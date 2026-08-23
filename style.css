@@ -10,21 +10,20 @@ html {
 
 body {
   font-family: Arial, Tahoma, sans-serif;
-  background: #87ceeb;
-  color: #183b4b;
-  line-height: 1.7;
+  background: #87CEEB;
+  color: #173B4D;
+  line-height: 1.6;
 }
 
 /* الرأس */
 
 .header {
   text-align: center;
-  padding: 35px 20px 25px;
-  background: #87ceeb;
+  padding: 35px 15px 25px;
 }
 
 .header h1 {
-  font-size: 34px;
+  font-size: 32px;
   margin-bottom: 5px;
 }
 
@@ -36,28 +35,36 @@ body {
 /* القائمة */
 
 .nav {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
   z-index: 100;
+
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  padding: 10px;
+
+  background: #FFFFFF;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .nav a {
+  color: #173B4D;
   text-decoration: none;
-  color: #183b4b;
-  padding: 8px 13px;
+
+  padding: 8px 12px;
+
   border-radius: 20px;
+
+  font-size: 15px;
   font-weight: bold;
 }
 
 .nav a:hover {
-  background: #e5f7fd;
+  background: #E8F8FD;
 }
 
 
@@ -65,61 +72,102 @@ body {
 
 .hero {
   text-align: center;
-  padding: 75px 20px;
-  background: #87ceeb;
+
+  padding: 70px 20px;
+
+  max-width: 900px;
+
+  margin: auto;
 }
 
 .hero h2 {
-  font-size: 30px;
+  font-size: 29px;
   margin-bottom: 12px;
 }
 
 .hero p {
-  font-size: 19px;
+  font-size: 18px;
 }
 
 
 /* الأقسام */
 
 .section {
-  padding: 55px 20px;
+  padding: 45px 15px;
 }
 
 .container {
+  width: 100%;
   max-width: 1000px;
   margin: auto;
 }
 
 .section h2 {
   text-align: center;
-  font-size: 28px;
-  margin-bottom: 30px;
+
+  font-size: 27px;
+
+  margin-bottom: 28px;
 }
 
 
-/* القوائم البسيطة */
+/* القوائم */
 
 .simple-menu {
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+
+  gap: 15px;
 }
+
+
+/* عناصر القائمة */
 
 .simple-item {
-  background: white;
+  background: #FFFFFF;
+
+  border: none;
+
   border-radius: 14px;
+
   padding: 25px 15px;
+
   text-align: center;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  color: #173B4D;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.simple-item span {
+.simple-item:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+
+/* أزرار الإقامات */
+
+.category-btn {
+  width: 100%;
+
+  cursor: pointer;
+
+  font-family: inherit;
+}
+
+.category-btn span {
   display: block;
+
   font-size: 38px;
+
   margin-bottom: 8px;
 }
 
-.simple-item h3 {
+.category-btn h3 {
   font-size: 18px;
 }
 
@@ -128,14 +176,32 @@ body {
 
 .search {
   display: block;
+
   width: 100%;
+
   max-width: 600px;
-  margin: 25px auto;
+
+  margin: 25px auto 20px;
+
   padding: 13px 16px;
-  border: none;
+
+  border: 2px solid transparent;
+
   border-radius: 10px;
+
+  background: #FFFFFF;
+
+  color: #173B4D;
+
   font-size: 16px;
+
+  font-family: inherit;
+
   outline: none;
+}
+
+.search:focus {
+  border-color: #FFFFFF;
 }
 
 
@@ -143,22 +209,75 @@ body {
 
 .cards {
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
+
   gap: 18px;
 }
 
 .card {
-  background: white;
+  background: #FFFFFF;
+
   border-radius: 14px;
+
   padding: 20px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card img {
+  width: 100%;
+
+  height: 190px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  margin-bottom: 8px;
+}
+
+.card p {
+  margin: 6px 0;
 }
 
 .loading {
+  grid-column: 1 / -1;
+
   text-align: center;
-  background: white;
+
+  background: #FFFFFF;
+
   padding: 20px;
+
   border-radius: 10px;
+}
+
+
+/* أزرار الإقامة */
+
+.whatsapp,
+.map-button {
+  display: inline-block;
+
+  margin-top: 10px;
+  margin-left: 5px;
+
+  padding: 8px 12px;
+
+  border-radius: 8px;
+
+  background: #E8F8FD;
+
+  color: #173B4D;
+
+  text-decoration: none;
+
+  font-size: 14px;
 }
 
 
@@ -166,11 +285,12 @@ body {
 
 .contact {
   text-align: center;
-  background: rgba(255, 255, 255, 0.35);
+
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .contact p {
-  margin: 8px 0;
+  margin: 7px 0;
 }
 
 
@@ -178,8 +298,11 @@ body {
 
 footer {
   text-align: center;
-  background: white;
+
+  background: #FFFFFF;
+
   padding: 20px;
+
   margin-top: 0;
 }
 
@@ -188,20 +311,32 @@ footer {
 
 @media (max-width: 700px) {
 
+  .header {
+    padding: 28px 15px 20px;
+  }
+
   .header h1 {
     font-size: 28px;
   }
 
   .hero {
-    padding: 55px 15px;
+    padding: 55px 18px;
   }
 
   .hero h2 {
     font-size: 24px;
   }
 
+  .hero p {
+    font-size: 16px;
+  }
+
   .section {
-    padding: 40px 15px;
+    padding: 38px 15px;
+  }
+
+  .section h2 {
+    font-size: 24px;
   }
 
   .simple-menu {
@@ -213,12 +348,13 @@ footer {
   }
 
   .nav {
-    gap: 4px;
+    gap: 3px;
   }
 
   .nav a {
-    font-size: 14px;
-    padding: 7px 9px;
+    font-size: 13px;
+
+    padding: 7px 8px;
   }
 
 }
