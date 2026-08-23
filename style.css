@@ -23,7 +23,7 @@ body {
   margin: auto;
 }
 
-/* الصفحة الرئيسية */
+/* الرئيسية */
 .hero {
   min-height: 45vh;
   display: flex;
@@ -34,12 +34,14 @@ body {
 }
 
 .hero h1 {
-  font-size: 38px;
-  margin-bottom: 15px;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
-.hero p {
+.hero-subtitle {
   font-size: 21px;
+  font-weight: 400;
 }
 
 /* الأقسام */
@@ -56,11 +58,14 @@ body {
 /* البطاقات */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  );
   gap: 20px;
 }
 
-/* بطاقة */
+/* بطاقة عامة */
 .card {
   background: #ffffff;
   border-radius: 16px;
@@ -78,11 +83,11 @@ body {
   margin-bottom: 15px;
 }
 
-/* زر */
+/* الأزرار */
 .btn {
   display: inline-block;
   background: #168acb;
-  color: white;
+  color: #ffffff;
   text-decoration: none;
   padding: 9px 18px;
   border-radius: 10px;
@@ -93,7 +98,7 @@ body {
   opacity: 0.85;
 }
 
-/* الإقامات المحملة من Supabase */
+/* بطاقات الإقامات القادمة من Supabase */
 .accommodation-card {
   background: #ffffff;
   border-radius: 16px;
@@ -111,13 +116,13 @@ body {
   margin: 6px 0;
 }
 
-/* حالة التحميل */
+/* التحميل */
 .loading {
   text-align: center;
   font-size: 18px;
 }
 
-/* رسالة عدم وجود إقامات */
+/* عدم وجود بيانات */
 .empty {
   text-align: center;
   font-size: 18px;
@@ -138,7 +143,7 @@ body {
   display: inline-block;
   margin-top: 20px;
   background: #25d366;
-  color: white;
+  color: #ffffff;
   text-decoration: none;
   padding: 12px 22px;
   border-radius: 12px;
@@ -187,11 +192,11 @@ footer {
   }
 
   .hero h1 {
-    font-size: 29px;
+    font-size: 30px;
   }
 
-  .hero p {
-    font-size: 18px;
+  .hero-subtitle {
+    font-size: 19px;
   }
 
   .section {
