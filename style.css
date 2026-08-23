@@ -10,255 +10,251 @@ html {
 
 body {
   font-family: Arial, Tahoma, sans-serif;
-  background: #87CEEB;
-  color: #173B4D;
-  line-height: 1.6;
+  background: #e8f7fc;
+  color: #173b4d;
+  line-height: 1.7;
 }
 
-/* الرأس */
+/* ===== الرأس ===== */
 
 .header {
   text-align: center;
   padding: 35px 15px 25px;
+  background: linear-gradient(135deg, #87ceeb, #dff7ff);
 }
 
 .header h1 {
-  font-size: 32px;
-  margin-bottom: 5px;
+  font-size: 34px;
+  margin-bottom: 6px;
+  font-weight: 800;
 }
 
 .header p {
   font-size: 17px;
 }
 
-
-/* القائمة */
+/* ===== القائمة ===== */
 
 .nav {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px;
 
   padding: 10px;
 
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.97);
 
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
 }
 
 .nav a {
-  color: #173B4D;
+  color: #173b4d;
   text-decoration: none;
 
-  padding: 8px 12px;
+  padding: 9px 14px;
 
-  border-radius: 20px;
+  border-radius: 25px;
 
   font-size: 15px;
   font-weight: bold;
+
+  transition: 0.2s;
 }
 
 .nav a:hover {
-  background: #E8F8FD;
+  background: #dff5fc;
+  transform: translateY(-1px);
 }
 
-
-/* الواجهة الرئيسية */
+/* ===== الواجهة الرئيسية ===== */
 
 .hero {
   text-align: center;
 
-  padding: 70px 20px;
+  padding: 75px 20px;
 
-  max-width: 900px;
+  max-width: 950px;
 
   margin: auto;
 }
 
 .hero h2 {
-  font-size: 29px;
-  margin-bottom: 12px;
+  font-size: 31px;
+  margin-bottom: 14px;
 }
 
 .hero p {
   font-size: 18px;
+  max-width: 700px;
+  margin: auto;
 }
 
-
-/* الأقسام */
+/* ===== الأقسام ===== */
 
 .section {
-  padding: 45px 15px;
+  padding: 50px 15px;
 }
 
 .container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
   margin: auto;
 }
 
 .section h2 {
   text-align: center;
-
-  font-size: 27px;
-
-  margin-bottom: 28px;
+  font-size: 28px;
+  margin-bottom: 30px;
 }
 
-
-/* القوائم */
+/* ===== القوائم ===== */
 
 .simple-menu {
   display: grid;
-
   grid-template-columns: repeat(3, 1fr);
-
-  gap: 15px;
+  gap: 18px;
 }
 
-
-/* عناصر القائمة */
-
 .simple-item {
-  background: #FFFFFF;
+  background: #ffffff;
 
-  border: none;
+  border-radius: 16px;
 
-  border-radius: 14px;
-
-  padding: 25px 15px;
+  padding: 27px 18px;
 
   text-align: center;
 
-  color: #173B4D;
+  color: #173b4d;
 
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: 0.25s;
 }
 
 .simple-item:hover {
-  transform: translateY(-3px);
-
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
 }
 
-
-/* أزرار الإقامات */
+/* ===== أزرار الإقامات ===== */
 
 .category-btn {
   width: 100%;
-
   cursor: pointer;
-
   font-family: inherit;
+  border: none;
 }
 
 .category-btn span {
   display: block;
-
-  font-size: 38px;
-
+  font-size: 40px;
   margin-bottom: 8px;
 }
 
 .category-btn h3 {
-  font-size: 18px;
+  font-size: 19px;
 }
 
-
-/* البحث */
+/* ===== البحث ===== */
 
 .search {
   display: block;
 
   width: 100%;
+  max-width: 650px;
 
-  max-width: 600px;
+  margin: 25px auto;
 
-  margin: 25px auto 20px;
+  padding: 14px 17px;
 
-  padding: 13px 16px;
+  border: 2px solid #d5edf5;
+  border-radius: 12px;
 
-  border: 2px solid transparent;
+  background: #ffffff;
 
-  border-radius: 10px;
-
-  background: #FFFFFF;
-
-  color: #173B4D;
+  color: #173b4d;
 
   font-size: 16px;
-
   font-family: inherit;
 
   outline: none;
+
+  transition: 0.2s;
 }
 
 .search:focus {
-  border-color: #FFFFFF;
+  border-color: #5bb9d8;
+  box-shadow: 0 0 0 3px rgba(91, 185, 216, 0.15);
 }
 
-
-/* بطاقات الإقامات */
+/* ===== بطاقات الإقامات ===== */
 
 .cards {
   display: grid;
-
   grid-template-columns: repeat(3, 1fr);
-
-  gap: 18px;
+  gap: 20px;
 }
 
 .card {
-  background: #FFFFFF;
+  background: #ffffff;
 
-  border-radius: 14px;
+  border-radius: 16px;
 
   padding: 20px;
 
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+
+  transition: 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .card img {
   width: 100%;
-
-  height: 190px;
+  height: 200px;
 
   object-fit: cover;
 
-  border-radius: 10px;
+  border-radius: 12px;
 
-  margin-bottom: 12px;
+  margin-bottom: 13px;
 }
 
 .card h3 {
   margin-bottom: 8px;
+  font-size: 20px;
 }
 
 .card p {
   margin: 6px 0;
 }
 
+/* ===== التحميل ===== */
+
 .loading {
   grid-column: 1 / -1;
 
   text-align: center;
 
-  background: #FFFFFF;
+  background: #ffffff;
 
-  padding: 20px;
+  padding: 25px;
 
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
-
-/* أزرار الإقامة */
+/* ===== أزرار الإقامة ===== */
 
 .whatsapp,
 .map-button {
@@ -267,56 +263,68 @@ body {
   margin-top: 10px;
   margin-left: 5px;
 
-  padding: 8px 12px;
+  padding: 9px 13px;
 
-  border-radius: 8px;
+  border-radius: 9px;
 
-  background: #E8F8FD;
+  background: #e8f8fd;
 
-  color: #173B4D;
+  color: #173b4d;
 
   text-decoration: none;
 
   font-size: 14px;
+  font-weight: bold;
+
+  transition: 0.2s;
 }
 
+.whatsapp:hover,
+.map-button:hover {
+  background: #cceff9;
+  transform: translateY(-1px);
+}
 
-/* التواصل */
+/* ===== التواصل ===== */
 
 .contact {
   text-align: center;
 
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .contact p {
-  margin: 7px 0;
+  margin: 8px 0;
 }
 
-
-/* أسفل الموقع */
+/* ===== أسفل الموقع ===== */
 
 footer {
   text-align: center;
 
-  background: #FFFFFF;
+  background: #ffffff;
 
-  padding: 20px;
+  padding: 22px;
 
   margin-top: 0;
+
+  font-size: 14px;
 }
 
-
-/* الهاتف */
+/* ===== الهاتف ===== */
 
 @media (max-width: 700px) {
 
   .header {
-    padding: 28px 15px 20px;
+    padding: 28px 15px 22px;
   }
 
   .header h1 {
     font-size: 28px;
+  }
+
+  .header p {
+    font-size: 15px;
   }
 
   .hero {
@@ -324,7 +332,7 @@ footer {
   }
 
   .hero h2 {
-    font-size: 24px;
+    font-size: 25px;
   }
 
   .hero p {
@@ -332,7 +340,7 @@ footer {
   }
 
   .section {
-    padding: 38px 15px;
+    padding: 40px 15px;
   }
 
   .section h2 {
@@ -347,14 +355,17 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .card img {
+    height: 210px;
+  }
+
   .nav {
-    gap: 3px;
+    gap: 4px;
+    padding: 8px 5px;
   }
 
   .nav a {
     font-size: 13px;
-
-    padding: 7px 8px;
+    padding: 7px 9px;
   }
-
 }
