@@ -14,7 +14,10 @@
 
 <body>
 
-  <!-- الرئيسية -->
+  <!-- =========================
+       الرئيسية
+  ========================== -->
+
   <section id="home" class="hero">
 
     <div class="container">
@@ -30,37 +33,74 @@
   </section>
 
 
-  <!-- الإقامات -->
+  <!-- =========================
+       الإقامات
+  ========================== -->
+
   <section id="stay" class="section">
 
     <div class="container">
 
       <h2>🏨 الإقامات</h2>
 
-      <div class="cards">
+      <!-- شقق مفروشة -->
 
-        <div class="card">
-          <h3>🏠 شقق مفروشة</h3>
-          <p>شقق مجهزة للإقامة القصيرة أو الطويلة.</p>
-          <a href="#accommodations" class="btn">
-            اكتشف الإقامات
-          </a>
+      <div class="accommodation-category">
+
+        <h3 class="category-title">
+          🏠 شقق مفروشة
+        </h3>
+
+        <div
+          id="apartmentsList"
+          class="cards">
+
+          <p class="loading">
+            جاري تحميل الشقق المفروشة...
+          </p>
+
         </div>
 
-        <div class="card">
-          <h3>🏨 فنادق</h3>
-          <p>فنادق مختلفة في مدن شمال المغرب.</p>
-          <a href="#accommodations" class="btn">
-            اكتشف الإقامات
-          </a>
+      </div>
+
+
+      <!-- فنادق -->
+
+      <div class="accommodation-category">
+
+        <h3 class="category-title">
+          🏨 فنادق
+        </h3>
+
+        <div
+          id="hotelsList"
+          class="cards">
+
+          <p class="loading">
+            جاري تحميل الفنادق...
+          </p>
+
         </div>
 
-        <div class="card">
-          <h3>🕌 رياضات</h3>
-          <p>رياضات ودور ضيافة داخل المدن القديمة.</p>
-          <a href="#accommodations" class="btn">
-            اكتشف الإقامات
-          </a>
+      </div>
+
+
+      <!-- رياضات -->
+
+      <div class="accommodation-category">
+
+        <h3 class="category-title">
+          🕌 رياضات
+        </h3>
+
+        <div
+          id="riadsList"
+          class="cards">
+
+          <p class="loading">
+            جاري تحميل الرياضات...
+          </p>
+
         </div>
 
       </div>
@@ -70,27 +110,10 @@
   </section>
 
 
-  <!-- قائمة الإقامات من Supabase -->
-  <section id="accommodations" class="section">
+  <!-- =========================
+       المواصلات
+  ========================== -->
 
-    <div class="container">
-
-      <h2>🏨 الإقامات المتاحة</h2>
-
-      <div id="accommodationsList" class="cards">
-
-        <p class="loading">
-          جاري تحميل الإقامات...
-        </p>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- المواصلات -->
   <section id="transport" class="section">
 
     <div class="container">
@@ -100,41 +123,53 @@
       <div class="cards">
 
         <div class="card">
+
           <h3>🚙 كراء السيارات</h3>
 
           <p>
             خدمات كراء السيارات في شمال المغرب.
           </p>
 
-          <a href="#contact" class="btn">
+          <a
+            href="#contact"
+            class="btn">
             تواصل معنا
           </a>
+
         </div>
 
 
         <div class="card">
+
           <h3>🚕 سيارات الأجرة</h3>
 
           <p>
             خدمات سيارات الأجرة والتنقل.
           </p>
 
-          <a href="#contact" class="btn">
+          <a
+            href="#contact"
+            class="btn">
             تواصل معنا
           </a>
+
         </div>
 
 
         <div class="card">
+
           <h3>🚌 الحافلات السياحية الصغيرة</h3>
 
           <p>
             خدمات الحافلات السياحية الصغيرة للزوار.
           </p>
 
-          <a href="#contact" class="btn">
+          <a
+            href="#contact"
+            class="btn">
             تواصل معنا
           </a>
+
         </div>
 
       </div>
@@ -144,7 +179,10 @@
   </section>
 
 
-  <!-- الأنشطة والجولات -->
+  <!-- =========================
+       الأنشطة والجولات
+  ========================== -->
+
   <section id="activities" class="section">
 
     <div class="container">
@@ -154,33 +192,41 @@
       <div class="cards">
 
         <div class="card">
+
           <h3>🏖️ الشواطئ</h3>
 
           <p>
             اكتشف شواطئ شمال المغرب.
           </p>
+
         </div>
 
 
         <div class="card">
+
           <h3>🏛️ المدن التاريخية</h3>
 
           <p>
             اكتشف المدن والمعالم التاريخية.
           </p>
+
         </div>
 
 
         <div class="card">
+
           <h3>🧭 المرشدين السياحيين</h3>
 
           <p>
             التواصل مع المرشدين السياحيين.
           </p>
 
-          <a href="#contact" class="btn">
+          <a
+            href="#contact"
+            class="btn">
             تواصل معنا
           </a>
+
         </div>
 
       </div>
@@ -190,7 +236,10 @@
   </section>
 
 
-  <!-- التواصل -->
+  <!-- =========================
+       التواصل
+  ========================== -->
+
   <section id="contact" class="section">
 
     <div class="container">
@@ -207,7 +256,9 @@
           href="https://wa.me/212600000000"
           class="whatsapp"
           target="_blank">
+
           💬 تواصل معنا عبر واتساب
+
         </a>
 
       </div>
@@ -217,24 +268,45 @@
   </section>
 
 
-  <!-- القائمة السفلية -->
+  <!-- =========================
+       القائمة السفلية
+  ========================== -->
+
   <nav class="bottom-nav">
 
-    <a href="#home">🏠 الرئيسية</a>
+    <a href="#home">
+      🏠 الرئيسية
+    </a>
 
-    <a href="#stay">🏨 الإقامات</a>
+    <a href="#stay">
+      🏨 الإقامات
+    </a>
 
-    <a href="#transport">🚗 المواصلات</a>
+    <a href="#transport">
+      🚗 المواصلات
+    </a>
 
-    <a href="#activities">🗺️ الأنشطة</a>
+    <a href="#activities">
+      🗺️ الأنشطة
+    </a>
 
-    <a href="#contact">📞 التواصل</a>
+    <a href="#contact">
+      📞 التواصل
+    </a>
 
   </nav>
 
 
+  <!-- =========================
+       الفوتر
+  ========================== -->
+
   <footer>
-    <p>شمال المغرب © 2026</p>
+
+    <p>
+      شمال المغرب © 2026
+    </p>
+
   </footer>
 
 
