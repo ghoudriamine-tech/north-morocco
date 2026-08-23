@@ -15,13 +15,13 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #eaf8ff;
+      background: #eefaff;
       color: #17324d;
       line-height: 1.7;
     }
 
     header {
-      background: linear-gradient(135deg, #008fc7, #36c5e8);
+      background: linear-gradient(135deg, #0077a8, #35c9e8);
       color: white;
       text-align: center;
       padding: 45px 20px;
@@ -39,78 +39,96 @@
     nav {
       background: white;
       text-align: center;
-      padding: 15px;
+      padding: 12px;
       position: sticky;
       top: 0;
       z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     nav a {
       display: inline-block;
-      margin: 5px;
-      padding: 10px 15px;
-      background: #e8f7ff;
-      color: #007aa8;
+      margin: 4px;
+      padding: 9px 13px;
+      background: #e6f7fc;
+      color: #0077a8;
       text-decoration: none;
       border-radius: 20px;
       font-weight: bold;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: auto;
       padding: 35px 20px;
     }
 
     section {
-      padding: 20px 0;
+      padding: 25px 0;
     }
 
     h2 {
       text-align: center;
-      color: #008fc7;
+      color: #0077a8;
       margin-bottom: 25px;
     }
 
     .welcome {
       background: white;
       text-align: center;
-      padding: 45px 20px;
+      padding: 50px 20px;
     }
 
     .welcome h2 {
-      font-size: 28px;
+      font-size: 29px;
     }
 
-    .cards {
+    .quick-menu {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      gap: 18px;
+      margin-top: 30px;
     }
 
-    .card {
-      background: white;
-      padding: 20px;
-      text-align: center;
+    .quick-card {
+      background: #f4fcff;
+      border: 1px solid #d6eef7;
       border-radius: 15px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      padding: 25px;
+      text-align: center;
     }
 
-    .card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 15px;
+    .quick-card .icon {
+      font-size: 42px;
     }
 
-    .card .icon {
-      font-size: 40px;
-    }
-
-    .card h3 {
-      color: #008fc7;
+    .quick-card h3 {
+      color: #0077a8;
       margin: 10px 0;
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .category-btn {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 25px;
+      background: #dff5fc;
+      color: #0077a8;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .category-btn.active {
+      background: #0077a8;
+      color: white;
     }
 
     .search {
@@ -122,15 +140,46 @@
       font-size: 16px;
     }
 
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 15px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      color: #0077a8;
+      margin: 10px 0;
+    }
+
+    .icon {
+      font-size: 42px;
+    }
+
     .phone {
-      margin-top: 12px;
+      margin-top: 10px;
       font-weight: bold;
     }
 
     .whatsapp {
       display: inline-block;
-      margin-top: 12px;
-      padding: 10px 18px;
+      margin-top: 10px;
+      padding: 10px 17px;
       background: #25D366;
       color: white;
       text-decoration: none;
@@ -142,7 +191,7 @@
       display: inline-block;
       margin-top: 10px;
       margin-right: 5px;
-      padding: 10px 18px;
+      padding: 10px 17px;
       background: #4285F4;
       color: white;
       text-decoration: none;
@@ -150,19 +199,14 @@
       font-weight: bold;
     }
 
-    .map-button:hover,
-    .whatsapp:hover {
-      opacity: 0.9;
-    }
-
     .contact {
       background: white;
       text-align: center;
-      padding: 40px 20px;
+      padding: 45px 20px;
     }
 
     footer {
-      background: #006b91;
+      background: #005b7a;
       color: white;
       text-align: center;
       padding: 25px;
@@ -185,26 +229,87 @@
 
 <header>
   <h1>🌊 شمال المغرب 🇲🇦</h1>
-  <p>اكتشف جمال الشمال المغربي</p>
+  <p>اكتشف • احجز • استمتع</p>
 </header>
 
 <nav>
-  <a href="#home">الرئيسية</a>
+  <a href="#home">🏠 الرئيسية</a>
   <a href="#stay">🏨 الإقامة</a>
   <a href="#transport">🚗 المواصلات</a>
-  <a href="#activities">🗺️ الأنشطة والجولات</a>
+  <a href="#activities">🗺️ الجولات والأنشطة</a>
   <a href="#contact">📞 تواصل معنا</a>
 </nav>
 
 <section id="home" class="welcome">
-  <h2>مرحبا بكم في شمال المغرب 🇲🇦</h2>
-  <p>منصتك لاكتشاف أجمل الوجهات السياحية في شمال المغرب.</p>
+
+  <h2>اكتشف سحر شمال المغرب 🇲🇦</h2>
+
+  <p>
+    منصتك لاكتشاف الإقامات والمواصلات والجولات السياحية
+    في أجمل مدن شمال المغرب.
+  </p>
+
+  <div class="quick-menu">
+
+    <div class="quick-card">
+      <div class="icon">🏨</div>
+      <h3>الإقامة</h3>
+      <p>شقق مفروشة • فنادق • رياضات</p>
+    </div>
+
+    <div class="quick-card">
+      <div class="icon">🚗</div>
+      <h3>المواصلات</h3>
+      <p>سيارات • طاكسي • حافلات صغيرة سياحية</p>
+    </div>
+
+    <div class="quick-card">
+      <div class="icon">🗺️</div>
+      <h3>الجولات والأنشطة</h3>
+      <p>شواطئ • جولات • مدن عتيقة • مرشدون معتمدون</p>
+    </div>
+
+  </div>
+
 </section>
 
 <section id="stay">
+
   <div class="container">
 
     <h2>🏨 الإقامة</h2>
+
+    <div class="categories">
+
+      <button
+        class="category-btn active"
+        onclick="filterAccommodation('all', this)"
+      >
+        🏨 الكل
+      </button>
+
+      <button
+        class="category-btn"
+        onclick="filterAccommodation('apartment', this)"
+      >
+        🏠 الشقق المفروشة
+      </button>
+
+      <button
+        class="category-btn"
+        onclick="filterAccommodation('hotel', this)"
+      >
+        🏨 الفنادق
+      </button>
+
+      <button
+        class="category-btn"
+        onclick="filterAccommodation('riad', this)"
+      >
+        🕌 الرياضات
+      </button>
+
+    </div>
 
     <input
       id="searchAccommodation"
@@ -213,14 +318,21 @@
       placeholder="🔎 ابحث عن إقامة..."
     >
 
-    <div id="accommodation-list" class="cards">
-      <p class="loading">جاري تحميل الإقامات...</p>
+    <div
+      id="accommodation-list"
+      class="cards"
+    >
+      <p class="loading">
+        جاري تحميل الإقامات...
+      </p>
     </div>
 
   </div>
+
 </section>
 
 <section id="transport">
+
   <div class="container">
 
     <h2>🚗 المواصلات</h2>
@@ -230,66 +342,108 @@
       <div class="card">
         <div class="icon">🚘</div>
         <h3>تأجير السيارات</h3>
-        <p>سيارات للإيجار في شمال المغرب.</p>
+        <p>
+          سيارات للإيجار للسياح والزوار في شمال المغرب.
+        </p>
       </div>
 
       <div class="card">
         <div class="icon">🚕</div>
         <h3>الطاكسي</h3>
-        <p>خدمات التنقل والطاكسي.</p>
+        <p>
+          خدمات الطاكسي والتنقل داخل المدن.
+        </p>
       </div>
 
       <div class="card">
         <div class="icon">🚌</div>
-        <h3>الحافلات</h3>
-        <p>التنقل بين المدن والمناطق السياحية.</p>
+        <h3>حافلات صغيرة سياحية</h3>
+        <p>
+          نقل سياحي للمجموعات والرحلات والجولات.
+        </p>
       </div>
 
     </div>
 
   </div>
+
 </section>
 
 <section id="activities">
+
   <div class="container">
 
-    <h2>🗺️ الأنشطة والجولات</h2>
+    <h2>🗺️ الجولات والأنشطة</h2>
 
     <div class="cards">
 
       <div class="card">
         <div class="icon">🏖️</div>
         <h3>الشواطئ</h3>
-        <p>اكتشف أجمل شواطئ شمال المغرب.</p>
+        <p>
+          اكتشف أجمل شواطئ شمال المغرب.
+        </p>
       </div>
 
       <div class="card">
         <div class="icon">🥾</div>
         <h3>الجولات السياحية</h3>
-        <p>جولات لاكتشاف أجمل الأماكن.</p>
+        <p>
+          جولات لاكتشاف أجمل الأماكن والمعالم.
+        </p>
       </div>
 
       <div class="card">
         <div class="icon">🏛️</div>
         <h3>المدن العتيقة</h3>
-        <p>اكتشف التاريخ والثقافة المغربية.</p>
+        <p>
+          اكتشف التاريخ والثقافة في مدن الشمال.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧑‍🏫</div>
+        <h3>المرشدون السياحيون المعتمدون</h3>
+        <p>
+          تواصل مع مرشدين سياحيين معتمدين.
+        </p>
       </div>
 
     </div>
 
   </div>
+
 </section>
 
 <section id="contact" class="contact">
+
   <h2>📞 تواصل معنا</h2>
-  <p>هل لديك سؤال أو تريد إضافة خدمة سياحية؟</p>
-  <p>📱 الهاتف: 06 XX XX XX XX</p>
-  <p>📧 البريد الإلكتروني: contact@northmorocco.com</p>
+
+  <p>
+    هل لديك سؤال أو تريد إضافة خدمة سياحية؟
+  </p>
+
+  <p>
+    📱 الهاتف: 06 XX XX XX XX
+  </p>
+
+  <p>
+    📧 البريد الإلكتروني:
+    contact@northmorocco.com
+  </p>
+
 </section>
 
 <footer>
-  <p>© 2026 شمال المغرب - جميع الحقوق محفوظة 🇲🇦</p>
-  <p>اكتشف • احجز • استمتع 🇲🇦</p>
+
+  <p>
+    © 2026 شمال المغرب - جميع الحقوق محفوظة 🇲🇦
+  </p>
+
+  <p>
+    اكتشف • احجز • استمتع
+  </p>
+
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -310,10 +464,15 @@ const supabaseClient =
 
 let accommodations = [];
 
+let currentAccommodationType = "all";
+
+
 async function loadAccommodations() {
 
   const list =
-    document.getElementById("accommodation-list");
+    document.getElementById(
+      "accommodation-list"
+    );
 
   list.innerHTML =
     "<p class='loading'>جاري تحميل الإقامات...</p>";
@@ -322,7 +481,9 @@ async function loadAccommodations() {
     await supabaseClient
       .from("accommodations")
       .select("*")
-      .order("id", { ascending: true });
+      .order("id", {
+        ascending: true
+      });
 
   if (error) {
 
@@ -336,13 +497,18 @@ async function loadAccommodations() {
 
   accommodations = data || [];
 
-  displayAccommodations(accommodations);
+  displayAccommodations(
+    accommodations
+  );
 }
+
 
 function displayAccommodations(items) {
 
   const list =
-    document.getElementById("accommodation-list");
+    document.getElementById(
+      "accommodation-list"
+    );
 
   list.innerHTML = "";
 
@@ -354,12 +520,14 @@ function displayAccommodations(items) {
     return;
   }
 
+
   items.forEach(function(item) {
 
     const card =
       document.createElement("div");
 
     card.className = "card";
+
 
     let image = "";
 
@@ -373,12 +541,12 @@ function displayAccommodations(items) {
       `;
     }
 
-    /* زر واتساب */
+
     let whatsapp = "";
 
     if (item.phone) {
 
-      let phoneNumber =
+      const phoneNumber =
         String(item.phone)
           .replace(/\s/g, "")
           .replace(/\+/g, "");
@@ -395,7 +563,7 @@ function displayAccommodations(items) {
       `;
     }
 
-    /* زر الموقع على الخريطة */
+
     let mapButton = "";
 
     if (item.city || item.address) {
@@ -419,6 +587,28 @@ function displayAccommodations(items) {
       `;
     }
 
+
+    const type =
+      item.type ||
+      item.category ||
+      "";
+
+
+    let typeText = "";
+
+    if (type === "apartment") {
+      typeText = "🏠 شقة مفروشة";
+    }
+
+    else if (type === "hotel") {
+      typeText = "🏨 فندق";
+    }
+
+    else if (type === "riad") {
+      typeText = "🕌 رياض";
+    }
+
+
     card.innerHTML = `
 
       ${image}
@@ -426,6 +616,17 @@ function displayAccommodations(items) {
       <h3>
         ${item.name || "إقامة سياحية"}
       </h3>
+
+      ${
+        typeText
+          ? `<p><strong>${typeText}</strong></p>`
+          : ""
+      }
+
+      <p>
+        📍 ${item.city || ""}
+        ${item.address ? " - " + item.address : ""}
+      </p>
 
       <p>
         ${item.description || ""}
@@ -439,7 +640,8 @@ function displayAccommodations(items) {
         }
 
         ${
-          item.price_per_night || item.price
+          item.price_per_night ||
+          item.price
             ? " درهم / ليلة"
             : ""
         }
@@ -460,36 +662,99 @@ function displayAccommodations(items) {
   });
 }
 
-document
-  .getElementById("searchAccommodation")
-  .addEventListener("input", function() {
 
-    const search =
-      this.value.toLowerCase().trim();
+function filterAccommodation(
+  type,
+  button
+) {
 
-    const filtered =
-      accommodations.filter(function(item) {
+  currentAccommodationType = type;
+
+  document
+    .querySelectorAll(".category-btn")
+    .forEach(function(btn) {
+
+      btn.classList.remove("active");
+
+    });
+
+  button.classList.add("active");
+
+  applyAccommodationFilters();
+}
+
+
+function applyAccommodationFilters() {
+
+  const search =
+    document
+      .getElementById(
+        "searchAccommodation"
+      )
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    accommodations.filter(
+      function(item) {
 
         const name =
-          (item.name || "").toLowerCase();
+          (item.name || "")
+            .toLowerCase();
 
         const description =
-          (item.description || "").toLowerCase();
+          (item.description || "")
+            .toLowerCase();
 
         const city =
-          (item.city || "").toLowerCase();
+          (item.city || "")
+            .toLowerCase();
 
-        return (
+        const type =
+          item.type ||
+          item.category ||
+          "";
+
+
+        const matchesSearch =
           name.includes(search) ||
           description.includes(search) ||
-          city.includes(search)
+          city.includes(search);
+
+
+        const matchesType =
+          currentAccommodationType === "all" ||
+          type === currentAccommodationType;
+
+
+        return (
+          matchesSearch &&
+          matchesType
         );
 
-      });
+      }
+    );
 
-    displayAccommodations(filtered);
 
-  });
+  displayAccommodations(filtered);
+}
+
+
+document
+  .getElementById(
+    "searchAccommodation"
+  )
+  .addEventListener(
+    "input",
+    function() {
+
+      applyAccommodationFilters();
+
+    }
+  );
+
 
 loadAccommodations();
 
