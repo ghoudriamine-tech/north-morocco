@@ -2,7 +2,7 @@ const SUPABASE_URL =
   "https://rbmttbxsezttysenbcwn.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2xw";
+  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2x2";
 
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
@@ -10,6 +10,11 @@ const supabaseClient = supabase.createClient(
 );
 
 let accommodations = [];
+
+
+/* =========================
+   تحميل الإقامات
+========================= */
 
 async function loadAccommodations() {
 
@@ -21,27 +26,40 @@ async function loadAccommodations() {
   list.innerHTML =
     "<p class='loading'>جاري تحميل الإقامات...</p>";
 
-  const { data, error } =
-    await supabaseClient
-      .from("accommodations")
-      .select("*")
-      .order("id", { ascending: true });
+  try {
 
-  if (error) {
+    const { data, error } =
+      await supabaseClient
+        .from("accommodations")
+        .select("*")
+        .order("id", { ascending: true });
+
+    if (error) {
+      console.error("Supabase Error:", error);
+
+      list.innerHTML =
+        "<p class='loading'>تعذر تحميل الإقامات حاليًا.</p>";
+
+      return;
+    }
+
+    accommodations = data || [];
+
+    displayAccommodations(accommodations);
+
+  } catch (error) {
 
     console.error(error);
 
     list.innerHTML =
-      "<p class='error'>حدث خطأ أثناء تحميل الإقامات.</p>";
-
-    return;
+      "<p class='loading'>حدث خطأ أثناء الاتصال بقاعدة البيانات.</p>";
   }
-
-  accommodations = data || [];
-
-  displayAccommodations(accommodations);
 }
 
+
+/* =========================
+   عرض الإقامات
+========================= */
 
 function displayAccommodations(items) {
 
@@ -52,13 +70,14 @@ function displayAccommodations(items) {
 
   list.innerHTML = "";
 
-  if (!items.length) {
+  if (!items || items.length === 0) {
 
     list.innerHTML =
       "<p class='loading'>لا توجد إقامات متاحة حاليًا.</p>";
 
     return;
   }
+
 
   items.forEach(function(item) {
 
@@ -67,42 +86,124 @@ function displayAccommodations(items) {
 
     card.className = "card";
 
-    let image = "";
+
+    /* الصورة */
 
     if (item.image_url) {
 
-      image = `
-        <img
-          src="${item.image_url}"
-          alt="${item.name || "إقامة سياحية"}"
-        >
-      `;
+      const image =
+        document.createElement("img");
+
+      image.src = item.image_url;
+
+      image.alt =
+        item.name || "إقامة سياحية";
+
+      image.loading = "lazy";
+
+      card.appendChild(image);
     }
 
 
-    let whatsapp = "";
+    /* الاسم */
+
+    const title =
+      document.createElement("h3");
+
+    title.textContent =
+      item.name || "إقامة سياحية";
+
+    card.appendChild(title);
+
+
+    /* النوع */
+
+    if (item.type) {
+
+      const type =
+        document.createElement("p");
+
+      type.textContent =
+        "🏨 " + item.type;
+
+      card.appendChild(type);
+    }
+
+
+    /* الوصف */
+
+    if (item.description) {
+
+      const description =
+        document.createElement("p");
+
+      description.textContent =
+        item.description;
+
+      card.appendChild(description);
+    }
+
+
+    /* السعر */
+
+    const price =
+      item.price_per_night ||
+      item.price ||
+      null;
+
+    const priceText =
+      document.createElement("p");
+
+    priceText.textContent =
+      price
+        ? "💰 " + price + " درهم / ليلة"
+        : "💰 السعر عند التواصل";
+
+    card.appendChild(priceText);
+
+
+    /* الهاتف */
+
+    const phone =
+      document.createElement("p");
+
+    phone.className = "phone";
+
+    phone.textContent =
+      "📞 " + (item.phone || "غير متوفر");
+
+    card.appendChild(phone);
+
+
+    /* واتساب */
 
     if (item.phone) {
 
       const phoneNumber =
         String(item.phone)
           .replace(/\s/g, "")
-          .replace(/\+/g, "");
+          .replace(/^\+/, "");
 
-      whatsapp = `
-        <a
-          class="whatsapp"
-          href="https://wa.me/${phoneNumber}"
-          target="_blank"
-          rel="noopener"
-        >
-          💬 واتساب
-        </a>
-      `;
+      const whatsapp =
+        document.createElement("a");
+
+      whatsapp.className = "whatsapp";
+
+      whatsapp.href =
+        "https://wa.me/" + phoneNumber;
+
+      whatsapp.target = "_blank";
+
+      whatsapp.rel = "noopener noreferrer";
+
+      whatsapp.textContent =
+        "💬 واتساب";
+
+      card.appendChild(whatsapp);
     }
 
 
-    let map = "";
+    /* الخريطة */
 
     if (item.city || item.address) {
 
@@ -113,74 +214,35 @@ function displayAccommodations(items) {
           (item.city || "")
         );
 
-      map = `
-        <a
-          class="map-button"
-          href="https://www.google.com/maps/search/?api=1&query=${location}"
-          target="_blank"
-          rel="noopener"
-        >
-          📍 الموقع على الخريطة
-        </a>
-      `;
+      const map =
+        document.createElement("a");
+
+      map.className = "map-button";
+
+      map.href =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        location;
+
+      map.target = "_blank";
+
+      map.rel = "noopener noreferrer";
+
+      map.textContent =
+        "📍 الموقع على الخريطة";
+
+      card.appendChild(map);
     }
 
-
-    let category = "";
-
-    if (item.type) {
-
-      category = `
-        <p>
-          🏨 ${item.type}
-        </p>
-      `;
-    }
-
-
-    const price =
-      item.price_per_night ||
-      item.price ||
-      null;
-
-
-    card.innerHTML = `
-
-      ${image}
-
-      <h3>
-        ${item.name || "إقامة سياحية"}
-      </h3>
-
-      ${category}
-
-      <p>
-        ${item.description || ""}
-      </p>
-
-      <p>
-        💰 ${
-          price
-            ? price + " درهم / ليلة"
-            : "السعر عند التواصل"
-        }
-      </p>
-
-      <p class="phone">
-        📞 ${item.phone || "غير متوفر"}
-      </p>
-
-      ${whatsapp}
-
-      ${map}
-
-    `;
 
     list.appendChild(card);
 
   });
 }
 
+
+/* =========================
+   البحث
+========================= */
 
 const searchInput =
   document.getElementById("searchAccommodation");
@@ -192,25 +254,34 @@ if (searchInput) {
     function() {
 
       const search =
-        this.value.toLowerCase().trim();
+        this.value
+          .toLowerCase()
+          .trim();
+
 
       const filtered =
         accommodations.filter(function(item) {
 
           const name =
-            (item.name || "").toLowerCase();
+            String(item.name || "")
+              .toLowerCase();
 
           const description =
-            (item.description || "").toLowerCase();
+            String(item.description || "")
+              .toLowerCase();
 
           const city =
-            (item.city || "").toLowerCase();
+            String(item.city || "")
+              .toLowerCase();
 
           const address =
-            (item.address || "").toLowerCase();
+            String(item.address || "")
+              .toLowerCase();
 
           const type =
-            (item.type || "").toLowerCase();
+            String(item.type || "")
+              .toLowerCase();
+
 
           return (
             name.includes(search) ||
@@ -222,11 +293,16 @@ if (searchInput) {
 
         });
 
+
       displayAccommodations(filtered);
 
     }
   );
 }
 
+
+/* =========================
+   تشغيل الموقع
+========================= */
 
 loadAccommodations();
