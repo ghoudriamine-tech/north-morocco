@@ -12,24 +12,23 @@ const supabaseClient = supabase.createClient(
 let accommodations = [];
 
 
-/* تحميل الإقامات من Supabase */
+/* =========================
+   تحميل الإقامات
+========================= */
+
 async function loadAccommodations() {
-
-  const list =
-    document.getElementById("accommodationsList");
-
-  if (!list) return;
-
-  list.innerHTML =
-    '<p class="loading">جاري تحميل الإقامات...</p>';
 
   try {
 
-    const { data, error } =
-      await supabaseClient
-        .from("accommodations")
-        .select("*")
-        .order("id", { ascending: false });
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("accommodations")
+      .select("*")
+      .order("id", {
+        ascending: false
+      });
 
     if (error) {
       throw error;
@@ -46,99 +45,310 @@ async function loadAccommodations() {
       error
     );
 
-    list.innerHTML =
-      '<p class="empty">تعذر تحميل الإقامات حالياً.</p>';
+    showError(
+      "apartmentsList"
+    );
+
+    showError(
+      "hotelsList"
+    );
+
+    showError(
+      "riadsList"
+    );
   }
 }
 
 
-/* عرض الإقامات */
+/* =========================
+   عرض الإقامات
+========================= */
+
 function displayAccommodations() {
 
+  const apartments =
+    accommodations.filter(
+      item =>
+        normalizeType(item.type) ===
+        "شقق مفروشة"
+    );
+
+  const hotels =
+    accommodations.filter(
+      item =>
+        normalizeType(item.type) ===
+        "فنادق"
+    );
+
+  const riads =
+    accommodations.filter(
+      item =>
+        normalizeType(item.type) ===
+        "رياضات"
+    );
+
+
+  renderList(
+    "apartmentsList",
+    apartments,
+    "لا توجد شقق مفروشة مضافة حالياً."
+  );
+
+
+  renderList(
+    "hotelsList",
+    hotels,
+    "لا توجد فنادق مضافة حالياً."
+  );
+
+
+  renderList(
+    "riadsList",
+    riads,
+    "لا توجد رياضات مضافة حالياً."
+  );
+}
+
+
+/* =========================
+   توحيد نوع الإقامة
+========================= */
+
+function normalizeType(type) {
+
+  if (!type) {
+    return "";
+  }
+
+  const value =
+    String(type)
+      .trim()
+      .toLowerCase();
+
+
+  if (
+    value === "شقة مفروشة" ||
+    value === "شقق مفروشة" ||
+    value === "apartment" ||
+    value === "apartments"
+  ) {
+    return "شقق مفروشة";
+  }
+
+
+  if (
+    value === "فندق" ||
+    value === "فنادق" ||
+    value === "hotel" ||
+    value === "hotels"
+  ) {
+    return "فنادق";
+  }
+
+
+  if (
+    value === "رياض" ||
+    value === "رياضات" ||
+    value === "riads" ||
+    value === "riad"
+  ) {
+    return "رياضات";
+  }
+
+
+  return value;
+}
+
+
+/* =========================
+   إنشاء البطاقات
+========================= */
+
+function renderList(
+  elementId,
+  items,
+  emptyMessage
+) {
+
   const list =
-    document.getElementById("accommodationsList");
+    document.getElementById(
+      elementId
+    );
 
-  if (!list) return;
+  if (!list) {
+    return;
+  }
 
-  if (!accommodations.length) {
+
+  if (!items.length) {
 
     list.innerHTML =
-      '<p class="empty">لا توجد إقامات مضافة حالياً.</p>';
+      `<p class="empty">
+        ${emptyMessage}
+      </p>`;
 
     return;
   }
 
+
   list.innerHTML =
-    accommodations
-      .map((item) => {
-
-        return `
-          <div class="accommodation-card">
-
-            <h3>
-              ${escapeHTML(
-                item.name || "إقامة"
-              )}
-            </h3>
-
-            ${
-              item.city
-                ? `<p>📍 ${escapeHTML(item.city)}</p>`
-                : ""
-            }
-
-            ${
-              item.address
-                ? `<p>📌 ${escapeHTML(item.address)}</p>`
-                : ""
-            }
-
-            ${
-              item.price
-                ? `<p>💰 ${escapeHTML(String(item.price))}</p>`
-                : ""
-            }
-
-            ${
-              item.description
-                ? `<p>${escapeHTML(item.description)}</p>`
-                : ""
-            }
-
-            ${
-              item.phone
-                ? `
-                  <a
-                    href="tel:${escapeHTML(item.phone)}"
-                    class="btn">
-                    📞 اتصال
-                  </a>
-                `
-                : ""
-            }
-
-          </div>
-        `;
-
-      })
+    items
+      .map(
+        item =>
+          createAccommodationCard(
+            item
+          )
+      )
       .join("");
 }
 
 
-/* حماية النصوص القادمة من قاعدة البيانات */
-function escapeHTML(value) {
+/* =========================
+   بطاقة الإقامة
+========================= */
 
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+function createAccommodationCard(
+  item
+) {
+
+  const name =
+    escapeHTML(
+      item.name ||
+      "إقامة"
+    );
+
+
+  const city =
+    item.city
+      ? `<p>📍 ${escapeHTML(item.city)}</p>`
+      : "";
+
+
+  const address =
+    item.address
+      ? `<p>📌 ${escapeHTML(item.address)}</p>`
+      : "";
+
+
+  const description =
+    item.description
+      ? `<p>${escapeHTML(item.description)}</p>`
+      : "";
+
+
+  const price =
+    item.price
+      ? `<p>💰 ${escapeHTML(
+          String(item.price)
+        )} درهم</p>`
+      : item.price_per_night
+      ? `<p>💰 ${escapeHTML(
+          String(item.price_per_night)
+        )} درهم / ليلة</p>`
+      : "";
+
+
+  const phone =
+    item.phone
+      ? `
+        <a
+          href="tel:${escapeHTML(
+            item.phone
+          )}"
+          class="btn">
+          📞 اتصال
+        </a>
+      `
+      : "";
+
+
+  return `
+    <div class="accommodation-card">
+
+      <h3>
+        ${name}
+      </h3>
+
+      ${city}
+
+      ${address}
+
+      ${description}
+
+      ${price}
+
+      ${phone}
+
+    </div>
+  `;
 }
 
 
-/* تشغيل الموقع */
+/* =========================
+   حماية النصوص
+========================= */
+
+function escapeHTML(
+  value
+) {
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+}
+
+
+/* =========================
+   عرض الخطأ
+========================= */
+
+function showError(
+  elementId
+) {
+
+  const element =
+    document.getElementById(
+      elementId
+    );
+
+  if (!element) {
+    return;
+  }
+
+  element.innerHTML =
+    `<p class="empty">
+      تعذر تحميل البيانات حالياً.
+    </p>`;
+}
+
+
+/* =========================
+   تشغيل الموقع
+========================= */
+
 document.addEventListener(
   "DOMContentLoaded",
-  loadAccommodations
+  () => {
+
+    loadAccommodations();
+
+  }
 );
