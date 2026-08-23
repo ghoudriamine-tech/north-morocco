@@ -1,3 +1,8 @@
+/* =========================================
+   شمال المغرب 🇲🇦
+   style.css - النسخة النهائية
+========================================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,362 +15,409 @@ html {
 
 body {
   font-family: Arial, Tahoma, sans-serif;
-  background: #e8f7fc;
-  color: #173b4d;
+  direction: rtl;
+  background: #f4fbff;
+  color: #17324d;
   line-height: 1.7;
 }
 
-/* ===== الرأس ===== */
+/* =========================================
+   الحاوية
+========================================= */
 
-.header {
+.container {
+  width: 92%;
+  max-width: 1150px;
+  margin: auto;
+}
+
+/* =========================================
+   الرأس
+========================================= */
+
+header {
+  background: linear-gradient(135deg, #0b83c9, #35b9e8);
+  color: white;
+  padding: 35px 15px;
   text-align: center;
-  padding: 35px 15px 25px;
-  background: linear-gradient(135deg, #87ceeb, #dff7ff);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
 }
 
-.header h1 {
-  font-size: 34px;
-  margin-bottom: 6px;
-  font-weight: 800;
+header h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
 }
 
-.header p {
+header p {
   font-size: 17px;
 }
 
-/* ===== القائمة ===== */
+/* =========================================
+   القائمة
+========================================= */
 
-.nav {
+nav {
+  background: white;
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
 
+nav .container {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 7px;
-
-  padding: 10px;
-
-  background: rgba(255, 255, 255, 0.97);
-
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
 }
 
-.nav a {
-  color: #173b4d;
+nav a {
+  color: #0b6fae;
   text-decoration: none;
-
-  padding: 9px 14px;
-
-  border-radius: 25px;
-
-  font-size: 15px;
   font-weight: bold;
-
-  transition: 0.2s;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: 0.3s;
 }
 
-.nav a:hover {
-  background: #dff5fc;
-  transform: translateY(-1px);
+nav a:hover {
+  background: #e5f6ff;
+  color: #075985;
 }
 
-/* ===== الواجهة الرئيسية ===== */
+/* =========================================
+   الأقسام
+========================================= */
 
-.hero {
+section {
+  padding: 55px 0;
+}
+
+section h2 {
   text-align: center;
+  color: #0878b8;
+  margin-bottom: 25px;
+  font-size: 27px;
+}
 
-  padding: 75px 20px;
+/* =========================================
+   الرئيسية
+========================================= */
 
-  max-width: 950px;
+#home {
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    #e4f7ff,
+    #f4fbff
+  );
+}
 
+#home h2 {
+  font-size: 30px;
+}
+
+#home p {
+  max-width: 750px;
   margin: auto;
-}
-
-.hero h2 {
-  font-size: 31px;
-  margin-bottom: 14px;
-}
-
-.hero p {
   font-size: 18px;
-  max-width: 700px;
-  margin: auto;
 }
 
-/* ===== الأقسام ===== */
+/* =========================================
+   البحث
+========================================= */
 
-.section {
-  padding: 50px 15px;
-}
-
-.container {
-  width: 100%;
-  max-width: 1100px;
-  margin: auto;
-}
-
-.section h2 {
-  text-align: center;
-  font-size: 28px;
-  margin-bottom: 30px;
-}
-
-/* ===== القوائم ===== */
-
-.simple-menu {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.simple-item {
-  background: #ffffff;
-
-  border-radius: 16px;
-
-  padding: 27px 18px;
-
-  text-align: center;
-
-  color: #173b4d;
-
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-
-  transition: 0.25s;
-}
-
-.simple-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
-}
-
-/* ===== أزرار الإقامات ===== */
-
-.category-btn {
-  width: 100%;
-  cursor: pointer;
-  font-family: inherit;
-  border: none;
-}
-
-.category-btn span {
-  display: block;
-  font-size: 40px;
-  margin-bottom: 8px;
-}
-
-.category-btn h3 {
-  font-size: 19px;
-}
-
-/* ===== البحث ===== */
-
-.search {
-  display: block;
-
-  width: 100%;
+.search-box {
   max-width: 650px;
+  margin: 0 auto 30px;
+}
 
-  margin: 25px auto;
-
-  padding: 14px 17px;
-
-  border: 2px solid #d5edf5;
-  border-radius: 12px;
-
-  background: #ffffff;
-
-  color: #173b4d;
-
+#searchAccommodation {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #b8e4f7;
+  border-radius: 30px;
+  background: white;
+  color: #17324d;
   font-size: 16px;
-  font-family: inherit;
-
   outline: none;
-
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
-.search:focus {
-  border-color: #5bb9d8;
-  box-shadow: 0 0 0 3px rgba(91, 185, 216, 0.15);
+#searchAccommodation:focus {
+  border-color: #0b83c9;
+  box-shadow: 0 0 0 4px rgba(11, 131, 201, 0.1);
 }
 
-/* ===== بطاقات الإقامات ===== */
+/* =========================================
+   قائمة الإقامات
+========================================= */
 
-.cards {
+#accommodation-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(270px, 1fr)
+  );
+  gap: 22px;
+  margin-top: 25px;
 }
+
+/* =========================================
+   بطاقة الإقامة
+========================================= */
 
 .card {
-  background: #ffffff;
-
-  border-radius: 16px;
-
-  padding: 20px;
-
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-
+  background: white;
+  border-radius: 18px;
   overflow: hidden;
-
-  transition: 0.25s;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.09);
+  padding-bottom: 20px;
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.13);
 }
 
 .card img {
+  display: block;
   width: 100%;
-  height: 200px;
-
+  height: 210px;
   object-fit: cover;
-
-  border-radius: 12px;
-
-  margin-bottom: 13px;
+  background: #e8f6fc;
 }
 
 .card h3 {
-  margin-bottom: 8px;
-  font-size: 20px;
+  color: #0878b8;
+  font-size: 21px;
+  padding: 18px 18px 8px;
 }
 
 .card p {
-  margin: 6px 0;
+  padding: 2px 18px;
+  color: #4b6070;
 }
 
-/* ===== التحميل ===== */
+.card .accommodation-type {
+  color: #0878b8;
+  font-weight: bold;
+}
+
+.card .city {
+  font-weight: bold;
+}
+
+.card .description {
+  margin-top: 8px;
+}
+
+.card .price {
+  color: #0878b8;
+  font-weight: bold;
+  font-size: 17px;
+  margin-top: 8px;
+}
+
+.card .phone {
+  margin-top: 5px;
+}
+
+/* =========================================
+   أزرار البطاقة
+========================================= */
+
+.card-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 15px 18px 0;
+}
+
+.card-buttons a {
+  flex: 1;
+  min-width: 110px;
+  text-align: center;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+.whatsapp {
+  background: #25d366;
+  color: white;
+}
+
+.whatsapp:hover {
+  background: #1ebc59;
+  transform: translateY(-2px);
+}
+
+.map-button {
+  background: #e8f6ff;
+  color: #0878b8;
+  border: 1px solid #b8e4f7;
+}
+
+.map-button:hover {
+  background: #d7f0fc;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   رسالة التحميل
+========================================= */
 
 .loading {
-  grid-column: 1 / -1;
-
   text-align: center;
-
-  background: #ffffff;
-
   padding: 25px;
-
-  border-radius: 12px;
-}
-
-/* ===== أزرار الإقامة ===== */
-
-.whatsapp,
-.map-button {
-  display: inline-block;
-
-  margin-top: 10px;
-  margin-left: 5px;
-
-  padding: 9px 13px;
-
-  border-radius: 9px;
-
-  background: #e8f8fd;
-
-  color: #173b4d;
-
-  text-decoration: none;
-
-  font-size: 14px;
+  color: #0878b8;
   font-weight: bold;
-
-  transition: 0.2s;
+  grid-column: 1 / -1;
 }
 
-.whatsapp:hover,
-.map-button:hover {
-  background: #cceff9;
-  transform: translateY(-1px);
+/* =========================================
+   المواصلات والأنشطة
+========================================= */
+
+#transport,
+#activities {
+  background: white;
 }
 
-/* ===== التواصل ===== */
-
-.contact {
+#transport p,
+#activities p {
   text-align: center;
-
-  background: rgba(255, 255, 255, 0.45);
+  max-width: 800px;
+  margin: auto;
+  font-size: 17px;
 }
 
-.contact p {
+/* =========================================
+   التواصل
+========================================= */
+
+#contact {
+  background: #e8f7ff;
+  text-align: center;
+}
+
+#contact p {
   margin: 8px 0;
+  font-size: 17px;
 }
 
-/* ===== أسفل الموقع ===== */
+#contact a {
+  color: #0878b8;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#contact a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   التذييل
+========================================= */
 
 footer {
+  background: #083b5c;
+  color: white;
   text-align: center;
-
-  background: #ffffff;
-
-  padding: 22px;
-
-  margin-top: 0;
-
-  font-size: 14px;
+  padding: 25px 15px;
 }
 
-/* ===== الهاتف ===== */
+footer p {
+  margin: 5px 0;
+}
 
-@media (max-width: 700px) {
+footer a {
+  color: #9cdef7;
+  text-decoration: none;
+}
 
-  .header {
-    padding: 28px 15px 22px;
+/* =========================================
+   الهاتف
+========================================= */
+
+@media (max-width: 600px) {
+
+  header {
+    padding: 28px 12px;
   }
 
-  .header h1 {
-    font-size: 28px;
+  header h1 {
+    font-size: 27px;
   }
 
-  .header p {
+  header p {
     font-size: 15px;
   }
 
-  .hero {
-    padding: 55px 18px;
+  nav .container {
+    gap: 3px;
   }
 
-  .hero h2 {
-    font-size: 25px;
+  nav a {
+    font-size: 13px;
+    padding: 7px 8px;
   }
 
-  .hero p {
-    font-size: 16px;
+  section {
+    padding: 40px 0;
   }
 
-  .section {
-    padding: 40px 15px;
-  }
-
-  .section h2 {
+  section h2 {
     font-size: 24px;
   }
 
-  .simple-menu {
-    grid-template-columns: 1fr;
+  #home h2 {
+    font-size: 26px;
   }
 
-  .cards {
+  #home p {
+    font-size: 16px;
+  }
+
+  #accommodation-list {
     grid-template-columns: 1fr;
   }
 
   .card img {
-    height: 210px;
+    height: 200px;
   }
 
-  .nav {
-    gap: 4px;
-    padding: 8px 5px;
+  .card-buttons {
+    flex-direction: column;
   }
 
-  .nav a {
-    font-size: 13px;
-    padding: 7px 9px;
+  .card-buttons a {
+    width: 100%;
   }
+
 }
+
+/* =========================================
+   تحسين اللمس على الهاتف
+========================================= */
+
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  transition: 0.2s ease;
+}
+
+/* =========================================
+   نهاية الملف
+========================================= */
