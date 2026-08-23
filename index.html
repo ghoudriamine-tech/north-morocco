@@ -12,242 +12,199 @@
 
 <body>
 
-<header>
-  <h1>🌊 شمال المغرب 🇲🇦</h1>
-  <p>اكتشف جمال الشمال المغربي</p>
-</header>
-
-<nav>
-  <a href="#home">الرئيسية</a>
-  <a href="#stay">🏨 الإقامة</a>
-  <a href="#transport">🚗 المواصلات</a>
-  <a href="#activities">🗺️ الجولات</a>
-  <a href="#contact">📞 تواصل معنا</a>
-</nav>
-
-<section id="home" class="welcome">
-
-  <h2>مرحبا بكم في شمال المغرب 🇲🇦</h2>
-
-  <p>
-    منصتك لاكتشاف أجمل الوجهات السياحية في شمال المغرب.
-  </p>
-
-  <div class="quick-menu">
-
-    <div class="quick-card">
-      <div class="icon">🏠</div>
-      <h3>الشقق المفروشة</h3>
-      <p>شقق مجهزة لإقامة مريحة.</p>
-    </div>
-
-    <div class="quick-card">
-      <div class="icon">🏨</div>
-      <h3>الفنادق</h3>
-      <p>فنادق مناسبة للعائلات والزوار.</p>
-    </div>
-
-    <div class="quick-card">
-      <div class="icon">🏡</div>
-      <h3>الرياض</h3>
-      <p>إقامات بطابع مغربي أصيل.</p>
-    </div>
-
-    <div class="quick-card">
-      <div class="icon">🧭</div>
-      <h3>المرشدون السياحيون</h3>
-      <p>مرشدون سياحيون معتمدون.</p>
-    </div>
-
-  </div>
-
-</section>
+  <!-- الرأس -->
+  <header class="header">
+    <h1>شمال المغرب 🇲🇦</h1>
+    <p>اكتشف الشمال ببساطة</p>
+  </header>
 
 
-<section id="stay">
+  <!-- القائمة -->
+  <nav class="nav">
 
-  <div class="container">
+    <a href="#home">الرئيسية</a>
 
-    <h2>🏨 الإقامة</h2>
+    <a href="#stay">🏨 الإقامات</a>
 
-    <div class="categories">
+    <a href="#transport">🚗 المواصلات</a>
 
-      <button
-        class="category-btn active"
-        onclick="filterAccommodation('')">
-        الكل
-      </button>
+    <a href="#activities">🧭 الأنشطة والجولات</a>
 
-      <button
-        class="category-btn"
-        onclick="filterAccommodation('شقة')">
-        🏠 شقق مفروشة
-      </button>
+    <a href="#contact">📞 تواصل معنا</a>
 
-      <button
-        class="category-btn"
-        onclick="filterAccommodation('فندق')">
-        🏨 فنادق
-      </button>
+  </nav>
 
-      <button
-        class="category-btn"
-        onclick="filterAccommodation('رياض')">
-        🏡 رياض
-      </button>
 
-    </div>
+  <!-- الرئيسية -->
+  <main id="home">
 
-    <input
-      id="searchAccommodation"
-      class="search"
-      type="text"
-      placeholder="🔎 ابحث عن إقامة..."
-    >
+    <section class="hero">
 
-    <div
-      id="accommodation-list"
-      class="cards">
+      <h2>مرحبا بكم في شمال المغرب 🇲🇦</h2>
 
-      <p class="loading">
-        جاري تحميل الإقامات...
+      <p>
+        كل ما تحتاجه لاكتشاف الشمال
+        في مكان واحد.
       </p>
 
-    </div>
-
-  </div>
-
-</section>
+    </section>
 
 
-<section id="transport">
+    <!-- الإقامات -->
+    <section id="stay" class="section">
 
-  <div class="container">
+      <div class="container">
 
-    <h2>🚗 المواصلات</h2>
+        <h2>🏨 الإقامات</h2>
 
-    <div class="cards">
+        <div class="simple-menu">
 
-      <div class="card">
-        <div class="icon">🚘</div>
-        <h3>تأجير السيارات</h3>
-        <p>سيارات للإيجار في شمال المغرب.</p>
+          <div class="simple-item">
+            <span>🏠</span>
+            <h3>شقق مفروشة</h3>
+          </div>
+
+          <div class="simple-item">
+            <span>🏨</span>
+            <h3>فنادق</h3>
+          </div>
+
+          <div class="simple-item">
+            <span>🏡</span>
+            <h3>رياضات</h3>
+          </div>
+
+        </div>
+
+
+        <!-- البحث -->
+        <input
+          id="searchAccommodation"
+          class="search"
+          type="text"
+          placeholder="🔎 ابحث عن إقامة..."
+        >
+
+
+        <!-- الإقامات القادمة من Supabase -->
+        <div
+          id="accommodation-list"
+          class="cards">
+
+          <p class="loading">
+            جاري تحميل الإقامات...
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="card">
-        <div class="icon">🚕</div>
-        <h3>الطاكسي</h3>
-        <p>خدمات التنقل والطاكسي.</p>
+    </section>
+
+
+    <!-- المواصلات -->
+    <section id="transport" class="section">
+
+      <div class="container">
+
+        <h2>🚗 المواصلات</h2>
+
+        <div class="simple-menu">
+
+          <div class="simple-item">
+            <span>🚘</span>
+            <h3>تأجير السيارات</h3>
+          </div>
+
+          <div class="simple-item">
+            <span>🚕</span>
+            <h3>طاكسي</h3>
+          </div>
+
+          <div class="simple-item">
+            <span>🚌</span>
+            <h3>حافلات سياحية صغيرة</h3>
+          </div>
+
+        </div>
+
       </div>
 
-      <div class="card">
-        <div class="icon">🚐</div>
-        <h3>حافلات صغيرة سياحية</h3>
+    </section>
+
+
+    <!-- الأنشطة والجولات -->
+    <section id="activities" class="section">
+
+      <div class="container">
+
+        <h2>🧭 الأنشطة والجولات</h2>
+
+        <div class="simple-menu">
+
+          <div class="simple-item">
+            <span>👨‍🏫</span>
+            <h3>مرشدون سياحيون معتمدون</h3>
+          </div>
+
+          <div class="simple-item">
+            <span>🏛️</span>
+            <h3>جولات داخل المدينة العتيقة</h3>
+          </div>
+
+          <div class="simple-item">
+            <span>🌿</span>
+            <h3>خرجات إلى الطبيعة</h3>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- تواصل معنا -->
+    <section id="contact" class="section contact">
+
+      <div class="container">
+
+        <h2>📞 تواصل معنا</h2>
+
         <p>
-          نقل سياحي للمجموعات داخل شمال المغرب.
+          للاستفسار أو طلب خدمة سياحية
         </p>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section id="activities">
-
-  <div class="container">
-
-    <h2>🗺️ الجولات والأنشطة</h2>
-
-    <div class="cards">
-
-      <div class="card">
-
-        <div class="icon">🧭</div>
-
-        <h3>
-          المرشدون السياحيون المعتمدون
-        </h3>
 
         <p>
-          اكتشف شمال المغرب برفقة مرشدين
-          سياحيين معتمدين.
+          📱 الهاتف: 06 XX XX XX XX
         </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="icon">🏖️</div>
-
-        <h3>الجولات السياحية</h3>
 
         <p>
-          جولات لاكتشاف أجمل الأماكن
-          والمعالم السياحية.
+          📧 contact@northmorocco.com
         </p>
 
       </div>
 
+    </section>
 
-      <div class="card">
-
-        <div class="icon">🏛️</div>
-
-        <h3>المدن العتيقة</h3>
-
-        <p>
-          اكتشف التاريخ والثقافة المغربية.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+  </main>
 
 
-<section id="contact" class="contact">
+  <!-- أسفل الموقع -->
+  <footer>
 
-  <h2>📞 تواصل معنا</h2>
+    <p>
+      © 2026 شمال المغرب 🇲🇦
+    </p>
 
-  <p>
-    هل لديك سؤال أو تريد إضافة خدمة سياحية؟
-  </p>
-
-  <p>
-    📱 الهاتف: 06 XX XX XX XX
-  </p>
-
-  <p>
-    📧 البريد الإلكتروني:
-    contact@northmorocco.com
-  </p>
-
-</section>
+  </footer>
 
 
-<footer>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <p>
-    © 2026 شمال المغرب - جميع الحقوق محفوظة 🇲🇦
-  </p>
-
-  <p>
-    اكتشف • احجز • استمتع 🇲🇦
-  </p>
-
-</footer>
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="script.js"></script>
+  <!-- JavaScript -->
+  <script src="script.js"></script>
 
 </body>
 
