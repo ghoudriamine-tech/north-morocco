@@ -1,15 +1,17 @@
 const SUPABASE_URL =
-  "https://rbmttbxsezttysenbcwn.supabase.co/rest/v1/://.";
+  "ضع_API_URL_الحالي_هنا";
 
 const SUPABASE_KEY =
-  "";
-sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2xw
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+  "ضع_Publishable_Key_الحالي_هنا";
 
-async function loadAccommodations() {
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+async function testConnection() {
 
   const apartmentsList =
     document.getElementById("apartmentsList");
@@ -25,10 +27,9 @@ async function loadAccommodations() {
     const result =
       await supabaseClient
         .from("accommodations")
-        .select("*")
-        .order("id", {
-          ascending: false
-        });
+        .select("*");
+
+    console.log("SUPABASE RESULT:", result);
 
     if (result.error) {
       throw result.error;
@@ -36,140 +37,162 @@ async function loadAccommodations() {
 
     const data = result.data || [];
 
-    const apartments = data.filter(item =>
-      item.type === "شقق مفروشة"
+    console.log(
+      "عدد الإقامات:",
+      data.length
     );
 
-    const hotels = data.filter(item =>
-      item.type === "فنادق" ||
-      item.type === "Hotel"
-    );
+    const apartments =
+      data.filter(item =>
+        item.type === "شقق مفروشة"
+      );
 
-    const riads = data.filter(item =>
-      item.type === "رياضات" ||
-      item.type === "Riad"
-    );
+    const hotels =
+      data.filter(item =>
+        item.type === "فنادق" ||
+        item.type === "Hotel"
+      );
 
-    showAccommodations(
+    const riads =
+      data.filter(item =>
+        item.type === "رياضات" ||
+        item.type === "Riad"
+      );
+
+    show(
       apartmentsList,
       apartments,
-      "لا توجد شقق مفروشة حالياً."
+      "لا توجد شقق مفروشة."
     );
 
-    showAccommodations(
+    show(
       hotelsList,
       hotels,
-      "لا توجد فنادق حالياً."
+      "لا توجد فنادق."
     );
 
-    showAccommodations(
+    show(
       riadsList,
       riads,
-      "لا توجد رياضات حالياً."
+      "لا توجد رياضات."
     );
 
   } catch (error) {
 
     console.error(
-      "Supabase error:",
+      "SUPABASE ERROR:",
       error
     );
 
-    showError(apartmentsList);
-    showError(hotelsList);
-    showError(riadsList);
+    showError(
+      apartmentsList,
+      error.message
+    );
+
+    showError(
+      hotelsList,
+      error.message
+    );
+
+    showError(
+      riadsList,
+      error.message
+    );
   }
 }
 
 
-function showAccommodations(
+function show(
   container,
-  accommodations,
+  items,
   emptyMessage
 ) {
 
   if (!container) return;
 
-  if (accommodations.length === 0) {
+  if (!items.length) {
 
     container.innerHTML =
-      `<p class="empty">${emptyMessage}</p>`;
+      `<p class="empty">
+        ${emptyMessage}
+      </p>`;
 
     return;
   }
 
   container.innerHTML =
-    accommodations.map(item => {
+    items.map(item => `
 
-      return `
-        <div class="accommodation-card">
+      <div class="accommodation-card">
 
-          <h3>
-            ${escapeHTML(
-              item.name || "إقامة"
-            )}
-          </h3>
+        <h3>
+          ${escapeHTML(
+            item.name || "إقامة"
+          )}
+        </h3>
 
-          ${
-            item.city
-              ? `<p>📍 ${escapeHTML(item.city)}</p>`
-              : ""
-          }
+        ${
+          item.city
+            ? `<p>📍 ${escapeHTML(
+                item.city
+              )}</p>`
+            : ""
+        }
 
-          ${
-            item.address
-              ? `<p>📌 ${escapeHTML(item.address)}</p>`
-              : ""
-          }
+        ${
+          item.address
+            ? `<p>📌 ${escapeHTML(
+                item.address
+              )}</p>`
+            : ""
+        }
 
-          ${
-            item.description
-              ? `<p>${escapeHTML(item.description)}</p>`
-              : ""
-          }
+        ${
+          item.description
+            ? `<p>${escapeHTML(
+                item.description
+              )}</p>`
+            : ""
+        }
 
-          ${
-            item.price
-              ? `<p>💰 ${escapeHTML(
-                  String(item.price)
-                )} درهم</p>`
-              : ""
-          }
+        ${
+          item.price
+            ? `<p>💰 ${escapeHTML(
+                String(item.price)
+              )} درهم</p>`
+            : ""
+        }
 
-          ${
-            item.price_per_night
-              ? `<p>💰 ${escapeHTML(
-                  String(item.price_per_night)
-                )} درهم / ليلة</p>`
-              : ""
-          }
+        ${
+          item.phone
+            ? `<a
+                href="tel:${escapeHTML(
+                  item.phone
+                )}"
+                class="btn">
+                📞 اتصال
+              </a>`
+            : ""
+        }
 
-          ${
-            item.phone
-              ? `
-                <a
-                  href="tel:${escapeHTML(item.phone)}"
-                  class="btn">
-                  📞 اتصال
-                </a>
-              `
-              : ""
-          }
+      </div>
 
-        </div>
-      `;
-
-    }).join("");
+    `).join("");
 }
 
 
-function showError(container) {
+function showError(
+  container,
+  message
+) {
 
   if (!container) return;
 
   container.innerHTML =
     `<p class="empty">
-      تعذر تحميل البيانات حالياً.
+      خطأ الاتصال: ${escapeHTML(
+        message || "غير معروف"
+      )}
     </p>`;
 }
 
@@ -187,5 +210,5 @@ function escapeHTML(value) {
 
 document.addEventListener(
   "DOMContentLoaded",
-  loadAccommodations
+  testConnection
 );
