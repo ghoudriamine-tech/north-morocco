@@ -11,7 +11,8 @@ const supabaseClient = supabase.createClient(
 
 let accommodations = [];
 
-/* تحميل الإقامات */
+
+/* تحميل الإقامات من Supabase */
 async function loadAccommodations() {
 
   const list =
@@ -136,7 +137,7 @@ function escapeHTML(value) {
 }
 
 
-/* تشغيل تحميل الإقامات */
+/* تشغيل الموقع */
 document.addEventListener(
   "DOMContentLoaded",
   loadAccommodations
