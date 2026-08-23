@@ -1,277 +1,68 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>شمال المغرب 🇲🇦</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #eefaff;
-      color: #17324d;
-      line-height: 1.7;
-    }
-
-    header {
-      background: linear-gradient(135deg, #0077a8, #35c9e8);
-      color: white;
-      text-align: center;
-      padding: 45px 20px;
-    }
-
-    header h1 {
-      font-size: 34px;
-      margin-bottom: 10px;
-    }
-
-    header p {
-      font-size: 18px;
-    }
-
-    nav {
-      background: white;
-      text-align: center;
-      padding: 12px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    nav a {
-      display: inline-block;
-      margin: 4px;
-      padding: 9px 13px;
-      background: #e6f7fc;
-      color: #0077a8;
-      text-decoration: none;
-      border-radius: 20px;
-      font-weight: bold;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 35px 20px;
-    }
-
-    section {
-      padding: 25px 0;
-    }
-
-    h2 {
-      text-align: center;
-      color: #0077a8;
-      margin-bottom: 25px;
-    }
-
-    .welcome {
-      background: white;
-      text-align: center;
-      padding: 50px 20px;
-    }
-
-    .welcome h2 {
-      font-size: 29px;
-    }
-
-    .quick-menu {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-      margin-top: 30px;
-    }
-
-    .quick-card {
-      background: #f4fcff;
-      border: 1px solid #d6eef7;
-      border-radius: 15px;
-      padding: 25px;
-      text-align: center;
-    }
-
-    .quick-card .icon {
-      font-size: 42px;
-    }
-
-    .quick-card h3 {
-      color: #0077a8;
-      margin: 10px 0;
-    }
-
-    .categories {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .category-btn {
-      border: none;
-      padding: 12px 18px;
-      border-radius: 25px;
-      background: #dff5fc;
-      color: #0077a8;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 15px;
-    }
-
-    .category-btn.active {
-      background: #0077a8;
-      color: white;
-    }
-
-    .search {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 25px;
-      font-size: 16px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: white;
-      padding: 20px;
-      text-align: center;
-      border-radius: 15px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-    }
-
-    .card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-
-    .card h3 {
-      color: #0077a8;
-      margin: 10px 0;
-    }
-
-    .icon {
-      font-size: 42px;
-    }
-
-    .phone {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    .whatsapp {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 17px;
-      background: #25D366;
-      color: white;
-      text-decoration: none;
-      border-radius: 25px;
-      font-weight: bold;
-    }
-
-    .map-button {
-      display: inline-block;
-      margin-top: 10px;
-      margin-right: 5px;
-      padding: 10px 17px;
-      background: #4285F4;
-      color: white;
-      text-decoration: none;
-      border-radius: 25px;
-      font-weight: bold;
-    }
-
-    .contact {
-      background: white;
-      text-align: center;
-      padding: 45px 20px;
-    }
-
-    footer {
-      background: #005b7a;
-      color: white;
-      text-align: center;
-      padding: 25px;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .error {
-      color: #b00020;
-      text-align: center;
-      padding: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
   <h1>🌊 شمال المغرب 🇲🇦</h1>
-  <p>اكتشف • احجز • استمتع</p>
+  <p>اكتشف جمال الشمال المغربي</p>
 </header>
 
 <nav>
-  <a href="#home">🏠 الرئيسية</a>
+  <a href="#home">الرئيسية</a>
   <a href="#stay">🏨 الإقامة</a>
   <a href="#transport">🚗 المواصلات</a>
-  <a href="#activities">🗺️ الجولات والأنشطة</a>
+  <a href="#activities">🗺️ الجولات</a>
   <a href="#contact">📞 تواصل معنا</a>
 </nav>
 
 <section id="home" class="welcome">
 
-  <h2>اكتشف سحر شمال المغرب 🇲🇦</h2>
+  <h2>مرحبا بكم في شمال المغرب 🇲🇦</h2>
 
   <p>
-    منصتك لاكتشاف الإقامات والمواصلات والجولات السياحية
-    في أجمل مدن شمال المغرب.
+    منصتك لاكتشاف أجمل الوجهات السياحية في شمال المغرب.
   </p>
 
   <div class="quick-menu">
 
     <div class="quick-card">
+      <div class="icon">🏠</div>
+      <h3>الشقق المفروشة</h3>
+      <p>شقق مجهزة لإقامة مريحة.</p>
+    </div>
+
+    <div class="quick-card">
       <div class="icon">🏨</div>
-      <h3>الإقامة</h3>
-      <p>شقق مفروشة • فنادق • رياضات</p>
+      <h3>الفنادق</h3>
+      <p>فنادق مناسبة للعائلات والزوار.</p>
     </div>
 
     <div class="quick-card">
-      <div class="icon">🚗</div>
-      <h3>المواصلات</h3>
-      <p>سيارات • طاكسي • حافلات صغيرة سياحية</p>
+      <div class="icon">🏡</div>
+      <h3>الرياض</h3>
+      <p>إقامات بطابع مغربي أصيل.</p>
     </div>
 
     <div class="quick-card">
-      <div class="icon">🗺️</div>
-      <h3>الجولات والأنشطة</h3>
-      <p>شواطئ • جولات • مدن عتيقة • مرشدون معتمدون</p>
+      <div class="icon">🧭</div>
+      <h3>المرشدون السياحيون</h3>
+      <p>مرشدون سياحيون معتمدون.</p>
     </div>
 
   </div>
 
 </section>
+
 
 <section id="stay">
 
@@ -283,30 +74,26 @@
 
       <button
         class="category-btn active"
-        onclick="filterAccommodation('all', this)"
-      >
-        🏨 الكل
+        onclick="filterAccommodation('')">
+        الكل
       </button>
 
       <button
         class="category-btn"
-        onclick="filterAccommodation('apartment', this)"
-      >
-        🏠 الشقق المفروشة
+        onclick="filterAccommodation('شقة')">
+        🏠 شقق مفروشة
       </button>
 
       <button
         class="category-btn"
-        onclick="filterAccommodation('hotel', this)"
-      >
-        🏨 الفنادق
+        onclick="filterAccommodation('فندق')">
+        🏨 فنادق
       </button>
 
       <button
         class="category-btn"
-        onclick="filterAccommodation('riad', this)"
-      >
-        🕌 الرياضات
+        onclick="filterAccommodation('رياض')">
+        🏡 رياض
       </button>
 
     </div>
@@ -320,16 +107,18 @@
 
     <div
       id="accommodation-list"
-      class="cards"
-    >
+      class="cards">
+
       <p class="loading">
         جاري تحميل الإقامات...
       </p>
+
     </div>
 
   </div>
 
 </section>
+
 
 <section id="transport">
 
@@ -342,24 +131,20 @@
       <div class="card">
         <div class="icon">🚘</div>
         <h3>تأجير السيارات</h3>
-        <p>
-          سيارات للإيجار للسياح والزوار في شمال المغرب.
-        </p>
+        <p>سيارات للإيجار في شمال المغرب.</p>
       </div>
 
       <div class="card">
         <div class="icon">🚕</div>
         <h3>الطاكسي</h3>
-        <p>
-          خدمات الطاكسي والتنقل داخل المدن.
-        </p>
+        <p>خدمات التنقل والطاكسي.</p>
       </div>
 
       <div class="card">
-        <div class="icon">🚌</div>
+        <div class="icon">🚐</div>
         <h3>حافلات صغيرة سياحية</h3>
         <p>
-          نقل سياحي للمجموعات والرحلات والجولات.
+          نقل سياحي للمجموعات داخل شمال المغرب.
         </p>
       </div>
 
@@ -368,6 +153,7 @@
   </div>
 
 </section>
+
 
 <section id="activities">
 
@@ -378,35 +164,45 @@
     <div class="cards">
 
       <div class="card">
+
+        <div class="icon">🧭</div>
+
+        <h3>
+          المرشدون السياحيون المعتمدون
+        </h3>
+
+        <p>
+          اكتشف شمال المغرب برفقة مرشدين
+          سياحيين معتمدين.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
         <div class="icon">🏖️</div>
-        <h3>الشواطئ</h3>
-        <p>
-          اكتشف أجمل شواطئ شمال المغرب.
-        </p>
-      </div>
 
-      <div class="card">
-        <div class="icon">🥾</div>
         <h3>الجولات السياحية</h3>
+
         <p>
-          جولات لاكتشاف أجمل الأماكن والمعالم.
+          جولات لاكتشاف أجمل الأماكن
+          والمعالم السياحية.
         </p>
+
       </div>
 
+
       <div class="card">
+
         <div class="icon">🏛️</div>
-        <h3>المدن العتيقة</h3>
-        <p>
-          اكتشف التاريخ والثقافة في مدن الشمال.
-        </p>
-      </div>
 
-      <div class="card">
-        <div class="icon">🧑‍🏫</div>
-        <h3>المرشدون السياحيون المعتمدون</h3>
+        <h3>المدن العتيقة</h3>
+
         <p>
-          تواصل مع مرشدين سياحيين معتمدين.
+          اكتشف التاريخ والثقافة المغربية.
         </p>
+
       </div>
 
     </div>
@@ -414,6 +210,7 @@
   </div>
 
 </section>
+
 
 <section id="contact" class="contact">
 
@@ -434,6 +231,7 @@
 
 </section>
 
+
 <footer>
 
   <p>
@@ -441,324 +239,16 @@
   </p>
 
   <p>
-    اكتشف • احجز • استمتع
+    اكتشف • احجز • استمتع 🇲🇦
   </p>
 
 </footer>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-
-const SUPABASE_URL =
-  "https://rbmttbxsezttysenbcwn.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2xw";
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-let accommodations = [];
-
-let currentAccommodationType = "all";
-
-
-async function loadAccommodations() {
-
-  const list =
-    document.getElementById(
-      "accommodation-list"
-    );
-
-  list.innerHTML =
-    "<p class='loading'>جاري تحميل الإقامات...</p>";
-
-  const { data, error } =
-    await supabaseClient
-      .from("accommodations")
-      .select("*")
-      .order("id", {
-        ascending: true
-      });
-
-  if (error) {
-
-    console.error(error);
-
-    list.innerHTML =
-      "<p class='error'>حدث خطأ أثناء تحميل الإقامات.</p>";
-
-    return;
-  }
-
-  accommodations = data || [];
-
-  displayAccommodations(
-    accommodations
-  );
-}
-
-
-function displayAccommodations(items) {
-
-  const list =
-    document.getElementById(
-      "accommodation-list"
-    );
-
-  list.innerHTML = "";
-
-  if (!items.length) {
-
-    list.innerHTML =
-      "<p class='loading'>لا توجد إقامات متاحة حاليًا.</p>";
-
-    return;
-  }
-
-
-  items.forEach(function(item) {
-
-    const card =
-      document.createElement("div");
-
-    card.className = "card";
-
-
-    let image = "";
-
-    if (item.image_url) {
-
-      image = `
-        <img
-          src="${item.image_url}"
-          alt="${item.name || "إقامة"}"
-        >
-      `;
-    }
-
-
-    let whatsapp = "";
-
-    if (item.phone) {
-
-      const phoneNumber =
-        String(item.phone)
-          .replace(/\s/g, "")
-          .replace(/\+/g, "");
-
-      whatsapp = `
-        <a
-          class="whatsapp"
-          href="https://wa.me/${phoneNumber}"
-          target="_blank"
-          rel="noopener"
-        >
-          💬 تواصل عبر واتساب
-        </a>
-      `;
-    }
-
-
-    let mapButton = "";
-
-    if (item.city || item.address) {
-
-      const location =
-        encodeURIComponent(
-          (item.address || "") +
-          ", " +
-          (item.city || "")
-        );
-
-      mapButton = `
-        <a
-          class="map-button"
-          href="https://www.google.com/maps/search/?api=1&query=${location}"
-          target="_blank"
-          rel="noopener"
-        >
-          📍 الموقع على الخريطة
-        </a>
-      `;
-    }
-
-
-    const type =
-      item.type ||
-      item.category ||
-      "";
-
-
-    let typeText = "";
-
-    if (type === "apartment") {
-      typeText = "🏠 شقة مفروشة";
-    }
-
-    else if (type === "hotel") {
-      typeText = "🏨 فندق";
-    }
-
-    else if (type === "riad") {
-      typeText = "🕌 رياض";
-    }
-
-
-    card.innerHTML = `
-
-      ${image}
-
-      <h3>
-        ${item.name || "إقامة سياحية"}
-      </h3>
-
-      ${
-        typeText
-          ? `<p><strong>${typeText}</strong></p>`
-          : ""
-      }
-
-      <p>
-        📍 ${item.city || ""}
-        ${item.address ? " - " + item.address : ""}
-      </p>
-
-      <p>
-        ${item.description || ""}
-      </p>
-
-      <p>
-        💰 ${
-          item.price_per_night ||
-          item.price ||
-          "السعر عند التواصل"
-        }
-
-        ${
-          item.price_per_night ||
-          item.price
-            ? " درهم / ليلة"
-            : ""
-        }
-      </p>
-
-      <p class="phone">
-        📞 ${item.phone || "غير متوفر"}
-      </p>
-
-      ${whatsapp}
-
-      ${mapButton}
-
-    `;
-
-    list.appendChild(card);
-
-  });
-}
-
-
-function filterAccommodation(
-  type,
-  button
-) {
-
-  currentAccommodationType = type;
-
-  document
-    .querySelectorAll(".category-btn")
-    .forEach(function(btn) {
-
-      btn.classList.remove("active");
-
-    });
-
-  button.classList.add("active");
-
-  applyAccommodationFilters();
-}
-
-
-function applyAccommodationFilters() {
-
-  const search =
-    document
-      .getElementById(
-        "searchAccommodation"
-      )
-      .value
-      .toLowerCase()
-      .trim();
-
-
-  const filtered =
-    accommodations.filter(
-      function(item) {
-
-        const name =
-          (item.name || "")
-            .toLowerCase();
-
-        const description =
-          (item.description || "")
-            .toLowerCase();
-
-        const city =
-          (item.city || "")
-            .toLowerCase();
-
-        const type =
-          item.type ||
-          item.category ||
-          "";
-
-
-        const matchesSearch =
-          name.includes(search) ||
-          description.includes(search) ||
-          city.includes(search);
-
-
-        const matchesType =
-          currentAccommodationType === "all" ||
-          type === currentAccommodationType;
-
-
-        return (
-          matchesSearch &&
-          matchesType
-        );
-
-      }
-    );
-
-
-  displayAccommodations(filtered);
-}
-
-
-document
-  .getElementById(
-    "searchAccommodation"
-  )
-  .addEventListener(
-    "input",
-    function() {
-
-      applyAccommodationFilters();
-
-    }
-  );
-
-
-loadAccommodations();
-
-</script>
+<script src="script.js"></script>
 
 </body>
+
 </html>
