@@ -12,45 +12,37 @@
 
 <body>
 
-  <!-- الرأس -->
-  <header class="header">
+  <header class="header" id="home">
     <h1>شمال المغرب 🇲🇦</h1>
     <p>اكتشف الشمال ببساطة</p>
   </header>
 
 
-  <!-- القائمة -->
   <nav class="nav">
 
     <a href="#home">الرئيسية</a>
-
     <a href="#stay">🏨 الإقامات</a>
-
     <a href="#transport">🚗 المواصلات</a>
-
     <a href="#activities">🧭 الأنشطة والجولات</a>
-
     <a href="#contact">📞 تواصل معنا</a>
 
   </nav>
 
 
-  <!-- الرئيسية -->
-  <main id="home">
+  <main>
 
     <section class="hero">
 
       <h2>مرحبا بكم في شمال المغرب 🇲🇦</h2>
 
       <p>
-        كل ما تحتاجه لاكتشاف الشمال
-        في مكان واحد.
+        كل ما تحتاجه لإقامة مريحة وتنقل سهل
+        وتجربة جميلة في شمال المغرب.
       </p>
 
     </section>
 
 
-    <!-- الإقامات -->
     <section id="stay" class="section">
 
       <div class="container">
@@ -59,25 +51,38 @@
 
         <div class="simple-menu">
 
-          <div class="simple-item">
+          <button
+            class="simple-item category-btn"
+            onclick="filterAccommodation('شقة')">
+
             <span>🏠</span>
             <h3>شقق مفروشة</h3>
-          </div>
 
-          <div class="simple-item">
+          </button>
+
+
+          <button
+            class="simple-item category-btn"
+            onclick="filterAccommodation('فندق')">
+
             <span>🏨</span>
             <h3>فنادق</h3>
-          </div>
 
-          <div class="simple-item">
+          </button>
+
+
+          <button
+            class="simple-item category-btn"
+            onclick="filterAccommodation('رياض')">
+
             <span>🏡</span>
             <h3>رياضات</h3>
-          </div>
+
+          </button>
 
         </div>
 
 
-        <!-- البحث -->
         <input
           id="searchAccommodation"
           class="search"
@@ -86,13 +91,10 @@
         >
 
 
-        <!-- الإقامات القادمة من Supabase -->
-        <div
-          id="accommodation-list"
-          class="cards">
+        <div id="accommodation-list" class="cards">
 
           <p class="loading">
-            جاري تحميل الإقامات...
+            اختر نوع الإقامة لعرض النتائج.
           </p>
 
         </div>
@@ -102,7 +104,6 @@
     </section>
 
 
-    <!-- المواصلات -->
     <section id="transport" class="section">
 
       <div class="container">
@@ -133,7 +134,6 @@
     </section>
 
 
-    <!-- الأنشطة والجولات -->
     <section id="activities" class="section">
 
       <div class="container">
@@ -164,7 +164,6 @@
     </section>
 
 
-    <!-- تواصل معنا -->
     <section id="contact" class="section contact">
 
       <div class="container">
@@ -190,20 +189,15 @@
   </main>
 
 
-  <!-- أسفل الموقع -->
   <footer>
 
-    <p>
-      © 2026 شمال المغرب 🇲🇦
-    </p>
+    <p>© 2026 شمال المغرب 🇲🇦</p>
 
   </footer>
 
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- JavaScript -->
   <script src="script.js"></script>
 
 </body>
