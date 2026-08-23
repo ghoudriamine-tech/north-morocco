@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,6 @@
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
@@ -16,29 +16,83 @@
 
   <!-- الرئيسية -->
   <section id="home" class="hero">
+
     <div class="container">
+
       <h1>مرحباً بكم في شمال المغرب</h1>
-      <p>اكتشف جمال الشمال المغربي ببساطة</p>
+
+      <p class="hero-subtitle">
+        اكتشف جمال الشمال المغربي بسهولة
+      </p>
+
     </div>
+
   </section>
 
 
   <!-- الإقامات -->
   <section id="stay" class="section">
+
     <div class="container">
 
       <h2>🏨 الإقامات</h2>
 
-      <div id="accommodationsList" class="cards">
-        <p class="loading">جاري تحميل الإقامات...</p>
+      <div class="cards">
+
+        <div class="card">
+          <h3>🏠 شقق مفروشة</h3>
+          <p>شقق مجهزة للإقامة القصيرة أو الطويلة.</p>
+          <a href="#accommodations" class="btn">
+            اكتشف الإقامات
+          </a>
+        </div>
+
+        <div class="card">
+          <h3>🏨 فنادق</h3>
+          <p>فنادق مختلفة في مدن شمال المغرب.</p>
+          <a href="#accommodations" class="btn">
+            اكتشف الإقامات
+          </a>
+        </div>
+
+        <div class="card">
+          <h3>🕌 رياضات</h3>
+          <p>رياضات ودور ضيافة داخل المدن القديمة.</p>
+          <a href="#accommodations" class="btn">
+            اكتشف الإقامات
+          </a>
+        </div>
+
       </div>
 
     </div>
+
+  </section>
+
+
+  <!-- قائمة الإقامات من Supabase -->
+  <section id="accommodations" class="section">
+
+    <div class="container">
+
+      <h2>🏨 الإقامات المتاحة</h2>
+
+      <div id="accommodationsList" class="cards">
+
+        <p class="loading">
+          جاري تحميل الإقامات...
+        </p>
+
+      </div>
+
+    </div>
+
   </section>
 
 
   <!-- المواصلات -->
   <section id="transport" class="section">
+
     <div class="container">
 
       <h2>🚗 المواصلات</h2>
@@ -47,30 +101,52 @@
 
         <div class="card">
           <h3>🚙 كراء السيارات</h3>
-          <p>اكتشف خدمات كراء السيارات في شمال المغرب.</p>
-          <a href="#contact" class="btn">تواصل معنا</a>
+
+          <p>
+            خدمات كراء السيارات في شمال المغرب.
+          </p>
+
+          <a href="#contact" class="btn">
+            تواصل معنا
+          </a>
         </div>
+
 
         <div class="card">
           <h3>🚕 سيارات الأجرة</h3>
-          <p>معلومات حول وسائل النقل وسيارات الأجرة.</p>
-          <a href="#contact" class="btn">تواصل معنا</a>
+
+          <p>
+            خدمات سيارات الأجرة والتنقل.
+          </p>
+
+          <a href="#contact" class="btn">
+            تواصل معنا
+          </a>
         </div>
-<h3>🚌 الحافلات السياحية الصغيرة</h3>
+
+
         <div class="card">
-          
-          <p>اكتشف خيارات التنقل بين مدن شمال المغرب.</p>
-          <a href="#contact" class="btn">تواصل معنا</a>
+          <h3>🚌 الحافلات السياحية الصغيرة</h3>
+
+          <p>
+            خدمات الحافلات السياحية الصغيرة للزوار.
+          </p>
+
+          <a href="#contact" class="btn">
+            تواصل معنا
+          </a>
         </div>
 
       </div>
 
     </div>
+
   </section>
 
 
   <!-- الأنشطة والجولات -->
   <section id="activities" class="section">
+
     <div class="container">
 
       <h2>🗺️ الأنشطة والجولات</h2>
@@ -79,33 +155,53 @@
 
         <div class="card">
           <h3>🏖️ الشواطئ</h3>
-          <p>اكتشف أجمل شواطئ شمال المغرب.</p>
+
+          <p>
+            اكتشف شواطئ شمال المغرب.
+          </p>
         </div>
+
 
         <div class="card">
           <h3>🏛️ المدن التاريخية</h3>
-          <p>اكتشف المدن العريقة والمعالم التاريخية.</p>
+
+          <p>
+            اكتشف المدن والمعالم التاريخية.
+          </p>
         </div>
+
 
         <div class="card">
           <h3>🧭 المرشدين السياحيين</h3>
-          <p>استمتع بجولات وتجارب مميزة في الشمال.</p>
+
+          <p>
+            التواصل مع المرشدين السياحيين.
+          </p>
+
+          <a href="#contact" class="btn">
+            تواصل معنا
+          </a>
         </div>
 
       </div>
 
     </div>
+
   </section>
 
 
   <!-- التواصل -->
   <section id="contact" class="section">
+
     <div class="container">
 
       <h2>📞 تواصل معنا</h2>
 
       <div class="contact-card">
-        <p>للاستفسار أو إضافة إقامة أو خدمة إلى الموقع، تواصل معنا.</p>
+
+        <p>
+          للاستفسار أو إضافة إقامة أو خدمة إلى الموقع، تواصل معنا.
+        </p>
 
         <a
           href="https://wa.me/212600000000"
@@ -113,19 +209,27 @@
           target="_blank">
           💬 تواصل معنا عبر واتساب
         </a>
+
       </div>
 
     </div>
+
   </section>
 
 
-  <!-- القائمة -->
+  <!-- القائمة السفلية -->
   <nav class="bottom-nav">
-    <a href="#home">الرئيسية</a>
+
+    <a href="#home">🏠 الرئيسية</a>
+
     <a href="#stay">🏨 الإقامات</a>
+
     <a href="#transport">🚗 المواصلات</a>
+
     <a href="#activities">🗺️ الأنشطة</a>
+
     <a href="#contact">📞 التواصل</a>
+
   </nav>
 
 
@@ -137,4 +241,5 @@
   <script src="script.js"></script>
 
 </body>
+
 </html>
