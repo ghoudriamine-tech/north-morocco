@@ -1,29 +1,52 @@
+/* =========================================
+   شمال المغرب 🇲🇦
+   script.js - النسخة النهائية
+========================================= */
+
+
+/* =========================================
+   إعداد Supabase
+========================================= */
+
 const SUPABASE_URL =
   "https://rbmttbxsezttysenbcwn.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2x2";
+  "sb_publishable_tVChEdNRQHs9lrYPjA4ajx2";
 
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
+
+/* =========================================
+   المتغيرات
+========================================= */
+
 let accommodations = [];
 
 
-/* =========================
-   تحميل الإقامات
-========================= */
+/* =========================================
+   عناصر الصفحة
+========================================= */
+
+const accommodationList =
+  document.getElementById("accommodation-list");
+
+const searchInput =
+  document.getElementById("searchAccommodation");
+
+
+/* =========================================
+   تحميل الإقامات من Supabase
+========================================= */
 
 async function loadAccommodations() {
 
-  const list =
-    document.getElementById("accommodation-list");
+  if (!accommodationList) return;
 
-  if (!list) return;
-
-  list.innerHTML =
+  accommodationList.innerHTML =
     "<p class='loading'>جاري تحميل الإقامات...</p>";
 
   try {
@@ -34,94 +57,133 @@ async function loadAccommodations() {
         .select("*")
         .order("id", { ascending: true });
 
-    if (error) {
-      console.error("Supabase Error:", error);
 
-      list.innerHTML =
+    if (error) {
+
+      console.error(
+        "Supabase Error:",
+        error
+      );
+
+      accommodationList.innerHTML =
         "<p class='loading'>تعذر تحميل الإقامات حاليًا.</p>";
 
       return;
     }
 
-    accommodations = data || [];
 
-    displayAccommodations(accommodations);
+    accommodations =
+      Array.isArray(data)
+        ? data
+        : [];
+
+
+    displayAccommodations(
+      accommodations
+    );
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Connection Error:",
+      error
+    );
 
-    list.innerHTML =
+    accommodationList.innerHTML =
       "<p class='loading'>حدث خطأ أثناء الاتصال بقاعدة البيانات.</p>";
   }
 }
 
 
-/* =========================
+/* =========================================
    عرض الإقامات
-========================= */
+========================================= */
 
 function displayAccommodations(items) {
 
-  const list =
-    document.getElementById("accommodation-list");
+  if (!accommodationList) return;
 
-  if (!list) return;
+  accommodationList.innerHTML = "";
 
-  list.innerHTML = "";
 
-  if (!items || items.length === 0) {
+  /* لا توجد نتائج */
 
-    list.innerHTML =
-      "<p class='loading'>لا توجد إقامات متاحة حاليًا.</p>";
+  if (
+    !items ||
+    items.length === 0
+  ) {
+
+    accommodationList.innerHTML =
+      "<p class='loading'>لا توجد إقامات مطابقة حاليًا.</p>";
 
     return;
   }
 
+
+  /* إنشاء البطاقات */
 
   items.forEach(function(item) {
 
     const card =
       document.createElement("div");
 
-    card.className = "card";
+    card.className =
+      "card";
 
 
-    /* الصورة */
+    /* =====================================
+       الصورة
+    ===================================== */
 
     if (item.image_url) {
 
       const image =
         document.createElement("img");
 
-      image.src = item.image_url;
+      image.src =
+        item.image_url;
 
       image.alt =
-        item.name || "إقامة سياحية";
+        item.name ||
+        "إقامة سياحية في شمال المغرب";
 
-      image.loading = "lazy";
+      image.loading =
+        "lazy";
+
+      image.onerror =
+        function() {
+          this.style.display = "none";
+        };
 
       card.appendChild(image);
     }
 
 
-    /* الاسم */
+    /* =====================================
+       الاسم
+    ===================================== */
 
     const title =
       document.createElement("h3");
 
     title.textContent =
-      item.name || "إقامة سياحية";
+      item.name ||
+      "إقامة سياحية";
 
     card.appendChild(title);
 
 
-    /* النوع */
+    /* =====================================
+       النوع
+    ===================================== */
 
     if (item.type) {
 
       const type =
         document.createElement("p");
+
+      type.className =
+        "accommodation-type";
 
       type.textContent =
         "🏨 " + item.type;
@@ -130,12 +192,55 @@ function displayAccommodations(items) {
     }
 
 
-    /* الوصف */
+    /* =====================================
+       المدينة
+    ===================================== */
+
+    if (item.city) {
+
+      const city =
+        document.createElement("p");
+
+      city.className =
+        "city";
+
+      city.textContent =
+        "📍 " + item.city;
+
+      card.appendChild(city);
+    }
+
+
+    /* =====================================
+       العنوان
+    ===================================== */
+
+    if (item.address) {
+
+      const address =
+        document.createElement("p");
+
+      address.className =
+        "address";
+
+      address.textContent =
+        "🏠 " + item.address;
+
+      card.appendChild(address);
+    }
+
+
+    /* =====================================
+       الوصف
+    ===================================== */
 
     if (item.description) {
 
       const description =
         document.createElement("p");
+
+      description.className =
+        "description";
 
       description.textContent =
         item.description;
@@ -144,108 +249,182 @@ function displayAccommodations(items) {
     }
 
 
-    /* السعر */
+    /* =====================================
+       السعر
+    ===================================== */
 
     const price =
-      item.price_per_night ||
-      item.price ||
+      item.price_per_night ??
+      item.price ??
       null;
 
-    const priceText =
+
+    const priceElement =
       document.createElement("p");
 
-    priceText.textContent =
-      price
-        ? "💰 " + price + " درهم / ليلة"
-        : "💰 السعر عند التواصل";
-
-    card.appendChild(priceText);
+    priceElement.className =
+      "price";
 
 
-    /* الهاتف */
+    if (
+      price !== null &&
+      price !== ""
+    ) {
 
-    const phone =
-      document.createElement("p");
+      priceElement.textContent =
+        "💰 " +
+        price +
+        " درهم / ليلة";
 
-    phone.className = "phone";
+    } else {
 
-    phone.textContent =
-      "📞 " + (item.phone || "غير متوفر");
+      priceElement.textContent =
+        "💰 السعر عند التواصل";
+    }
 
-    card.appendChild(phone);
+
+    card.appendChild(priceElement);
 
 
-    /* واتساب */
+    /* =====================================
+       الهاتف
+    ===================================== */
+
+    if (item.phone) {
+
+      const phone =
+        document.createElement("p");
+
+      phone.className =
+        "phone";
+
+      phone.textContent =
+        "📞 " +
+        item.phone;
+
+      card.appendChild(phone);
+    }
+
+
+    /* =====================================
+       أزرار البطاقة
+    ===================================== */
+
+    const buttons =
+      document.createElement("div");
+
+    buttons.className =
+      "card-buttons";
+
+
+    /* =====================================
+       زر واتساب
+    ===================================== */
 
     if (item.phone) {
 
       const phoneNumber =
         String(item.phone)
-          .replace(/\s/g, "")
-          .replace(/^\+/, "");
+          .replace(/[^\d]/g, "");
 
-      const whatsapp =
-        document.createElement("a");
 
-      whatsapp.className = "whatsapp";
+      if (phoneNumber.length >= 8) {
 
-      whatsapp.href =
-        "https://wa.me/" + phoneNumber;
+        const whatsapp =
+          document.createElement("a");
 
-      whatsapp.target = "_blank";
+        whatsapp.className =
+          "whatsapp";
 
-      whatsapp.rel = "noopener noreferrer";
+        whatsapp.href =
+          "https://wa.me/" +
+          phoneNumber;
 
-      whatsapp.textContent =
-        "💬 واتساب";
+        whatsapp.target =
+          "_blank";
 
-      card.appendChild(whatsapp);
+        whatsapp.rel =
+          "noopener noreferrer";
+
+        whatsapp.textContent =
+          "💬 واتساب";
+
+        buttons.appendChild(
+          whatsapp
+        );
+      }
     }
 
 
-    /* الخريطة */
+    /* =====================================
+       زر الخريطة
+    ===================================== */
 
-    if (item.city || item.address) {
+    if (
+      item.city ||
+      item.address
+    ) {
 
       const location =
         encodeURIComponent(
-          (item.address || "") +
-          " " +
-          (item.city || "")
+          [
+            item.address || "",
+            item.city || "",
+            "المغرب"
+          ]
+            .filter(Boolean)
+            .join(" ")
         );
+
 
       const map =
         document.createElement("a");
 
-      map.className = "map-button";
+      map.className =
+        "map-button";
 
       map.href =
         "https://www.google.com/maps/search/?api=1&query=" +
         location;
 
-      map.target = "_blank";
+      map.target =
+        "_blank";
 
-      map.rel = "noopener noreferrer";
+      map.rel =
+        "noopener noreferrer";
 
       map.textContent =
-        "📍 الموقع على الخريطة";
+        "📍 الخريطة";
 
-      card.appendChild(map);
+      buttons.appendChild(
+        map
+      );
     }
 
 
-    list.appendChild(card);
+    /* إضافة الأزرار */
+
+    if (buttons.children.length > 0) {
+
+      card.appendChild(
+        buttons
+      );
+    }
+
+
+    /* إضافة البطاقة للقائمة */
+
+    accommodationList.appendChild(
+      card
+    );
 
   });
 }
 
 
-/* =========================
-   البحث
-========================= */
-
-const searchInput =
-  document.getElementById("searchAccommodation");
+/* =========================================
+   البحث عن الإقامات
+========================================= */
 
 if (searchInput) {
 
@@ -259,50 +438,75 @@ if (searchInput) {
           .trim();
 
 
+      /* إذا كان البحث فارغًا */
+
+      if (!search) {
+
+        displayAccommodations(
+          accommodations
+        );
+
+        return;
+      }
+
+
+      /* تصفية النتائج */
+
       const filtered =
-        accommodations.filter(function(item) {
+        accommodations.filter(
+          function(item) {
 
-          const name =
-            String(item.name || "")
-              .toLowerCase();
+            const searchableText = [
 
-          const description =
-            String(item.description || "")
-              .toLowerCase();
+              item.name,
+              item.type,
+              item.city,
+              item.address,
+              item.description
 
-          const city =
-            String(item.city || "")
-              .toLowerCase();
-
-          const address =
-            String(item.address || "")
-              .toLowerCase();
-
-          const type =
-            String(item.type || "")
+            ]
+              .filter(Boolean)
+              .join(" ")
               .toLowerCase();
 
 
-          return (
-            name.includes(search) ||
-            description.includes(search) ||
-            city.includes(search) ||
-            address.includes(search) ||
-            type.includes(search)
-          );
+            return searchableText
+              .includes(search);
 
-        });
+          }
+        );
 
 
-      displayAccommodations(filtered);
+      displayAccommodations(
+        filtered
+      );
 
     }
   );
 }
 
 
-/* =========================
+/* =========================================
    تشغيل الموقع
-========================= */
+========================================= */
 
-loadAccommodations();
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    loadAccommodations();
+
+  }
+);
+
+
+/* =========================================
+   تحديث الإقامات يدويًا
+========================================= */
+
+window.reloadAccommodations =
+  function() {
+
+    loadAccommodations();
+
+  };
