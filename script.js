@@ -2,7 +2,7 @@ const SUPABASE_URL =
   "https://rbmttbxsezttysenbcwn.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2x2";
+  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2xw";
 
 
 async function loadAccommodations() {
@@ -47,17 +47,20 @@ function displayAccommodations(data) {
 
   const apartments = data.filter(item =>
     item.type === "شقق مفروشة" ||
-    item.type === "شقة مفروشة"
+    item.type === "شقة مفروشة" ||
+    item.type === "Apartment"
   );
 
   const hotels = data.filter(item =>
     item.type === "فنادق" ||
-    item.type === "فندق"
+    item.type === "فندق" ||
+    item.type === "Hotel"
   );
 
   const riads = data.filter(item =>
     item.type === "رياضات" ||
-    item.type === "رياض"
+    item.type === "رياض" ||
+    item.type === "Riad"
   );
 
 
@@ -104,10 +107,15 @@ function displayList(id, items, emptyMessage) {
           ? String(item.phone).replace(/\D/g, "")
           : "";
 
-      const whatsappNumber =
-        phone.startsWith("0")
-          ? "212" + phone.substring(1)
+      const whatsapp =
+        item.whatsapp
+          ? String(item.whatsapp).replace(/\D/g, "")
           : phone;
+
+      const whatsappNumber =
+        whatsapp.startsWith("0")
+          ? "212" + whatsapp.substring(1)
+          : whatsapp;
 
       return `
 
@@ -118,7 +126,9 @@ function displayList(id, items, emptyMessage) {
               ? `
                 <img
                   src="${escapeHTML(item.image_url)}"
-                  alt="${escapeHTML(item.name || "صورة الإقامة")}"
+                  alt="${escapeHTML(
+                    item.name || "صورة الإقامة"
+                  )}"
                   class="accommodation-image"
                   loading="lazy"
                   onerror="this.style.display='none'"
@@ -161,35 +171,49 @@ function displayList(id, items, emptyMessage) {
               : ""
           }
 
-          ${
-            item.phone
-              ? `
-                <div class="accommodation-buttons">
+          <div class="accommodation-buttons">
 
+            ${
+              phone
+                ? `
                   <a
                     href="tel:${escapeHTML(item.phone)}"
                     class="btn">
                     📞 اتصال
                   </a>
+                `
+                : ""
+            }
 
-                  ${
-                    whatsappNumber
-                      ? `
-                        <a
-                          href="https://wa.me/${whatsappNumber}"
-                          class="btn whatsapp-accommodation"
-                          target="_blank"
-                          rel="noopener">
-                          💬 واتساب
-                        </a>
-                      `
-                      : ""
-                  }
+            ${
+              whatsappNumber
+                ? `
+                  <a
+                    href="https://wa.me/${whatsappNumber}"
+                    class="btn whatsapp-accommodation"
+                    target="_blank"
+                    rel="noopener">
+                    💬 واتساب
+                  </a>
+                `
+                : ""
+            }
 
-                </div>
-              `
-              : ""
-          }
+            ${
+              item.map_url
+                ? `
+                  <a
+                    href="${escapeHTML(item.map_url)}"
+                    class="btn"
+                    target="_blank"
+                    rel="noopener">
+                    📍 الموقع
+                  </a>
+                `
+                : ""
+            }
+
+          </div>
 
         </div>
 
