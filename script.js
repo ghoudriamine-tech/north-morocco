@@ -2,7 +2,7 @@ const SUPABASE_URL =
   "https://rbmttbxsezttysenbcwn.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2xw";
+  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2x2";
 
 
 async function loadAccommodations() {
@@ -97,69 +97,104 @@ function displayList(id, items, emptyMessage) {
   }
 
   container.innerHTML =
-    items.map(item => `
+    items.map(item => {
 
-      <div class="accommodation-card">
+      const phone =
+        item.phone
+          ? String(item.phone).replace(/\D/g, "")
+          : "";
 
-        ${
-          item.image_url
-            ? `
-              <img
-                src="${escapeHTML(item.image_url)}"
-                alt="${escapeHTML(item.name || "صورة الإقامة")}"
-                class="accommodation-image"
-                loading="lazy"
-                onerror="this.style.display='none'"
-              >
-            `
-            : ""
-        }
+      const whatsappNumber =
+        phone.startsWith("0")
+          ? "212" + phone.substring(1)
+          : phone;
 
-        <h3>
-          ${escapeHTML(item.name || "إقامة")}
-        </h3>
+      return `
 
-        ${
-          item.city
-            ? `<p>📍 ${escapeHTML(item.city)}</p>`
-            : ""
-        }
+        <div class="accommodation-card">
 
-        ${
-          item.address
-            ? `<p>📌 ${escapeHTML(item.address)}</p>`
-            : ""
-        }
+          ${
+            item.image_url
+              ? `
+                <img
+                  src="${escapeHTML(item.image_url)}"
+                  alt="${escapeHTML(item.name || "صورة الإقامة")}"
+                  class="accommodation-image"
+                  loading="lazy"
+                  onerror="this.style.display='none'"
+                >
+              `
+              : ""
+          }
 
-        ${
-          item.description
-            ? `<p>${escapeHTML(item.description)}</p>`
-            : ""
-        }
+          <h3>
+            ${escapeHTML(item.name || "إقامة")}
+          </h3>
 
-        ${
-          item.price_per_night
-            ? `<p>💰 ${escapeHTML(
-                String(item.price_per_night)
-              )} درهم / ليلة</p>`
-            : ""
-        }
+          ${
+            item.city
+              ? `<p>📍 ${escapeHTML(item.city)}</p>`
+              : ""
+          }
 
-        ${
-          item.phone
-            ? `
-              <a
-                href="tel:${escapeHTML(item.phone)}"
-                class="btn">
-                📞 اتصال
-              </a>
-            `
-            : ""
-        }
+          ${
+            item.address
+              ? `<p>📌 ${escapeHTML(item.address)}</p>`
+              : ""
+          }
 
-      </div>
+          ${
+            item.description
+              ? `<p>${escapeHTML(item.description)}</p>`
+              : ""
+          }
 
-    `).join("");
+          ${
+            item.price_per_night
+              ? `
+                <p>
+                  💰 ${escapeHTML(
+                    String(item.price_per_night)
+                  )} درهم / ليلة
+                </p>
+              `
+              : ""
+          }
+
+          ${
+            item.phone
+              ? `
+                <div class="accommodation-buttons">
+
+                  <a
+                    href="tel:${escapeHTML(item.phone)}"
+                    class="btn">
+                    📞 اتصال
+                  </a>
+
+                  ${
+                    whatsappNumber
+                      ? `
+                        <a
+                          href="https://wa.me/${whatsappNumber}"
+                          class="btn whatsapp-accommodation"
+                          target="_blank"
+                          rel="noopener">
+                          💬 واتساب
+                        </a>
+                      `
+                      : ""
+                  }
+
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      `;
+    }).join("");
 }
 
 
