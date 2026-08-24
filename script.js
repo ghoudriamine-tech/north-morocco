@@ -45,20 +45,49 @@ async function loadAccommodations() {
 
 function displayAccommodations(data) {
 
-  const apartments = data.filter(item =>
-    item.type === "شقق مفروشة" ||
-    item.type === "شقة مفروشة"
-  );
+  const apartments = data.filter(item => {
 
-  const hotels = data.filter(item =>
-    item.type === "فنادق" ||
-    item.type === "فندق"
-  );
+    const type = String(item.type || "")
+      .trim()
+      .toLowerCase();
 
-  const riads = data.filter(item =>
-    item.type === "رياضات" ||
-    item.type === "رياض"
-  );
+    return (
+      type === "شقق مفروشة" ||
+      type === "شقة مفروشة" ||
+      type === "apartment" ||
+      type === "apartments"
+    );
+  });
+
+
+  const hotels = data.filter(item => {
+
+    const type = String(item.type || "")
+      .trim()
+      .toLowerCase();
+
+    return (
+      type === "فنادق" ||
+      type === "فندق" ||
+      type === "hotel" ||
+      type === "hotels"
+    );
+  });
+
+
+  const riads = data.filter(item => {
+
+    const type = String(item.type || "")
+      .trim()
+      .toLowerCase();
+
+    return (
+      type === "رياضات" ||
+      type === "رياض" ||
+      type === "riad" ||
+      type === "riads"
+    );
+  });
 
 
   displayList(
@@ -67,11 +96,13 @@ function displayAccommodations(data) {
     "لا توجد شقق مفروشة حالياً."
   );
 
+
   displayList(
     "hotelsList",
     hotels,
     "لا توجد فنادق حالياً."
   );
+
 
   displayList(
     "riadsList",
@@ -88,6 +119,7 @@ function displayList(id, items, emptyMessage) {
 
   if (!container) return;
 
+
   if (items.length === 0) {
 
     container.innerHTML =
@@ -95,6 +127,7 @@ function displayList(id, items, emptyMessage) {
 
     return;
   }
+
 
   container.innerHTML =
     items.map(item => {
@@ -104,10 +137,12 @@ function displayList(id, items, emptyMessage) {
           ? String(item.phone).replace(/\D/g, "")
           : "";
 
+
       const whatsappNumber =
         phone.startsWith("0")
           ? "212" + phone.substring(1)
           : phone;
+
 
       return `
 
@@ -118,7 +153,9 @@ function displayList(id, items, emptyMessage) {
               ? `
                 <img
                   src="${escapeHTML(item.image_url)}"
-                  alt="${escapeHTML(item.name || "صورة الإقامة")}"
+                  alt="${escapeHTML(
+                    item.name || "صورة الإقامة"
+                  )}"
                   class="accommodation-image"
                   loading="lazy"
                   onerror="this.style.display='none'"
@@ -127,27 +164,44 @@ function displayList(id, items, emptyMessage) {
               : ""
           }
 
+
           <h3>
             ${escapeHTML(item.name || "إقامة")}
           </h3>
 
+
           ${
             item.city
-              ? `<p>📍 ${escapeHTML(item.city)}</p>`
+              ? `
+                <p>
+                  📍 ${escapeHTML(item.city)}
+                </p>
+              `
               : ""
           }
+
 
           ${
             item.address
-              ? `<p>📌 ${escapeHTML(item.address)}</p>`
+              ? `
+                <p>
+                  📌 ${escapeHTML(item.address)}
+                </p>
+              `
               : ""
           }
 
+
           ${
             item.description
-              ? `<p>${escapeHTML(item.description)}</p>`
+              ? `
+                <p>
+                  ${escapeHTML(item.description)}
+                </p>
+              `
               : ""
           }
+
 
           ${
             item.price_per_night
@@ -161,6 +215,7 @@ function displayList(id, items, emptyMessage) {
               : ""
           }
 
+
           ${
             item.phone
               ? `
@@ -171,6 +226,7 @@ function displayList(id, items, emptyMessage) {
                     class="btn">
                     📞 اتصال
                   </a>
+
 
                   ${
                     whatsappNumber
@@ -194,6 +250,7 @@ function displayList(id, items, emptyMessage) {
         </div>
 
       `;
+
     }).join("");
 }
 
@@ -204,6 +261,7 @@ function showError(id) {
     document.getElementById(id);
 
   if (!container) return;
+
 
   container.innerHTML =
     `<p class="empty">
