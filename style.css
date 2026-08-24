@@ -1,7 +1,5 @@
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -9,215 +7,114 @@ html {
 }
 
 body {
-  font-family: Arial, Tahoma, sans-serif;
-  background: #dff3ff;
-  color: #17324d;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  direction: rtl;
+  background: #eaf7ff;
+  color: #222;
   line-height: 1.7;
-  padding-bottom: 70px;
 }
 
-/* الحاوية */
 .container {
   width: 92%;
   max-width: 1100px;
   margin: auto;
 }
 
-/* الرئيسية */
-.hero {
-  min-height: 45vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+header {
+  background: #87ceeb;
+  color: white;
   text-align: center;
-  padding: 60px 20px;
+  padding: 35px 15px;
 }
 
-.hero h1 {
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 12px;
+header h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
 }
 
-.hero-subtitle {
-  font-size: 21px;
-  font-weight: 400;
+header p {
+  margin: 0;
+  font-size: 18px;
 }
 
-/* الأقسام */
-.section {
-  padding: 45px 0;
+section {
+  padding: 35px 0;
 }
 
-.section h2 {
+section h2 {
   text-align: center;
-  font-size: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
-/* البطاقات */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(250px, 1fr)
-  );
-  gap: 20px;
+.accommodation-card {
+  background: white;
+  border-radius: 14px;
+  padding: 0 0 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.10);
 }
 
-/* بطاقة عامة */
-.card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 25px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.accommodation-image {
+  display: block;
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  margin: 0 0 15px;
 }
 
-.card h3 {
-  font-size: 22px;
-  margin-bottom: 10px;
+.accommodation-card h3,
+.accommodation-card p,
+.accommodation-card .btn {
+  margin-right: 18px;
+  margin-left: 18px;
 }
 
-.card p {
-  margin-bottom: 15px;
+.accommodation-card h3 {
+  color: #087ea4;
+  margin-top: 10px;
+  margin-bottom: 8px;
 }
 
-/* الأزرار */
+.accommodation-card p {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
 .btn {
   display: inline-block;
-  background: #168acb;
-  color: #ffffff;
+  background: #087ea4;
+  color: white;
   text-decoration: none;
-  padding: 9px 18px;
-  border-radius: 10px;
-  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 .btn:hover {
   opacity: 0.85;
 }
 
-/* بطاقات الإقامات القادمة من Supabase */
-.accommodation-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 25px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.accommodation-card h3 {
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-
-.accommodation-card p {
-  margin: 6px 0;
-}
-
-/* التحميل */
-.loading {
-  text-align: center;
-  font-size: 18px;
-}
-
-/* عدم وجود بيانات */
 .empty {
   text-align: center;
-  font-size: 18px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-/* التواصل */
-.contact-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 30px;
-  text-align: center;
-  max-width: 600px;
-  margin: auto;
-}
-
-/* واتساب */
-.whatsapp {
-  display: inline-block;
-  margin-top: 20px;
-  background: #25d366;
-  color: #ffffff;
-  text-decoration: none;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-weight: bold;
-}
-
-/* القائمة السفلية */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background: #ffffff;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px;
-  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.08);
-  z-index: 1000;
-}
-
-.bottom-nav a {
-  color: #17324d;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.bottom-nav a:hover {
-  background: #dff3ff;
-}
-
-/* الفوتر */
 footer {
+  background: #087ea4;
+  color: white;
   text-align: center;
-  padding: 30px 10px;
+  padding: 25px 15px;
+  margin-top: 30px;
 }
 
-/* الهاتف */
-@media (max-width: 600px) {
-
-  .hero {
-    min-height: 38vh;
-    padding: 40px 15px;
-  }
-
-  .hero h1 {
-    font-size: 30px;
-  }
-
-  .hero-subtitle {
-    font-size: 19px;
-  }
-
-  .section {
-    padding: 35px 0;
-  }
-
-  .section h2 {
-    font-size: 26px;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .bottom-nav {
-    gap: 2px;
-    padding: 7px 3px;
-  }
-
-  .bottom-nav a {
-    font-size: 11px;
-    padding: 7px 5px;
-  }
+a {
+  color: inherit;
 }
+
+img {
+  max-width: 100%;
+  }
