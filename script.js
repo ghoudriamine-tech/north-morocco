@@ -9,7 +9,8 @@ async function loadAccommodations() {
 
   const headers = {
     "apikey": SUPABASE_KEY,
-    "Authorization": `Bearer ${SUPABASE_KEY}`
+    "Authorization": `Bearer ${SUPABASE_KEY}`,
+    "Content-Type": "application/json"
   };
 
   try {
@@ -23,22 +24,46 @@ async function loadAccommodations() {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+
+      const errorText =
+        await response.text();
+
+      throw new Error(
+        `HTTP ${response.status} - ${errorText}`
+      );
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
-    console.log("Supabase data:", data);
+    console.log(
+      "Supabase data:",
+      data
+    );
 
     displayAccommodations(data);
 
   } catch (error) {
 
-    console.error("Supabase error:", error);
+    console.error(
+      "Supabase error:",
+      error
+    );
 
-    showError("apartmentsList");
-    showError("hotelsList");
-    showError("riadsList");
+    showError(
+      "apartmentsList",
+      error.message
+    );
+
+    showError(
+      "hotelsList",
+      error.message
+    );
+
+    showError(
+      "riadsList",
+      error.message
+    );
   }
 }
 
@@ -49,21 +74,55 @@ async function loadAccommodations() {
 
 function displayAccommodations(data) {
 
-  const apartments = data.filter(item =>
-    item.type === "شقق مفروشة" ||
-    item.type === "شقة مفروشة"
-  );
+  const apartments =
+    data.filter(item => {
 
-  const hotels = data.filter(item =>
-    item.type === "فنادق" ||
-    item.type === "فندق"
-  );
+      const type =
+        String(item.type || "")
+          .trim()
+          .toLowerCase();
 
-  const riads = data.filter(item =>
-    item.type === "رياضات" ||
-    item.type === "رياض" ||
-    item.type === "Riad"
-  );
+      return (
+        type === "شقق مفروشة" ||
+        type === "شقة مفروشة" ||
+        type === "apartment"
+      );
+
+    });
+
+
+  const hotels =
+    data.filter(item => {
+
+      const type =
+        String(item.type || "")
+          .trim()
+          .toLowerCase();
+
+      return (
+        type === "فنادق" ||
+        type === "فندق" ||
+        type === "hotel"
+      );
+
+    });
+
+
+  const riads =
+    data.filter(item => {
+
+      const type =
+        String(item.type || "")
+          .trim()
+          .toLowerCase();
+
+      return (
+        type === "رياضات" ||
+        type === "رياض" ||
+        type === "riad"
+      );
+
+    });
 
 
   displayList(
@@ -72,11 +131,13 @@ function displayAccommodations(data) {
     "لا توجد شقق مفروشة حالياً."
   );
 
+
   displayList(
     "hotelsList",
     hotels,
     "لا توجد فنادق حالياً."
   );
+
 
   displayList(
     "riadsList",
@@ -87,21 +148,31 @@ function displayAccommodations(data) {
 
 
 /* =========================
-   عرض البطاقات
+   عرض الإقامات
 ========================= */
 
-function displayList(id, items, emptyMessage) {
+function displayList(
+  id,
+  items,
+  emptyMessage
+) {
 
   const container =
     document.getElementById(id);
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
 
   if (items.length === 0) {
 
     container.innerHTML =
-      `<p class="empty">${emptyMessage}</p>`;
+      `
+        <p class="empty">
+          ${emptyMessage}
+        </p>
+      `;
 
     return;
   }
@@ -110,15 +181,19 @@ function displayList(id, items, emptyMessage) {
   container.innerHTML =
     items.map(item => {
 
-      /* الهاتف */
+      /* =====================
+         الهاتف
+      ===================== */
 
       const phone =
         item.phone
-          ? String(item.phone).replace(/\D/g, "")
+          ? String(item.phone).trim()
           : "";
 
 
-      /* واتساب */
+      /* =====================
+         واتساب
+      ===================== */
 
       let whatsappNumber = "";
 
@@ -128,14 +203,18 @@ function displayList(id, items, emptyMessage) {
           String(item.whatsapp)
             .replace(/\D/g, "");
 
-      } else if (phone) {
+      }
+      else if (phone) {
 
-        whatsappNumber = phone;
+        whatsappNumber =
+          phone.replace(/\D/g, "");
 
       }
 
 
-      if (whatsappNumber.startsWith("0")) {
+      if (
+        whatsappNumber.startsWith("0")
+      ) {
 
         whatsappNumber =
           "212" +
@@ -144,33 +223,141 @@ function displayList(id, items, emptyMessage) {
       }
 
 
+      /* =====================
+         الصورة
+      ===================== */
+
+      const image =
+        item.image_url
+          ? `
+            <img
+              src="${escapeHTML(
+                item.image_url
+              )}"
+              alt="${escapeHTML(
+                item.name ||
+                "صورة الإقامة"
+              )}"
+              class="accommodation-image"
+              loading="lazy"
+              onerror="
+                this.style.display='none'
+              "
+            >
+          `
+          : "";
+
+
+      /* =====================
+         السعر
+      ===================== */
+
+      const price =
+        item.price_per_night
+          ? `
+            <p>
+              💰
+              ${escapeHTML(
+                String(
+                  item.price_per_night
+                )
+              )}
+              درهم / ليلة
+            </p>
+          `
+          : (
+              item.price
+                ? `
+                  <p>
+                    💰
+                    ${escapeHTML(
+                      String(
+                        item.price
+                      )
+                    )}
+                    درهم / ليلة
+                  </p>
+                `
+                : ""
+            );
+
+
+      /* =====================
+         الهاتف
+      ===================== */
+
+      const phoneButton =
+        phone
+          ? `
+            <a
+              href="tel:${escapeHTML(
+                phone
+              )}"
+              class="btn">
+
+              📞 اتصال
+
+            </a>
+          `
+          : "";
+
+
+      /* =====================
+         واتساب
+      ===================== */
+
+      const whatsappButton =
+        whatsappNumber
+          ? `
+            <a
+              href="https://wa.me/${whatsappNumber}"
+              class="btn whatsapp-accommodation"
+              target="_blank"
+              rel="noopener">
+
+              💬 واتساب
+
+            </a>
+          `
+          : "";
+
+
+      /* =====================
+         الخريطة
+      ===================== */
+
+      const mapButton =
+        item.map_url
+          ? `
+            <a
+              href="${escapeHTML(
+                item.map_url
+              )}"
+              class="btn"
+              target="_blank"
+              rel="noopener">
+
+              📍 الموقع
+
+            </a>
+          `
+          : "";
+
+
+      /* =====================
+         البطاقة
+      ===================== */
+
       return `
 
         <div class="accommodation-card">
 
-
-          ${
-            item.image_url
-              ? `
-                <img
-                  src="${escapeHTML(item.image_url)}"
-                  alt="${escapeHTML(
-                    item.name || "صورة الإقامة"
-                  )}"
-                  class="accommodation-image"
-                  loading="lazy"
-                  onerror="
-                    this.style.display='none'
-                  "
-                >
-              `
-              : ""
-          }
-
+          ${image}
 
           <h3>
             ${escapeHTML(
-              item.name || "إقامة"
+              item.name ||
+              "إقامة"
             )}
           </h3>
 
@@ -179,7 +366,10 @@ function displayList(id, items, emptyMessage) {
             item.city
               ? `
                 <p>
-                  📍 ${escapeHTML(item.city)}
+                  📍
+                  ${escapeHTML(
+                    item.city
+                  )}
                 </p>
               `
               : ""
@@ -190,7 +380,10 @@ function displayList(id, items, emptyMessage) {
             item.address
               ? `
                 <p>
-                  📌 ${escapeHTML(item.address)}
+                  📌
+                  ${escapeHTML(
+                    item.address
+                  )}
                 </p>
               `
               : ""
@@ -201,88 +394,36 @@ function displayList(id, items, emptyMessage) {
             item.description
               ? `
                 <p>
-                  ${escapeHTML(item.description)}
+                  ${escapeHTML(
+                    item.description
+                  )}
                 </p>
               `
               : ""
           }
+
+
+          ${price}
 
 
           ${
-            item.price_per_night
+            phoneButton ||
+            whatsappButton ||
+            mapButton
               ? `
-                <p>
-                  💰
-                  ${escapeHTML(
-                    String(
-                      item.price_per_night
-                    )
-                  )}
-                  درهم / ليلة
-                </p>
+                <div
+                  class="accommodation-buttons">
+
+                  ${phoneButton}
+
+                  ${whatsappButton}
+
+                  ${mapButton}
+
+                </div>
               `
               : ""
           }
-
-
-          <div class="accommodation-buttons">
-
-
-            ${
-              item.phone
-                ? `
-                  <a
-                    href="tel:${escapeHTML(
-                      item.phone
-                    )}"
-                    class="btn">
-
-                    📞 اتصال
-
-                  </a>
-                `
-                : ""
-            }
-
-
-            ${
-              whatsappNumber
-                ? `
-                  <a
-                    href="https://wa.me/${whatsappNumber}"
-                    class="btn whatsapp-accommodation"
-                    target="_blank"
-                    rel="noopener">
-
-                    💬 واتساب
-
-                  </a>
-                `
-                : ""
-            }
-
-
-            ${
-              item.map_url
-                ? `
-                  <a
-                    href="${escapeHTML(
-                      item.map_url
-                    )}"
-                    class="btn"
-                    target="_blank"
-                    rel="noopener">
-
-                    📍 الموقع
-
-                  </a>
-                `
-                : ""
-            }
-
-
-          </div>
-
 
         </div>
 
@@ -296,12 +437,23 @@ function displayList(id, items, emptyMessage) {
    رسالة الخطأ
 ========================= */
 
-function showError(id) {
+function showError(
+  id,
+  errorMessage = ""
+) {
 
   const container =
     document.getElementById(id);
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
+
+
+  console.error(
+    `Error in ${id}:`,
+    errorMessage
+  );
 
 
   container.innerHTML =
@@ -321,11 +473,20 @@ function escapeHTML(value) {
 
   return String(value)
 
-    .replace(/&/g, "&amp;")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
 
-    .replace(/</g, "&lt;")
+    .replace(
+      /</g,
+      "&lt;"
+    )
 
-    .replace(/>/g, "&gt;")
+    .replace(
+      />/g,
+      "&gt;"
+    )
 
     .replace(
       /"/g,
@@ -345,5 +506,9 @@ function escapeHTML(value) {
 
 document.addEventListener(
   "DOMContentLoaded",
-  loadAccommodations
+  function () {
+
+    loadAccommodations();
+
+  }
 );
