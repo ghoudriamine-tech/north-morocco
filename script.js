@@ -23,27 +23,18 @@ async function loadAccommodations() {
     );
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}`
-      );
+      throw new Error(`HTTP ${response.status}`);
     }
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
-    console.log(
-      "Supabase data:",
-      data
-    );
+    console.log("Supabase data:", data);
 
     displayAccommodations(data);
 
   } catch (error) {
 
-    console.error(
-      "Supabase error:",
-      error
-    );
+    console.error("Supabase error:", error);
 
     showError("apartmentsList");
     showError("hotelsList");
@@ -54,23 +45,20 @@ async function loadAccommodations() {
 
 function displayAccommodations(data) {
 
-  const apartments =
-    data.filter(item =>
-      item.type === "شقق مفروشة" ||
-      item.type === "شقة مفروشة"
-    );
+  const apartments = data.filter(item =>
+    item.type === "شقق مفروشة" ||
+    item.type === "شقة مفروشة"
+  );
 
-  const hotels =
-    data.filter(item =>
-      item.type === "فنادق" ||
-      item.type === "فندق"
-    );
+  const hotels = data.filter(item =>
+    item.type === "فنادق" ||
+    item.type === "فندق"
+  );
 
-  const riads =
-    data.filter(item =>
-      item.type === "رياضات" ||
-      item.type === "رياض"
-    );
+  const riads = data.filter(item =>
+    item.type === "رياضات" ||
+    item.type === "رياض"
+  );
 
 
   displayList(
@@ -93,11 +81,7 @@ function displayAccommodations(data) {
 }
 
 
-function displayList(
-  id,
-  items,
-  emptyMessage
-) {
+function displayList(id, items, emptyMessage) {
 
   const container =
     document.getElementById(id);
@@ -107,9 +91,7 @@ function displayList(
   if (items.length === 0) {
 
     container.innerHTML =
-      `<p class="empty">
-        ${emptyMessage}
-      </p>`;
+      `<p class="empty">${emptyMessage}</p>`;
 
     return;
   }
@@ -119,10 +101,22 @@ function displayList(
 
       <div class="accommodation-card">
 
+        ${
+          item.image_url
+            ? `
+              <img
+                src="${escapeHTML(item.image_url)}"
+                alt="${escapeHTML(item.name || "صورة الإقامة")}"
+                class="accommodation-image"
+                loading="lazy"
+                onerror="this.style.display='none'"
+              >
+            `
+            : ""
+        }
+
         <h3>
-          ${escapeHTML(
-            item.name || "إقامة"
-          )}
+          ${escapeHTML(item.name || "إقامة")}
         </h3>
 
         ${
@@ -153,11 +147,13 @@ function displayList(
 
         ${
           item.phone
-            ? `<a
+            ? `
+              <a
                 href="tel:${escapeHTML(item.phone)}"
                 class="btn">
                 📞 اتصال
-              </a>`
+              </a>
+            `
             : ""
         }
 
