@@ -7,20 +7,30 @@ document.addEventListener(
   "DOMContentLoaded",
   function () {
 
-    // الإقامات
-    loadAccommodations();
+    /* الإقامات */
+    if (typeof loadAccommodations === "function") {
+      loadAccommodations();
+    }
 
-    // المواصلات
-    loadTransportServices();
 
-    // الأنشطة والجولات
-    loadActivities();
+    /* المواصلات */
+    if (typeof loadTransportServices === "function") {
+      loadTransportServices();
+    }
 
-    // نموذج طلب الخدمة
+
+    /* الأنشطة */
+    if (typeof loadActivities === "function") {
+      loadActivities();
+    }
+
+
+    /* نموذج طلب الخدمة */
     const form =
       document.getElementById(
         "serviceRequestForm"
       );
+
 
     if (form) {
 
@@ -59,6 +69,7 @@ function escapeHTML(value) {
 function escapeJS(value) {
 
   return String(value)
+
     .replace(/\\/g, "\\\\")
     .replace(/'/g, "\\'")
     .replace(/"/g, '\\"')
@@ -69,7 +80,7 @@ function escapeJS(value) {
 
 
 /* =========================================
-   رسالة الخطأ
+   رسالة الخطأ العامة
 ========================================= */
 
 function showError(id) {
@@ -77,7 +88,9 @@ function showError(id) {
   const container =
     document.getElementById(id);
 
+
   if (!container) return;
+
 
   container.innerHTML = `
     <p class="empty">
