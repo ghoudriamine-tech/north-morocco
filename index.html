@@ -283,7 +283,139 @@
   </section>
 
 
-  <!-- =========================
+<!-- =========================
+     طلب خدمة
+========================== -->
+
+<section id="request" class="section">
+
+  <div class="container">
+
+    <h2>📋 طلب خدمة</h2>
+
+    <div class="contact-card">
+
+      <form id="serviceRequestForm">
+
+        <p>
+          أرسل طلبك وسنتواصل معك في أقرب وقت.
+        </p>
+
+        <label for="requester_name">
+          الاسم
+        </label>
+
+        <input
+          type="text"
+          id="requester_name"
+          name="requester_name"
+          placeholder="أدخل اسمك"
+          required
+        >
+
+        <label for="phone">
+          الهاتف
+        </label>
+
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="رقم الهاتف"
+        >
+
+        <label for="whatsapp">
+          واتساب
+        </label>
+
+        <input
+          type="tel"
+          id="whatsapp"
+          name="whatsapp"
+          placeholder="رقم واتساب"
+        >
+
+        <label for="service_type">
+          نوع الخدمة
+        </label>
+
+        <select
+          id="service_type"
+          name="service_type"
+          required
+        >
+
+          <option value="">
+            اختر نوع الخدمة
+          </option>
+
+          <option value="accommodation">
+            🏨 إقامة
+          </option>
+
+          <option value="transport">
+            🚗 مواصلات
+          </option>
+
+          <option value="activity">
+            🗺️ نشاط أو جولة
+          </option>
+
+        </select>
+
+        <label for="service_id">
+          رقم الخدمة
+        </label>
+
+        <input
+          type="number"
+          id="service_id"
+          name="service_id"
+          placeholder="رقم الخدمة"
+          required
+        >
+
+        <label for="request_date">
+          تاريخ الطلب
+        </label>
+
+        <input
+          type="date"
+          id="request_date"
+          name="request_date"
+        >
+
+        <label for="notes">
+          ملاحظات
+        </label>
+
+        <textarea
+          id="notes"
+          name="notes"
+          rows="4"
+          placeholder="اكتب طلبك أو ملاحظاتك هنا"
+        ></textarea>
+
+        <button
+          type="submit"
+          class="btn"
+          id="submitRequestBtn"
+        >
+          📩 إرسال الطلب
+        </button>
+
+        <p
+          id="requestMessage"
+          class="empty"
+        ></p>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>  <!-- =========================
        التواصل
   ========================== -->
 
