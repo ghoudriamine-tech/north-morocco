@@ -2,33 +2,78 @@ async function loadTransportServices() {
 
   try {
 
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 10000);
+
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/transport_services?select=*`,
       {
         method: "GET",
-        headers: supabaseHeaders()
+        headers: supabaseHeaders(),
+        signal: controller.signal
       }
     );
 
+    clearTimeout(timeout);
+
     if (!response.ok) {
+
+      const errorText = await response.text();
+
       throw new Error(
-        `HTTP ${response.status}: ${await response.text()}`
+        `HTTP ${response.status}: ${errorText}`
       );
     }
 
     const data = await response.json();
 
+    console.log(
+      "Transport data:",
+      data
+    );
+
     displayTransportServices(data);
 
   } catch (error) {
 
-    console.error("Transport error:", error);
+    console.error(
+      "Transport error:",
+      error
+    );
 
-    showError("carRentalList");
-    showError("taxiList");
-    showError("busList");
+    let message;
+
+    if (error.name === "AbortError") {
+      message =
+        "انتهت مهلة تحميل خدمات المواصلات. لم يستجب الخادم خلال 10 ثوانٍ.";
+    } else {
+      message =
+        `خطأ في تحميل المواصلات:<br>${escapeHTML(
+          error.message || String(error)
+        )}`;
+    }
+
+    [
+      "carRentalList",
+      "taxiList",
+      "busList"
+    ].forEach(id => {
+
+      const container =
+        document.getElementById(id);
+
+      if (container) {
+        container.innerHTML =
+          `<p class="empty">${message}</p>`;
+      }
+
+    });
 
   }
+
 }
 
 
@@ -81,6 +126,7 @@ function displayTransportServices(data) {
     buses,
     "لا توجد خدمات الحافلات السياحية حالياً."
   );
+
 }
 
 
@@ -110,6 +156,7 @@ function isTransportType(item, types) {
     );
 
   });
+
 }
 
 
@@ -241,4 +288,5 @@ function displayTransportList(
     `;
 
   }).join("");
-    }
+
+      }
