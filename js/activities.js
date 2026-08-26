@@ -1,1 +1,380 @@
+/* =========================================
+   🗺️ الأنشطة والجولات
+   تحميل الأنشطة من Supabase
+========================================= */
 
+async function loadActivities() {
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/activities?select=*`,
+      {
+        method: "GET",
+        headers: supabaseHeaders()
+      }
+    );
+
+    if (!response.ok) {
+
+      const errorText =
+        await response.text();
+
+      console.error(
+        "Activities HTTP error:",
+        response.status,
+        errorText
+      );
+
+      showActivitiesError();
+
+      return;
+    }
+
+    const data =
+      await response.json();
+
+    console.log(
+      "Activities data:",
+      data
+    );
+
+    displayActivities(data);
+
+  } catch (error) {
+
+    console.error(
+      "Activities error:",
+      error
+    );
+
+    showActivitiesError();
+
+  }
+}
+
+
+/* =========================================
+   تقسيم الأنشطة
+========================================= */
+
+function displayActivities(data) {
+
+  const beaches =
+    data.filter(item =>
+      isActivityType(
+        item,
+        [
+          "beach",
+          "شاطئ",
+          "الشواطئ"
+        ]
+      )
+    );
+
+  const historicalCities =
+    data.filter(item =>
+      isActivityType(
+        item,
+        [
+          "historical_city",
+          "historical city",
+          "مدينة تاريخية",
+          "المدن التاريخية"
+        ]
+      )
+    );
+
+  const guides =
+    data.filter(item =>
+      isActivityType(
+        item,
+        [
+          "tour_guide",
+          "tour guide",
+          "مرشد سياحي",
+          "المرشدون السياحيون"
+        ]
+      )
+    );
+
+
+  displayActivityList(
+    "beachesList",
+    beaches,
+    "لا توجد أنشطة شاطئية حالياً."
+  );
+
+
+  displayActivityList(
+    "historicalCitiesList",
+    historicalCities,
+    "لا توجد مدن أو جولات تاريخية حالياً."
+  );
+
+
+  displayActivityList(
+    "guidesList",
+    guides,
+    "لا يوجد مرشدون سياحيون حالياً."
+  );
+
+}
+
+
+/* =========================================
+   فحص نوع النشاط
+========================================= */
+
+function isActivityType(item, types) {
+
+  const value =
+    String(
+      item.activity_type || ""
+    )
+      .trim()
+      .toLowerCase();
+
+  return types.some(type =>
+    value ===
+    String(type)
+      .trim()
+      .toLowerCase()
+  );
+
+}
+
+
+/* =========================================
+   عرض قائمة الأنشطة
+========================================= */
+
+function displayActivityList(
+  id,
+  items,
+  emptyMessage
+) {
+
+  const container =
+    document.getElementById(id);
+
+  if (!container) return;
+
+
+  if (!items.length) {
+
+    container.innerHTML =
+      `<p class="empty">${emptyMessage}</p>`;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    items.map(item => {
+
+      const name =
+        item.name ||
+        "نشاط سياحي";
+
+
+      const phone =
+        item.phone
+          ? String(item.phone).trim()
+          : "";
+
+
+      let whatsapp =
+        item.whatsapp
+          ? String(item.whatsapp)
+              .replace(/\D/g, "")
+          : phone.replace(/\D/g, "");
+
+
+      if (whatsapp.startsWith("0")) {
+
+        whatsapp =
+          "212" +
+          whatsapp.substring(1);
+
+      }
+
+
+      const image =
+        item.image_url
+          ? `
+            <img
+              src="${escapeHTML(item.image_url)}"
+              alt="${escapeHTML(name)}"
+              class="accommodation-image"
+              loading="lazy">
+          `
+          : "";
+
+
+      const phoneButton =
+        phone
+          ? `
+            <a
+              href="tel:${escapeHTML(phone)}"
+              class="btn">
+              📞 اتصال
+            </a>
+          `
+          : "";
+
+
+      const whatsappButton =
+        whatsapp
+          ? `
+            <a
+              href="https://wa.me/${whatsapp}"
+              class="btn whatsapp-accommodation"
+              target="_blank"
+              rel="noopener">
+              💬 واتساب
+            </a>
+          `
+          : "";
+
+
+      const mapButton =
+        item.map_url
+          ? `
+            <a
+              href="${escapeHTML(item.map_url)}"
+              class="btn"
+              target="_blank"
+              rel="noopener">
+              📍 الموقع
+            </a>
+          `
+          : "";
+
+
+      const price =
+        item.price ??
+        "";
+
+
+      const requestButton = `
+        <button
+          type="button"
+          class="btn"
+          onclick="selectService(
+            'activity',
+            '${escapeJS(item.id)}',
+            '${escapeJS(name)}'
+          )">
+          📋 اطلب هذه الخدمة
+        </button>
+      `;
+
+
+      return `
+        <div class="accommodation-card">
+
+          ${image}
+
+          <h3>
+            ${escapeHTML(name)}
+          </h3>
+
+
+          ${
+            item.city
+              ? `
+                <p>
+                  📍 ${escapeHTML(item.city)}
+                </p>
+              `
+              : ""
+          }
+
+
+          ${
+            item.address
+              ? `
+                <p>
+                  📌 ${escapeHTML(item.address)}
+                </p>
+              `
+              : ""
+          }
+
+
+          ${
+            item.description
+              ? `
+                <p>
+                  ${escapeHTML(item.description)}
+                </p>
+              `
+              : ""
+          }
+
+
+          ${
+            price !== ""
+              ? `
+                <p>
+                  💰 ${escapeHTML(price)} درهم
+                </p>
+              `
+              : ""
+          }
+
+
+          <div class="accommodation-buttons">
+
+            ${phoneButton}
+
+            ${whatsappButton}
+
+            ${mapButton}
+
+            ${requestButton}
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================
+   رسالة الخطأ
+========================================= */
+
+function showActivitiesError() {
+
+  const message =
+    `
+      <p class="empty">
+        تعذر تحميل الأنشطة حالياً.
+      </p>
+    `;
+
+
+  [
+    "beachesList",
+    "historicalCitiesList",
+    "guidesList"
+  ].forEach(id => {
+
+    const container =
+      document.getElementById(id);
+
+    if (container) {
+
+      container.innerHTML =
+        message;
+
+    }
+
+  });
+
+      }
