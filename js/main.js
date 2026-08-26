@@ -13,6 +13,9 @@ document.addEventListener(
     // المواصلات
     loadTransportServices();
 
+    // الأنشطة والجولات
+    loadActivities();
+
     // نموذج طلب الخدمة
     const form =
       document.getElementById(
@@ -82,4 +85,4 @@ function showError(id) {
     </p>
   `;
 
-    }
+}
