@@ -1,6 +1,7 @@
 /* =========================================
    🌊 شمال المغرب 🇲🇦
    Supabase
+   النسخة الحالية المحسنة
 ========================================= */
 
 const SUPABASE_URL =
@@ -356,6 +357,10 @@ function displayList(
           : "";
 
 
+      /* =================================
+         رابط الموقع
+      ================================= */
+
       const mapButton =
         item.map_url
           ? `
@@ -374,6 +379,7 @@ function displayList(
 
       /* =================================
          زر طلب الخدمة
+         الاختيار تلقائي
       ================================= */
 
       const requestButton =
@@ -738,6 +744,9 @@ function displayTransportList(
               alt="${escapeHTML(name)}"
               class="accommodation-image"
               loading="lazy"
+              onerror="
+                this.style.display='none';
+              "
             >
           `
           : "";
@@ -774,7 +783,28 @@ function displayTransportList(
 
 
       /* =================================
+         رابط الموقع
+      ================================= */
+
+      const mapButton =
+        item.map_url
+          ? `
+            <a
+              href="${escapeHTML(item.map_url)}"
+              class="btn"
+              target="_blank"
+              rel="noopener">
+
+              📍 الموقع
+
+            </a>
+          `
+          : "";
+
+
+      /* =================================
          زر طلب الخدمة
+         الاختيار تلقائي
       ================================= */
 
       const requestButton =
@@ -834,6 +864,8 @@ function displayTransportList(
 
             ${whatsappButton}
 
+            ${mapButton}
+
             ${requestButton}
 
           </div>
@@ -876,27 +908,47 @@ function selectService(
 
 
   if (!type || !id) {
+
+    console.error(
+      "❌ حقول الخدمة غير موجودة في نموذج الطلب."
+    );
+
     return;
+
   }
 
 
+  /* نوع الخدمة */
   type.value =
-    serviceType;
+    String(serviceType).trim();
 
 
+  /* رقم الخدمة */
   id.value =
-    serviceId;
+    String(serviceId).trim();
 
 
+  /* اسم الخدمة */
   if (notes) {
 
     notes.value =
       "أرغب في طلب خدمة: " +
-      serviceName;
+      String(serviceName || "").trim();
 
   }
 
 
+  console.log(
+    "🟢 تم اختيار الخدمة تلقائياً:",
+    {
+      service_type: type.value,
+      service_id: id.value,
+      service_name: serviceName
+    }
+  );
+
+
+  /* الانتقال إلى نموذج الطلب */
   const requestSection =
     document.getElementById(
       "request"
@@ -906,7 +958,8 @@ function selectService(
   if (requestSection) {
 
     requestSection.scrollIntoView({
-      behavior: "smooth"
+      behavior: "smooth",
+      block: "start"
     });
 
   }
@@ -952,50 +1005,96 @@ async function submitServiceRequest(event) {
   }
 
 
+  const requesterNameElement =
+    document.getElementById(
+      "requester_name"
+    );
+
+
+  const phoneElement =
+    document.getElementById(
+      "phone"
+    );
+
+
+  const whatsappElement =
+    document.getElementById(
+      "whatsapp"
+    );
+
+
+  const serviceTypeElement =
+    document.getElementById(
+      "service_type"
+    );
+
+
+  const serviceIdElement =
+    document.getElementById(
+      "service_id"
+    );
+
+
+  const requestDateElement =
+    document.getElementById(
+      "request_date"
+    );
+
+
+  const notesElement =
+    document.getElementById(
+      "notes"
+    );
+
+
+  if (
+    !requesterNameElement ||
+    !serviceTypeElement ||
+    !serviceIdElement
+  ) {
+
+    message.textContent =
+      "❌ نموذج الطلب غير مكتمل.";
+
+    return;
+
+  }
+
+
   const requesterName =
-    document
-      .getElementById("requester_name")
-      .value
-      .trim();
+    requesterNameElement.value.trim();
 
 
   const phone =
-    document
-      .getElementById("phone")
-      .value
-      .trim();
+    phoneElement
+      ? phoneElement.value.trim()
+      : "";
 
 
   const whatsapp =
-    document
-      .getElementById("whatsapp")
-      .value
-      .trim();
+    whatsappElement
+      ? whatsappElement.value.trim()
+      : "";
 
 
   const serviceType =
-    document
-      .getElementById("service_type")
-      .value;
+    serviceTypeElement.value.trim();
 
 
   const serviceId =
-    document
-      .getElementById("service_id")
-      .value;
+    serviceIdElement.value.trim();
 
 
   const requestDate =
-    document
-      .getElementById("request_date")
-      .value;
+    requestDateElement
+      ? requestDateElement.value
+      : "";
 
 
   const notes =
-    document
-      .getElementById("notes")
-      .value
-      .trim();
+    notesElement
+      ? notesElement.value.trim()
+      : "";
 
 
   if (
@@ -1005,7 +1104,7 @@ async function submitServiceRequest(event) {
   ) {
 
     message.textContent =
-      "⚠️ يرجى ملء الحقول المطلوبة.";
+      "⚠️ يرجى اختيار الخدمة وملء الاسم.";
 
     return;
 
@@ -1089,21 +1188,31 @@ async function submitServiceRequest(event) {
       "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
 
 
+    /* إعادة ضبط النموذج */
     form.reset();
+
+
+    /* مسح الخدمة المختارة */
+    if (serviceTypeElement) {
+      serviceTypeElement.value = "";
+    }
+
+
+    if (serviceIdElement) {
+      serviceIdElement.value = "";
+    }
 
 
   } catch (error) {
 
     console.error(
-      "Service request error:",
+      "🔴 Service request error:",
       error
     );
 
 
     message.textContent =
-      "❌ خطأ: " +
-      error.message;
-
+      "❌ تعذر إرسال الطلب حالياً. يرجى المحاولة مرة أخرى.";
 
   } finally {
 
