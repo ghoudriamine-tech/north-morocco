@@ -1,47 +1,57 @@
 /* =========================================
-   🗺️ الأنشطة والجولات
-   تحميل الأنشطة من Supabase
+   🗺️ شمال المغرب
+   الأنشطة والجولات
 ========================================= */
+
 
 async function loadActivities() {
 
   try {
 
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 10000);
+
+
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/activities?select=*`,
       {
         method: "GET",
-        headers: supabaseHeaders()
+        headers: supabaseHeaders(),
+        signal: controller.signal
       }
     );
+
+
+    clearTimeout(timeout);
+
 
     if (!response.ok) {
 
       const errorText =
         await response.text();
 
-      console.error(
-        "Activities HTTP error:",
-        response.status,
-        errorText
-      );
-
-      showActivitiesError(
+      throw new Error(
         `HTTP ${response.status}: ${errorText}`
       );
 
-      return;
     }
+
 
     const data =
       await response.json();
+
 
     console.log(
       "Activities data:",
       data
     );
 
+
     displayActivities(data);
+
 
   } catch (error) {
 
@@ -50,11 +60,46 @@ async function loadActivities() {
       error
     );
 
-    showActivitiesError(
-      error.message || String(error)
-    );
+
+    let message;
+
+
+    if (error.name === "AbortError") {
+
+      message =
+        "انتهت مهلة تحميل الأنشطة. لم يستجب الخادم خلال 10 ثوانٍ.";
+
+    } else {
+
+      message =
+        `خطأ في تحميل الأنشطة:<br>${escapeHTML(
+          error.message || String(error)
+        )}`;
+
+    }
+
+
+    [
+      "beachesList",
+      "historicalCitiesList",
+      "guidesList"
+    ].forEach(id => {
+
+      const container =
+        document.getElementById(id);
+
+
+      if (container) {
+
+        container.innerHTML =
+          `<p class="empty">${message}</p>`;
+
+      }
+
+    });
 
   }
+
 }
 
 
@@ -64,16 +109,15 @@ async function loadActivities() {
 
 function displayActivities(data) {
 
+
   const beaches =
     data.filter(item =>
       isActivityType(
-        item.activity_type,
+        item,
         [
           "beach",
           "شاطئ",
-          "الشاطئ",
-          "الشواطئ",
-          "beaches"
+          "الشواطئ"
         ]
       )
     );
@@ -82,16 +126,12 @@ function displayActivities(data) {
   const historicalCities =
     data.filter(item =>
       isActivityType(
-        item.activity_type,
+        item,
         [
           "historical_city",
           "historical city",
-          "historical",
-          "city",
           "مدينة تاريخية",
-          "مدينة تاريخية",
-          "المدن التاريخية",
-          "مدن تاريخية"
+          "المدن التاريخية"
         ]
       )
     );
@@ -100,36 +140,15 @@ function displayActivities(data) {
   const guides =
     data.filter(item =>
       isActivityType(
-        item.activity_type,
+        item,
         [
           "tour_guide",
           "tour guide",
-          "guide",
-          "guides",
-          "مرشد",
           "مرشد سياحي",
-          "مرشد سياحي",
-          "المرشدون السياحيون",
-          "مرشدين سياحيين"
+          "المرشدون السياحيون"
         ]
       )
     );
-
-
-  console.log(
-    "Beaches:",
-    beaches
-  );
-
-  console.log(
-    "Historical cities:",
-    historicalCities
-  );
-
-  console.log(
-    "Guides:",
-    guides
-  );
 
 
   displayActivityList(
@@ -159,36 +178,29 @@ function displayActivities(data) {
    فحص نوع النشاط
 ========================================= */
 
-function isActivityType(
-  value,
-  types
-) {
-
-  if (!value) return false;
+function isActivityType(item, types) {
 
 
-  const normalized =
-    String(value)
+  const value =
+    String(
+      item.activity_type || ""
+    )
       .trim()
       .toLowerCase();
 
 
-  return types.some(type => {
-
-    const normalizedType =
-      String(type)
-        .trim()
-        .toLowerCase();
-
-    return normalized === normalizedType;
-
-  });
+  return types.some(type =>
+    value ===
+    String(type)
+      .trim()
+      .toLowerCase()
+  );
 
 }
 
 
 /* =========================================
-   عرض قائمة الأنشطة
+   عرض الأنشطة
 ========================================= */
 
 function displayActivityList(
@@ -197,8 +209,10 @@ function displayActivityList(
   emptyMessage
 ) {
 
+
   const container =
     document.getElementById(id);
+
 
   if (!container) return;
 
@@ -209,11 +223,13 @@ function displayActivityList(
       `<p class="empty">${emptyMessage}</p>`;
 
     return;
+
   }
 
 
   container.innerHTML =
     items.map(item => {
+
 
       const name =
         item.name ||
@@ -388,41 +404,5 @@ function displayActivityList(
 
 
 /* =========================================
-   رسالة الخطأ
+   نهاية activities.js
 ========================================= */
-
-function showActivitiesError(
-  errorMessage
-) {
-
-  const message =
-    `
-      <p class="empty">
-        تعذر تحميل الأنشطة حالياً.
-      </p>
-
-      <small>
-        ${escapeHTML(errorMessage || "")}
-      </small>
-    `;
-
-
-  [
-    "beachesList",
-    "historicalCitiesList",
-    "guidesList"
-  ].forEach(id => {
-
-    const container =
-      document.getElementById(id);
-
-    if (container) {
-
-      container.innerHTML =
-        message;
-
-    }
-
-  });
-
-}
