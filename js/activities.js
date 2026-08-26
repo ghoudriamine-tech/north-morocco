@@ -26,7 +26,9 @@ async function loadActivities() {
         errorText
       );
 
-      showActivitiesError();
+      showActivitiesError(
+        `HTTP ${response.status}: ${errorText}`
+      );
 
       return;
     }
@@ -48,7 +50,9 @@ async function loadActivities() {
       error
     );
 
-    showActivitiesError();
+    showActivitiesError(
+      error.message || String(error)
+    );
 
   }
 }
@@ -63,40 +67,69 @@ function displayActivities(data) {
   const beaches =
     data.filter(item =>
       isActivityType(
-        item,
+        item.activity_type,
         [
           "beach",
           "شاطئ",
-          "الشواطئ"
+          "الشاطئ",
+          "الشواطئ",
+          "beaches"
         ]
       )
     );
+
 
   const historicalCities =
     data.filter(item =>
       isActivityType(
-        item,
+        item.activity_type,
         [
           "historical_city",
           "historical city",
+          "historical",
+          "city",
           "مدينة تاريخية",
-          "المدن التاريخية"
+          "مدينة تاريخية",
+          "المدن التاريخية",
+          "مدن تاريخية"
         ]
       )
     );
 
+
   const guides =
     data.filter(item =>
       isActivityType(
-        item,
+        item.activity_type,
         [
           "tour_guide",
           "tour guide",
+          "guide",
+          "guides",
+          "مرشد",
           "مرشد سياحي",
-          "المرشدون السياحيون"
+          "مرشد سياحي",
+          "المرشدون السياحيون",
+          "مرشدين سياحيين"
         ]
       )
     );
+
+
+  console.log(
+    "Beaches:",
+    beaches
+  );
+
+  console.log(
+    "Historical cities:",
+    historicalCities
+  );
+
+  console.log(
+    "Guides:",
+    guides
+  );
 
 
   displayActivityList(
@@ -126,21 +159,30 @@ function displayActivities(data) {
    فحص نوع النشاط
 ========================================= */
 
-function isActivityType(item, types) {
+function isActivityType(
+  value,
+  types
+) {
 
-  const value =
-    String(
-      item.activity_type || ""
-    )
+  if (!value) return false;
+
+
+  const normalized =
+    String(value)
       .trim()
       .toLowerCase();
 
-  return types.some(type =>
-    value ===
-    String(type)
-      .trim()
-      .toLowerCase()
-  );
+
+  return types.some(type => {
+
+    const normalizedType =
+      String(type)
+        .trim()
+        .toLowerCase();
+
+    return normalized === normalizedType;
+
+  });
 
 }
 
@@ -349,13 +391,19 @@ function displayActivityList(
    رسالة الخطأ
 ========================================= */
 
-function showActivitiesError() {
+function showActivitiesError(
+  errorMessage
+) {
 
   const message =
     `
       <p class="empty">
         تعذر تحميل الأنشطة حالياً.
       </p>
+
+      <small>
+        ${escapeHTML(errorMessage || "")}
+      </small>
     `;
 
 
@@ -377,4 +425,4 @@ function showActivitiesError() {
 
   });
 
-      }
+}
