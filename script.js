@@ -631,7 +631,7 @@ async function submitServiceRequest(event) {
     );
 
     message.textContent =
-      "❌ تعذر إرسال الطلب حاليًا. حاول مرة أخرى.";
+  "❌ خطأ: " + error.message;
 
 
   } finally {
