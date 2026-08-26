@@ -1,34 +1,34 @@
 /* =========================================
-   شمال المغرب 🇲🇦
-   Supabase Configuration
+   🌊 شمال المغرب 🇲🇦
+   Supabase
 ========================================= */
 
 const SUPABASE_URL =
   "https://rbmttbxsezttysenbcwn.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2w";
+  "sb_publishable_tVChEdNRQHs9lrYPjA4ajQ_heTXT2xw";
 
 
 /* =========================================
-   Headers
+   الاتصال بـ Supabase
 ========================================= */
 
 function supabaseHeaders() {
-
   return {
     "apikey": SUPABASE_KEY,
     "Content-Type": "application/json"
   };
-
 }
 
 
 /* =========================================
-   تحميل الإقامات
+   اختبار الاتصال
 ========================================= */
 
-async function loadAccommodations() {
+async function testSupabaseConnection() {
+
+  console.log("🔵 اختبار الاتصال بـ Supabase...");
 
   try {
 
@@ -40,115 +40,109 @@ async function loadAccommodations() {
       }
     );
 
+    const text = await response.text();
+
+    console.log("HTTP Status:", response.status);
+    console.log("Supabase Response:", text);
 
     if (!response.ok) {
 
-      const errorText =
-        await response.text();
-
       throw new Error(
-        `HTTP ${response.status} - ${errorText}`
+        `HTTP ${response.status}: ${text}`
       );
 
     }
 
-
-    const data =
-      await response.json();
-
+    const data = JSON.parse(text);
 
     console.log(
-      "Supabase accommodations:",
+      "✅ الاتصال بـ Supabase ناجح",
       data
     );
 
-
     displayAccommodations(data);
 
+    return true;
 
   } catch (error) {
 
     console.error(
-      "Accommodations error:",
+      "❌ Supabase Connection Error:",
       error
     );
 
-
     showError(
-      "apartmentsList"
+      "apartmentsList",
+      error.message
     );
 
     showError(
-      "hotelsList"
+      "hotelsList",
+      error.message
     );
 
     showError(
-      "riadsList"
+      "riadsList",
+      error.message
     );
 
+    return false;
   }
-
 }
 
 
 /* =========================================
-   تصنيف الإقامات
+   الإقامات
 ========================================= */
 
 function displayAccommodations(data) {
 
-  const apartments =
-    data.filter(item => {
+  const apartments = data.filter(item => {
 
-      const type =
-        String(item.type || "")
-          .trim()
-          .toLowerCase();
+    const type =
+      String(item.type || "")
+        .trim()
+        .toLowerCase();
 
+    return (
+      type === "شقق مفروشة" ||
+      type === "شقة مفروشة" ||
+      type === "apartment"
+    );
 
-      return (
-        type === "شقق مفروشة" ||
-        type === "شقة مفروشة" ||
-        type === "apartment"
-      );
-
-    });
+  });
 
 
-  const hotels =
-    data.filter(item => {
+  const hotels = data.filter(item => {
 
-      const type =
-        String(item.type || "")
-          .trim()
-          .toLowerCase();
+    const type =
+      String(item.type || "")
+        .trim()
+        .toLowerCase();
 
+    return (
+      type === "فنادق" ||
+      type === "فندق" ||
+      type === "hotel"
+    );
 
-      return (
-        type === "فنادق" ||
-        type === "فندق" ||
-        type === "hotel"
-      );
-
-    });
+  });
 
 
-  const riads =
-    data.filter(item => {
+  const riads = data.filter(item => {
 
-      const type =
-        String(item.type || "")
-          .trim()
-          .toLowerCase();
+    const type =
+      String(item.type || "")
+        .trim()
+        .toLowerCase();
 
+    return (
+      type === "رياضات" ||
+      type === "رياض" ||
+      type === "riad"
+    );
 
-      return (
-        type === "رياضات" ||
-        type === "رياض" ||
-        type === "riad"
-      );
-
-    });
+  });
 
 
   displayList(
@@ -187,7 +181,6 @@ function displayList(
   const container =
     document.getElementById(id);
 
-
   if (!container) {
     return;
   }
@@ -195,276 +188,219 @@ function displayList(
 
   if (!items.length) {
 
-    container.innerHTML =
-      `
-        <p class="empty">
-          ${emptyMessage}
-        </p>
-      `;
+    container.innerHTML = `
+      <p class="empty">
+        ${escapeHTML(emptyMessage)}
+      </p>
+    `;
 
     return;
-
   }
 
 
-  container.innerHTML =
-    items.map(item => {
+  container.innerHTML = items.map(item => {
 
+    const phone =
+      item.phone
+        ? String(item.phone).trim()
+        : "";
 
-      /* -------------------------
-         الهاتف
-      ------------------------- */
 
-      const phone =
-        item.phone
-          ? String(item.phone).trim()
-          : "";
+    let whatsappNumber = "";
 
-
-      /* -------------------------
-         واتساب
-      ------------------------- */
 
-      let whatsappNumber = "";
+    if (item.whatsapp) {
 
+      whatsappNumber =
+        String(item.whatsapp)
+          .replace(/\D/g, "");
 
-      if (item.whatsapp) {
+    }
+    else if (phone) {
 
-        whatsappNumber =
-          String(item.whatsapp)
-            .replace(/\D/g, "");
+      whatsappNumber =
+        phone.replace(/\D/g, "");
 
-      }
-      else if (phone) {
+    }
 
-        whatsappNumber =
-          phone.replace(/\D/g, "");
 
-      }
+    if (
+      whatsappNumber.startsWith("0")
+    ) {
 
+      whatsappNumber =
+        "212" +
+        whatsappNumber.substring(1);
 
-      if (
-        whatsappNumber.startsWith("0")
-      ) {
+    }
 
-        whatsappNumber =
-          "212" +
-          whatsappNumber.substring(1);
 
-      }
-
+    const image =
+      item.image_url
+        ? `
+          <img
+            src="${escapeHTML(item.image_url)}"
+            alt="${escapeHTML(
+              item.name || "صورة الإقامة"
+            )}"
+            class="accommodation-image"
+            loading="lazy"
+            onerror="this.style.display='none';"
+          >
+        `
+        : "";
 
-      /* -------------------------
-         الصورة
-      ------------------------- */
 
-      const image =
-        item.image_url
-          ? `
-            <img
-              src="${escapeHTML(item.image_url)}"
-              alt="${escapeHTML(
-                item.name ||
-                "صورة الإقامة"
-              )}"
-              class="accommodation-image"
-              loading="lazy"
-              onerror="
-                this.style.display='none';
-              "
-            >
-          `
-          : "";
+    let price = "";
 
 
-      /* -------------------------
-         السعر
-      ------------------------- */
+    if (
+      item.price_per_night !== null &&
+      item.price_per_night !== undefined &&
+      item.price_per_night !== ""
+    ) {
 
-      let price = "";
-
-
-      if (
-        item.price_per_night !== null &&
-        item.price_per_night !== undefined &&
-        item.price_per_night !== ""
-      ) {
-
-        price =
-          `
-            <p>
-              💰
-              ${escapeHTML(
-                String(item.price_per_night)
-              )}
-              درهم / ليلة
-            </p>
-          `;
-
-      }
-      else if (
-        item.price !== null &&
-        item.price !== undefined &&
-        item.price !== ""
-      ) {
-
-        price =
-          `
-            <p>
-              💰
-              ${escapeHTML(
-                String(item.price)
-              )}
-              درهم / ليلة
-            </p>
-          `;
-
-      }
-
-
-      /* -------------------------
-         زر الهاتف
-      ------------------------- */
-
-      const phoneButton =
-        phone
-          ? `
-            <a
-              href="tel:${escapeHTML(phone)}"
-              class="btn">
-
-              📞 اتصال
-
-            </a>
-          `
-          : "";
-
-
-      /* -------------------------
-         زر واتساب
-      ------------------------- */
-
-      const whatsappButton =
-        whatsappNumber
-          ? `
-            <a
-              href="https://wa.me/${whatsappNumber}"
-              class="btn whatsapp-accommodation"
-              target="_blank"
-              rel="noopener">
-
-              💬 واتساب
-
-            </a>
-          `
-          : "";
-
-
-      /* -------------------------
-         زر الخريطة
-      ------------------------- */
-
-      const mapButton =
-        item.map_url
-          ? `
-            <a
-              href="${escapeHTML(item.map_url)}"
-              class="btn"
-              target="_blank"
-              rel="noopener">
-
-              📍 الموقع
-
-            </a>
-          `
-          : "";
-
-
-      /* -------------------------
-         البطاقة
-      ------------------------- */
-
-      return `
-
-        <div class="accommodation-card">
-
-          ${image}
-
-          <h3>
-            ${escapeHTML(
-              item.name ||
-              "إقامة"
-            )}
-          </h3>
-
-
-          ${
-            item.city
-              ? `
-                <p>
-                  📍
-                  ${escapeHTML(item.city)}
-                </p>
-              `
-              : ""
-          }
-
-
-          ${
-            item.address
-              ? `
-                <p>
-                  📌
-                  ${escapeHTML(item.address)}
-                </p>
-              `
-              : ""
-          }
-
-
-          ${
-            item.description
-              ? `
-                <p>
-                  ${escapeHTML(item.description)}
-                </p>
-              `
-              : ""
-          }
-
-
-          ${price}
-
-
-          ${
-            phoneButton ||
-            whatsappButton ||
-            mapButton
-              ? `
-                <div class="accommodation-buttons">
-
-                  ${phoneButton}
-
-                  ${whatsappButton}
-
-                  ${mapButton}
-
-                </div>
-              `
-              : ""
-          }
-
-        </div>
-
+      price = `
+        <p>
+          💰
+          ${escapeHTML(
+            String(item.price_per_night)
+          )}
+          درهم / ليلة
+        </p>
       `;
 
-    }).join("");
+    }
+    else if (
+      item.price !== null &&
+      item.price !== undefined &&
+      item.price !== ""
+    ) {
+
+      price = `
+        <p>
+          💰
+          ${escapeHTML(
+            String(item.price)
+          )}
+          درهم / ليلة
+        </p>
+      `;
+
+    }
+
+
+    const phoneButton =
+      phone
+        ? `
+          <a
+            href="tel:${escapeHTML(phone)}"
+            class="btn">
+            📞 اتصال
+          </a>
+        `
+        : "";
+
+
+    const whatsappButton =
+      whatsappNumber
+        ? `
+          <a
+            href="https://wa.me/${whatsappNumber}"
+            class="btn whatsapp-accommodation"
+            target="_blank"
+            rel="noopener">
+            💬 واتساب
+          </a>
+        `
+        : "";
+
+
+    const mapButton =
+      item.map_url
+        ? `
+          <a
+            href="${escapeHTML(item.map_url)}"
+            class="btn"
+            target="_blank"
+            rel="noopener">
+            📍 الموقع
+          </a>
+        `
+        : "";
+
+
+    return `
+
+      <div class="accommodation-card">
+
+        ${image}
+
+        <h3>
+          ${escapeHTML(
+            item.name || "إقامة"
+          )}
+        </h3>
+
+        ${
+          item.city
+            ? `
+              <p>
+                📍
+                ${escapeHTML(item.city)}
+              </p>
+            `
+            : ""
+        }
+
+        ${
+          item.address
+            ? `
+              <p>
+                📌
+                ${escapeHTML(item.address)}
+              </p>
+            `
+            : ""
+        }
+
+        ${
+          item.description
+            ? `
+              <p>
+                ${escapeHTML(item.description)}
+              </p>
+            `
+            : ""
+        }
+
+        ${price}
+
+        ${
+          phoneButton ||
+          whatsappButton ||
+          mapButton
+            ? `
+              <div class="accommodation-buttons">
+                ${phoneButton}
+                ${whatsappButton}
+                ${mapButton}
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+    `;
+
+  }).join("");
 
 }
 
 
 /* =========================================
-   تحميل خدمات المواصلات
+   المواصلات
 ========================================= */
 
 async function loadTransportServices() {
@@ -480,26 +416,33 @@ async function loadTransportServices() {
     );
 
 
+    const text =
+      await response.text();
+
+
+    console.log(
+      "Transport HTTP:",
+      response.status
+    );
+
+
+    console.log(
+      "Transport Response:",
+      text
+    );
+
+
     if (!response.ok) {
 
-      const errorText =
-        await response.text();
-
       throw new Error(
-        `HTTP ${response.status} - ${errorText}`
+        `HTTP ${response.status}: ${text}`
       );
 
     }
 
 
     const data =
-      await response.json();
-
-
-    console.log(
-      "Supabase transport:",
-      data
-    );
+      JSON.parse(text);
 
 
     displayTransportServices(data);
@@ -508,21 +451,24 @@ async function loadTransportServices() {
   } catch (error) {
 
     console.error(
-      "Transport error:",
+      "❌ Transport error:",
       error
     );
 
 
     showError(
-      "carRentalList"
+      "carRentalList",
+      error.message
     );
 
     showError(
-      "taxiList"
+      "taxiList",
+      error.message
     );
 
     showError(
-      "busList"
+      "busList",
+      error.message
     );
 
   }
@@ -608,25 +554,17 @@ function displayTransportServices(data) {
    فحص نوع المواصلات
 ========================================= */
 
-function isTransportType(
-  item,
-  types
-) {
+function isTransportType(item, types) {
 
-  const possibleValues = [
-
+  const values = [
     item.service_type,
-
     item.type,
-
     item.category,
-
     item.transport_type
-
   ];
 
 
-  return possibleValues.some(value => {
+  return values.some(value => {
 
     if (!value) {
       return false;
@@ -640,12 +578,10 @@ function isTransportType(
 
 
     return types.some(type =>
-
       normalized ===
       String(type)
         .trim()
         .toLowerCase()
-
     );
 
   });
@@ -674,21 +610,18 @@ function displayTransportList(
 
   if (!items.length) {
 
-    container.innerHTML =
-      `
-        <p class="empty">
-          ${emptyMessage}
-        </p>
-      `;
+    container.innerHTML = `
+      <p class="empty">
+        ${escapeHTML(emptyMessage)}
+      </p>
+    `;
 
     return;
-
   }
 
 
   container.innerHTML =
     items.map(item => {
-
 
       const name =
         item.name ||
@@ -697,13 +630,11 @@ function displayTransportList(
 
 
       const description =
-        item.description ||
-        "";
+        item.description || "";
 
 
       const city =
-        item.city ||
-        "";
+        item.city || "";
 
 
       const phone =
@@ -760,9 +691,7 @@ function displayTransportList(
             <a
               href="tel:${escapeHTML(phone)}"
               class="btn">
-
               📞 اتصال
-
             </a>
           `
           : "";
@@ -776,9 +705,7 @@ function displayTransportList(
               class="btn whatsapp-accommodation"
               target="_blank"
               rel="noopener">
-
               💬 واتساب
-
             </a>
           `
           : "";
@@ -794,7 +721,6 @@ function displayTransportList(
             ${escapeHTML(name)}
           </h3>
 
-
           ${
             city
               ? `
@@ -806,7 +732,6 @@ function displayTransportList(
               : ""
           }
 
-
           ${
             description
               ? `
@@ -817,17 +742,13 @@ function displayTransportList(
               : ""
           }
 
-
           ${
             phoneButton ||
             whatsappButton
               ? `
                 <div class="accommodation-buttons">
-
                   ${phoneButton}
-
                   ${whatsappButton}
-
                 </div>
               `
               : ""
@@ -843,7 +764,7 @@ function displayTransportList(
 
 
 /* =========================================
-   إرسال طلب الخدمة
+   طلب الخدمة
 ========================================= */
 
 async function submitServiceRequest(event) {
@@ -995,14 +916,26 @@ async function submitServiceRequest(event) {
       );
 
 
+    const text =
+      await response.text();
+
+
+    console.log(
+      "Service request HTTP:",
+      response.status
+    );
+
+
+    console.log(
+      "Service request response:",
+      text
+    );
+
+
     if (!response.ok) {
 
-      const errorText =
-        await response.text();
-
-
       throw new Error(
-        `HTTP ${response.status}: ${errorText}`
+        `HTTP ${response.status}: ${text}`
       );
 
     }
@@ -1018,7 +951,7 @@ async function submitServiceRequest(event) {
   } catch (error) {
 
     console.error(
-      "Service request error:",
+      "❌ Service request error:",
       error
     );
 
@@ -1044,7 +977,7 @@ async function submitServiceRequest(event) {
    رسالة الخطأ
 ========================================= */
 
-function showError(id) {
+function showError(id, errorMessage = "") {
 
   const container =
     document.getElementById(id);
@@ -1055,12 +988,21 @@ function showError(id) {
   }
 
 
-  container.innerHTML =
-    `
-      <p class="empty">
-        تعذر تحميل البيانات حالياً.
-      </p>
-    `;
+  console.error(
+    `Error in ${id}:`,
+    errorMessage
+  );
+
+
+  container.innerHTML = `
+    <p class="empty">
+      ❌ خطأ في الاتصال
+      <br>
+      <small>
+        ${escapeHTML(errorMessage)}
+      </small>
+    </p>
+  `;
 
 }
 
@@ -1073,30 +1015,11 @@ function escapeHTML(value) {
 
   return String(value)
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
@@ -1109,15 +1032,22 @@ document.addEventListener(
   "DOMContentLoaded",
   function () {
 
-    /* الإقامات */
-    loadAccommodations();
+    console.log(
+      "🌊 شمال المغرب - بدء التشغيل"
+    );
+
+
+    /* اختبار الإقامات */
+
+    testSupabaseConnection();
 
 
     /* المواصلات */
+
     loadTransportServices();
 
 
-    /* نموذج طلب الخدمة */
+    /* نموذج الطلب */
 
     const form =
       document.getElementById(
