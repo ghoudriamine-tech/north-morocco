@@ -1,4 +1,4 @@
-async function loadAccommodations() {
+async function loadAccommodations() async function loadAccommodations() {
 
   try {
 
@@ -11,26 +11,74 @@ async function loadAccommodations() {
     );
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}: ${await response.text()}`
+
+      const errorText = await response.text();
+
+      console.error(
+        "Accommodations HTTP error:",
+        response.status,
+        errorText
       );
+
+      const message =
+        `خطأ في تحميل الإقامات<br>
+        HTTP ${response.status}<br>
+        ${escapeHTML(errorText)}`;
+
+      [
+        "apartmentsList",
+        "hotelsList",
+        "riadsList"
+      ].forEach(id => {
+
+        const container =
+          document.getElementById(id);
+
+        if (container) {
+          container.innerHTML =
+            `<p class="empty">${message}</p>`;
+        }
+
+      });
+
+      return;
     }
 
     const data = await response.json();
+
+    console.log("Accommodations data:", data);
 
     displayAccommodations(data);
 
   } catch (error) {
 
-    console.error("Accommodations error:", error);
+    console.error(
+      "Accommodations error:",
+      error
+    );
 
-    showError("apartmentsList");
-    showError("hotelsList");
-    showError("riadsList");
+    const message =
+      `حدث خطأ أثناء تحميل الإقامات:<br>
+      ${escapeHTML(error.message || String(error))}`;
+
+    [
+      "apartmentsList",
+      "hotelsList",
+      "riadsList"
+    ].forEach(id => {
+
+      const container =
+        document.getElementById(id);
+
+      if (container) {
+        container.innerHTML =
+          `<p class="empty">${message}</p>`;
+      }
+
+    });
 
   }
-}
-
+        }
 
 function displayAccommodations(data) {
 
