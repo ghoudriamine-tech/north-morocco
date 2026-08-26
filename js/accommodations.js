@@ -2,46 +2,30 @@ async function loadAccommodations() {
 
   try {
 
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 10000);
+
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
       {
         method: "GET",
-        headers: supabaseHeaders()
+        headers: supabaseHeaders(),
+        signal: controller.signal
       }
     );
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
 
       const errorText = await response.text();
 
-      console.error(
-        "Accommodations HTTP error:",
-        response.status,
-        errorText
+      throw new Error(
+        `HTTP ${response.status}: ${errorText}`
       );
-
-      const message =
-        `خطأ في تحميل الإقامات<br>
-        HTTP ${response.status}<br>
-        ${escapeHTML(errorText)}`;
-
-      [
-        "apartmentsList",
-        "hotelsList",
-        "riadsList"
-      ].forEach(id => {
-
-        const container =
-          document.getElementById(id);
-
-        if (container) {
-          container.innerHTML =
-            `<p class="empty">${message}</p>`;
-        }
-
-      });
-
-      return;
     }
 
     const data = await response.json();
@@ -57,9 +41,17 @@ async function loadAccommodations() {
       error
     );
 
-    const message =
-      `حدث خطأ أثناء تحميل الإقامات:<br>
-      ${escapeHTML(error.message || String(error))}`;
+    let message;
+
+    if (error.name === "AbortError") {
+      message =
+        "انتهت مهلة تحميل الإقامات. لم يستجب الخادم خلال 10 ثوانٍ.";
+    } else {
+      message =
+        `خطأ في تحميل الإقامات:<br>${escapeHTML(
+          error.message || String(error)
+        )}`;
+    }
 
     [
       "apartmentsList",
@@ -277,4 +269,4 @@ function displayList(id, items, emptyMessage) {
 
   }).join("");
 
-          }
+  }
