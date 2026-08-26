@@ -1,4 +1,4 @@
-async function loadAccommodations() async function loadAccommodations() {
+async function loadAccommodations() {
 
   try {
 
@@ -78,7 +78,9 @@ async function loadAccommodations() async function loadAccommodations() {
     });
 
   }
-        }
+
+}
+
 
 function displayAccommodations(data) {
 
@@ -126,6 +128,7 @@ function displayAccommodations(data) {
     riads,
     "لا توجد رياضات حالياً."
   );
+
 }
 
 
@@ -273,4 +276,5 @@ function displayList(id, items, emptyMessage) {
     `;
 
   }).join("");
-}
+
+          }
