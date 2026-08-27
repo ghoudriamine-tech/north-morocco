@@ -14,7 +14,6 @@ async function loadActivities() {
       controller.abort();
     }, 10000);
 
-
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/activities?select=*`,
       {
@@ -24,9 +23,7 @@ async function loadActivities() {
       }
     );
 
-
     clearTimeout(timeout);
-
 
     if (!response.ok) {
 
@@ -39,19 +36,15 @@ async function loadActivities() {
 
     }
 
-
     const data =
       await response.json();
-
 
     console.log(
       "Activities data:",
       data
     );
 
-
     displayActivities(data);
-
 
   } catch (error) {
 
@@ -60,9 +53,7 @@ async function loadActivities() {
       error
     );
 
-
     let message;
-
 
     if (error.name === "AbortError") {
 
@@ -78,7 +69,6 @@ async function loadActivities() {
 
     }
 
-
     [
       "beachesList",
       "historicalCitiesList",
@@ -87,7 +77,6 @@ async function loadActivities() {
 
       const container =
         document.getElementById(id);
-
 
       if (container) {
 
@@ -103,12 +92,7 @@ async function loadActivities() {
 }
 
 
-/* =========================================
-   تقسيم الأنشطة
-========================================= */
-
 function displayActivities(data) {
-
 
   const beaches =
     data.filter(item =>
@@ -121,7 +105,6 @@ function displayActivities(data) {
         ]
       )
     );
-
 
   const historicalCities =
     data.filter(item =>
@@ -136,7 +119,6 @@ function displayActivities(data) {
       )
     );
 
-
   const guides =
     data.filter(item =>
       isActivityType(
@@ -150,20 +132,17 @@ function displayActivities(data) {
       )
     );
 
-
   displayActivityList(
     "beachesList",
     beaches,
     "لا توجد أنشطة شاطئية حالياً."
   );
 
-
   displayActivityList(
     "historicalCitiesList",
     historicalCities,
     "لا توجد مدن أو جولات تاريخية حالياً."
   );
-
 
   displayActivityList(
     "guidesList",
@@ -174,12 +153,7 @@ function displayActivities(data) {
 }
 
 
-/* =========================================
-   فحص نوع النشاط
-========================================= */
-
 function isActivityType(item, types) {
-
 
   const value =
     String(
@@ -187,7 +161,6 @@ function isActivityType(item, types) {
     )
       .trim()
       .toLowerCase();
-
 
   return types.some(type =>
     value ===
@@ -199,23 +172,16 @@ function isActivityType(item, types) {
 }
 
 
-/* =========================================
-   عرض الأنشطة
-========================================= */
-
 function displayActivityList(
   id,
   items,
   emptyMessage
 ) {
 
-
   const container =
     document.getElementById(id);
 
-
   if (!container) return;
-
 
   if (!items.length) {
 
@@ -226,28 +192,23 @@ function displayActivityList(
 
   }
 
-
   container.innerHTML =
     items.map(item => {
-
 
       const name =
         item.name ||
         "نشاط سياحي";
-
 
       const phone =
         item.phone
           ? String(item.phone).trim()
           : "";
 
-
       let whatsapp =
         item.whatsapp
           ? String(item.whatsapp)
               .replace(/\D/g, "")
           : phone.replace(/\D/g, "");
-
 
       if (whatsapp.startsWith("0")) {
 
@@ -256,7 +217,6 @@ function displayActivityList(
           whatsapp.substring(1);
 
       }
-
 
       const image =
         item.image_url
@@ -269,7 +229,6 @@ function displayActivityList(
           `
           : "";
 
-
       const phoneButton =
         phone
           ? `
@@ -280,7 +239,6 @@ function displayActivityList(
             </a>
           `
           : "";
-
 
       const whatsappButton =
         whatsapp
@@ -295,7 +253,6 @@ function displayActivityList(
           `
           : "";
 
-
       const mapButton =
         item.map_url
           ? `
@@ -309,11 +266,9 @@ function displayActivityList(
           `
           : "";
 
-
       const price =
         item.price ??
         "";
-
 
       const requestButton = `
         <button
@@ -328,7 +283,6 @@ function displayActivityList(
         </button>
       `;
 
-
       return `
         <div class="accommodation-card">
 
@@ -337,7 +291,6 @@ function displayActivityList(
           <h3>
             ${escapeHTML(name)}
           </h3>
-
 
           ${
             item.city
@@ -349,7 +302,6 @@ function displayActivityList(
               : ""
           }
 
-
           ${
             item.address
               ? `
@@ -359,7 +311,6 @@ function displayActivityList(
               `
               : ""
           }
-
 
           ${
             item.description
@@ -371,7 +322,6 @@ function displayActivityList(
               : ""
           }
 
-
           ${
             price !== ""
               ? `
@@ -381,7 +331,6 @@ function displayActivityList(
               `
               : ""
           }
-
 
           <div class="accommodation-buttons">
 
@@ -395,14 +344,14 @@ function displayActivityList(
 
           </div>
 
+          ${renderReviews(
+            "activity",
+            item.id
+          )}
+
         </div>
       `;
 
     }).join("");
 
-}
-
-
-/* =========================================
-   نهاية activities.js
-========================================= */
+       }
