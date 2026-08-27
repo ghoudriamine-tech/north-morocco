@@ -1,47 +1,32 @@
 /* =========================================
    ⭐ شمال المغرب
    نظام التقييمات والمراجعات
-   النسخة المحسنة للسرعة والاستقرار
 ========================================= */
 
-
-/* =========================================
-   تحميل تقييمات خدمة واحدة
-========================================= */
-
-async function loadReviews(
-  serviceType,
-  serviceId
-) {
+async function loadReviews(serviceType, serviceId) {
 
   try {
 
-    const response =
-      await fetch(
-        `${SUPABASE_URL}/rest/v1/reviews` +
-        `?select=id,service_type,service_id,reviewer_name,rating,comment,created_at` +
-        `&service_type=eq.${encodeURIComponent(serviceType)}` +
-        `&service_id=eq.${encodeURIComponent(serviceId)}` +
-        `&order=created_at.desc` +
-        `&limit=50`,
-        {
-          method: "GET",
-          headers: supabaseHeaders()
-        }
-      );
-
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/reviews` +
+      `?select=id,service_type,service_id,reviewer_name,rating,comment,created_at` +
+      `&service_type=eq.${encodeURIComponent(serviceType)}` +
+      `&service_id=eq.${encodeURIComponent(serviceId)}` +
+      `&order=created_at.desc` +
+      `&limit=50`,
+      {
+        method: "GET",
+        headers: supabaseHeaders()
+      }
+    );
 
     if (!response.ok) {
-
       throw new Error(
         `HTTP ${response.status}: ${await response.text()}`
       );
-
     }
 
-
     return await response.json();
-
 
   } catch (error) {
 
@@ -51,24 +36,15 @@ async function loadReviews(
     );
 
     return [];
-
   }
-
 }
 
 
-/* =========================================
-   حساب متوسط التقييم
-========================================= */
-
-function calculateAverageRating(
-  reviews
-) {
+function calculateAverageRating(reviews) {
 
   if (!reviews.length) {
     return 0;
   }
-
 
   const total =
     reviews.reduce(
@@ -77,138 +53,59 @@ function calculateAverageRating(
       0
     );
 
-
   return total / reviews.length;
-
 }
 
 
-/* =========================================
-   عرض النجوم
-========================================= */
-
-function displayStars(
-  rating
-) {
+function displayStars(rating) {
 
   const value =
     Math.max(
       0,
       Math.min(
         5,
-        Math.round(
-          Number(rating) || 0
-        )
+        Math.round(Number(rating) || 0)
       )
     );
-
 
   return (
     "★".repeat(value) +
     "☆".repeat(5 - value)
   );
-
 }
 
 
-/* =========================================
-   حماية HTML
-========================================= */
+function reviewEscapeHTML(value) {
 
-function reviewEscapeHTML(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 
-/* =========================================
-   حماية JavaScript
-========================================= */
+function reviewEscapeJS(value) {
 
-function reviewEscapeJS(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-
-    .replace(
-      /\\/g,
-      "\\\\"
-    )
-
-    .replace(
-      /'/g,
-      "\\'"
-    )
-
-    .replace(
-      /"/g,
-      '\\"'
-    )
-
-    .replace(
-      /\r?\n/g,
-      " "
-    );
-
+  return String(value ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\r?\n/g, " ");
 }
 
 
-/* =========================================
-   إنشاء واجهة التقييم
-========================================= */
-
-function renderReviews(
-  serviceType,
-  serviceId
-) {
+function renderReviews(serviceType, serviceId) {
 
   const safeType =
-    reviewEscapeHTML(
-      serviceType
-    );
+    reviewEscapeHTML(serviceType);
 
   const safeId =
-    reviewEscapeHTML(
-      serviceId
-    );
-
+    reviewEscapeHTML(serviceId);
 
   const uniqueId =
     `reviews-${serviceType}-${serviceId}`;
-
 
   return `
 
@@ -223,19 +120,17 @@ function renderReviews(
       <div class="reviews-summary">
 
         <strong>
-          ⭐ التقييمات
+          ⭐ التقييم
         </strong>
 
         <span class="reviews-average">
-          جاري تحميل التقييمات...
+          جاري التحميل...
         </span>
 
       </div>
 
-
       <div class="reviews-list">
       </div>
-
 
       <button
         type="button"
@@ -247,7 +142,6 @@ function renderReviews(
       >
         ⭐ أضف تقييمك
       </button>
-
 
       <div
         class="review-form-container"
@@ -277,11 +171,9 @@ function renderReviews(
             required
           >
 
-
           <label>
             تقييمك
           </label>
-
 
           <div class="star-rating">
 
@@ -312,18 +204,15 @@ function renderReviews(
 
           </div>
 
-
           <input
             type="hidden"
             class="review-rating"
             value="0"
           >
 
-
           <label>
             تعليقك
           </label>
-
 
           <textarea
             class="review-comment"
@@ -332,14 +221,12 @@ function renderReviews(
             placeholder="اكتب تعليقك هنا (اختياري)"
           ></textarea>
 
-
           <button
             type="submit"
             class="btn review-submit-btn"
           >
             📩 إرسال التقييم
           </button>
-
 
           <p class="review-message"></p>
 
@@ -350,76 +237,50 @@ function renderReviews(
     </div>
 
   `;
-
 }
 
 
-/* =========================================
-   فتح وإغلاق نموذج التقييم
-========================================= */
-
-function toggleReviewForm(
-  serviceType,
-  serviceId
-) {
+function toggleReviewForm(serviceType, serviceId) {
 
   const form =
     document.getElementById(
       `review-form-${serviceType}-${serviceId}`
     );
 
-
   if (!form) {
     return;
   }
-
 
   form.style.display =
     form.style.display === "none"
       ? "block"
       : "none";
-
 }
 
 
-/* =========================================
-   اختيار النجوم
-========================================= */
-
-function setReviewRating(
-  button,
-  rating
-) {
+function setReviewRating(button, rating) {
 
   const form =
     button.closest("form");
-
 
   if (!form) {
     return;
   }
 
-
   const ratingInput =
-    form.querySelector(
-      ".review-rating"
-    );
-
+    form.querySelector(".review-rating");
 
   const buttons =
     form.querySelectorAll(
       ".star-rating button"
     );
 
-
   if (!ratingInput) {
     return;
   }
 
-
   ratingInput.value =
     String(rating);
-
 
   buttons.forEach(
     (star, index) => {
@@ -428,16 +289,10 @@ function setReviewRating(
         index < rating
           ? "★"
           : "☆";
-
     }
   );
-
 }
 
-
-/* =========================================
-   إرسال التقييم
-========================================= */
 
 async function submitReview(
   event,
@@ -447,45 +302,27 @@ async function submitReview(
 
   event.preventDefault();
 
-
   const form =
     event.target;
-
 
   if (!form) {
     return;
   }
 
-
   const nameInput =
-    form.querySelector(
-      ".reviewer-name"
-    );
-
+    form.querySelector(".reviewer-name");
 
   const ratingInput =
-    form.querySelector(
-      ".review-rating"
-    );
-
+    form.querySelector(".review-rating");
 
   const commentInput =
-    form.querySelector(
-      ".review-comment"
-    );
-
+    form.querySelector(".review-comment");
 
   const message =
-    form.querySelector(
-      ".review-message"
-    );
-
+    form.querySelector(".review-message");
 
   const submitButton =
-    form.querySelector(
-      ".review-submit-btn"
-    );
-
+    form.querySelector(".review-submit-btn");
 
   if (
     !nameInput ||
@@ -494,27 +331,17 @@ async function submitReview(
     !message ||
     !submitButton
   ) {
-
     return;
-
   }
-
 
   const reviewerName =
     nameInput.value.trim();
 
-
   const rating =
-    Number(
-      ratingInput.value
-    );
-
+    Number(ratingInput.value);
 
   const comment =
     commentInput.value.trim();
-
-
-  /* التحقق من الاسم */
 
   if (!reviewerName) {
 
@@ -522,11 +349,7 @@ async function submitReview(
       "⚠️ يرجى كتابة اسمك.";
 
     return;
-
   }
-
-
-  /* التحقق من التقييم */
 
   if (
     !Number.isInteger(rating) ||
@@ -538,11 +361,7 @@ async function submitReview(
       "⚠️ يرجى اختيار تقييم من 1 إلى 5 نجوم.";
 
     return;
-
   }
-
-
-  /* التحقق من التعليق */
 
   if (comment.length > 500) {
 
@@ -550,47 +369,27 @@ async function submitReview(
       "⚠️ التعليق طويل جدًا.";
 
     return;
-
   }
 
-
-  /* منع الضغط المتكرر */
-
-  if (
-    submitButton.disabled
-  ) {
-
+  if (submitButton.disabled) {
     return;
-
   }
 
-
-  submitButton.disabled =
-    true;
-
+  submitButton.disabled = true;
 
   submitButton.textContent =
     "⏳ جاري إرسال التقييم...";
 
-
-  message.textContent =
-    "";
-
-
-  /* مهلة قصوى للطلب */
+  message.textContent = "";
 
   const controller =
     new AbortController();
 
-
   const timeout =
     setTimeout(
-      () => {
-        controller.abort();
-      },
+      () => controller.abort(),
       10000
     );
-
 
   try {
 
@@ -601,14 +400,9 @@ async function submitReview(
           method: "POST",
 
           headers: {
-            "apikey":
-              SUPABASE_KEY,
-
-            "Content-Type":
-              "application/json",
-
-            "Prefer":
-              "return=minimal"
+            "apikey": SUPABASE_KEY,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
           },
 
           body: JSON.stringify({
@@ -632,58 +426,33 @@ async function submitReview(
 
           signal:
             controller.signal
-
         }
       );
 
-
     clearTimeout(timeout);
-
 
     if (!response.ok) {
 
       const errorText =
         await response.text();
 
-
       throw new Error(
         `HTTP ${response.status}: ${errorText}`
       );
-
     }
-
-
-    /* نجاح الإرسال */
 
     message.textContent =
       "✅ تم إرسال تقييمك بنجاح.";
 
-
-    /* تنظيف النموذج */
-
     form.reset();
 
-
-    ratingInput.value =
-      "0";
-
+    ratingInput.value = "0";
 
     form
-      .querySelectorAll(
-        ".star-rating button"
-      )
-      .forEach(
-        star => {
-          star.textContent =
-            "☆";
-        }
-      );
-
-
-    /*
-       تحديث تقييمات هذه الخدمة فقط
-       وليس كل الموقع
-    */
+      .querySelectorAll(".star-rating button")
+      .forEach(star => {
+        star.textContent = "☆";
+      });
 
     await refreshReviews(
       serviceType,
@@ -691,21 +460,16 @@ async function submitReview(
       true
     );
 
-
   } catch (error) {
 
     clearTimeout(timeout);
-
 
     console.error(
       "Review submission error:",
       error
     );
 
-
-    if (
-      error.name === "AbortError"
-    ) {
+    if (error.name === "AbortError") {
 
       message.textContent =
         "❌ انتهت مهلة إرسال التقييم. حاول مرة أخرى.";
@@ -714,27 +478,17 @@ async function submitReview(
 
       message.textContent =
         "❌ تعذر إرسال التقييم حاليًا.";
-
     }
-
 
   } finally {
 
-    submitButton.disabled =
-      false;
-
+    submitButton.disabled = false;
 
     submitButton.textContent =
       "📩 إرسال التقييم";
-
   }
-
 }
 
-
-/* =========================================
-   تحديث تقييمات خدمة واحدة
-========================================= */
 
 async function refreshReviews(
   serviceType,
@@ -747,54 +501,36 @@ async function refreshReviews(
       `reviews-${serviceType}-${serviceId}`
     );
 
-
   if (!section) {
     return;
   }
-
-
-  /*
-     منع تحميل نفس التقييمات عدة مرات
-     بسبب إعادة رسم الصفحة
-  */
 
   if (
     !force &&
     section.dataset.reviewsLoaded === "true"
   ) {
-
     return;
-
   }
-
 
   const averageElement =
     section.querySelector(
       ".reviews-average"
     );
 
-
   const listElement =
     section.querySelector(
       ".reviews-list"
     );
 
-
   if (
     !averageElement ||
     !listElement
   ) {
-
     return;
-
   }
-
-
-  /* علامة أن التحميل بدأ */
 
   section.dataset.reviewsLoaded =
     "loading";
-
 
   const reviews =
     await loadReviews(
@@ -802,33 +538,24 @@ async function refreshReviews(
       serviceId
     );
 
-
   const average =
     calculateAverageRating(
       reviews
     );
 
-
-  /* عرض المتوسط */
-
   if (reviews.length) {
 
     averageElement.innerHTML =
       `
-        ${displayStars(average)}
-        ${average.toFixed(1)}/5
-        (${reviews.length} تقييم)
+        ⭐ ${average.toFixed(1)}/5
+        · ${reviews.length} تقييم
       `;
 
   } else {
 
     averageElement.textContent =
       "لا توجد تقييمات بعد.";
-
   }
-
-
-  /* عرض قائمة التقييمات */
 
   if (!reviews.length) {
 
@@ -842,8 +569,8 @@ async function refreshReviews(
   } else {
 
     listElement.innerHTML =
-      reviews.map(
-        review => {
+      reviews
+        .map(review => {
 
           const comment =
             review.comment
@@ -855,7 +582,6 @@ async function refreshReviews(
                 </p>
               `
               : "";
-
 
           return `
             <div class="review-item">
@@ -876,24 +602,14 @@ async function refreshReviews(
 
             </div>
           `;
-
-        }
-      ).join("");
-
+        })
+        .join("");
   }
-
-
-  /* انتهى التحميل */
 
   section.dataset.reviewsLoaded =
     "true";
-
 }
 
-
-/* =========================================
-   تشغيل التقييمات الموجودة
-========================================= */
 
 function initReviews() {
 
@@ -902,68 +618,39 @@ function initReviews() {
       ".reviews-section"
     );
 
+  sections.forEach(section => {
 
-  sections.forEach(
-    section => {
+    const serviceType =
+      section.dataset.serviceType;
 
-      const serviceType =
-        section.dataset.serviceType;
+    const serviceId =
+      section.dataset.serviceId;
 
-
-      const serviceId =
-        section.dataset.serviceId;
-
-
-      if (
-        !serviceType ||
-        !serviceId
-      ) {
-
-        return;
-
-      }
-
-
-      /*
-         لا نعيد تحميل التقييمات
-         إذا سبق تحميلها
-      */
-
-      if (
-        section.dataset.reviewsLoaded ===
-        "true"
-      ) {
-
-        return;
-
-      }
-
-
-      refreshReviews(
-        serviceType,
-        serviceId
-      );
-
+    if (
+      !serviceType ||
+      !serviceId
+    ) {
+      return;
     }
-  );
 
+    if (
+      section.dataset.reviewsLoaded ===
+      "true"
+    ) {
+      return;
+    }
+
+    refreshReviews(
+      serviceType,
+      serviceId
+    );
+  });
 }
 
 
-/* =========================================
-   مراقبة البطاقات الجديدة
-========================================= */
-
 function startReviewsObserver() {
 
-  /*
-     متغير لمنع تشغيل initReviews
-     عشرات المرات في نفس اللحظة
-  */
-
-  let observerTimer =
-    null;
-
+  let observerTimer = null;
 
   const observer =
     new MutationObserver(
@@ -972,7 +659,6 @@ function startReviewsObserver() {
         let hasNewReviewSection =
           false;
 
-
         mutations.forEach(
           mutation => {
 
@@ -980,19 +666,11 @@ function startReviewsObserver() {
               !mutation.addedNodes ||
               !mutation.addedNodes.length
             ) {
-
               return;
-
             }
-
 
             mutation.addedNodes.forEach(
               node => {
-
-                /*
-                   نفحص فقط العناصر الجديدة
-                   التي تحتوي على reviews-section
-                */
 
                 if (
                   node.nodeType === 1 &&
@@ -1005,61 +683,29 @@ function startReviewsObserver() {
                     )
                   )
                 ) {
-
                   hasNewReviewSection =
                     true;
-
                 }
-
               }
             );
-
           }
         );
 
-
-        /*
-           إذا لم تتم إضافة قسم تقييم جديد
-           لا نفعل أي شيء
-        */
-
-        if (
-          !hasNewReviewSection
-        ) {
-
+        if (!hasNewReviewSection) {
           return;
-
         }
 
-
-        /*
-           تأخير بسيط وتجميع التغييرات
-           لمنع الطلبات المتكررة
-        */
-
-        clearTimeout(
-          observerTimer
-        );
-
+        clearTimeout(observerTimer);
 
         observerTimer =
           setTimeout(
             () => {
-
               initReviews();
-
             },
             150
           );
-
       }
     );
-
-
-  /*
-     نراقب body فقط لاكتشاف
-     بطاقات الخدمات الجديدة
-  */
 
   observer.observe(
     document.body,
@@ -1069,38 +715,17 @@ function startReviewsObserver() {
     }
   );
 
-
   return observer;
-
 }
 
-
-/* =========================================
-   تشغيل النظام
-========================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   function () {
 
-    /*
-       تشغيل التقييمات الموجودة
-    */
-
     initReviews();
-
-
-    /*
-       مراقبة إضافة بطاقات جديدة فقط
-       بدون إعادة تحميل التقييمات القديمة
-    */
 
     startReviewsObserver();
 
   }
 );
-
-
-/* =========================================
-   نهاية reviews.js
-========================================= */
