@@ -1,5 +1,14 @@
 /* =========================================
-   📋 طلب الخدمة
+   📋 شمال المغرب
+   نظام طلب الخدمة
+   النسخة المحسنة للسرعة والاستقرار
+========================================= */
+
+
+/* =========================================
+   اختيار الخدمة تلقائيًا
+   عند الضغط على:
+   📋 اطلب هذه الخدمة
 ========================================= */
 
 function selectService(
@@ -9,46 +18,87 @@ function selectService(
 ) {
 
   const type =
-    document.getElementById("service_type");
+    document.getElementById(
+      "service_type"
+    );
 
   const id =
-    document.getElementById("service_id");
+    document.getElementById(
+      "service_id"
+    );
 
   const notes =
-    document.getElementById("notes");
+    document.getElementById(
+      "notes"
+    );
 
-  if (!type || !id) return;
 
-  type.value = serviceType;
+  /* التأكد من وجود الحقول */
 
-  id.value = serviceId;
-
-  if (notes) {
-    notes.value =
-      "أرغب في طلب خدمة: " +
-      serviceName;
+  if (!type || !id) {
+    return;
   }
 
+
+  /* تحديد نوع الخدمة */
+
+  type.value =
+    String(serviceType || "");
+
+
+  /* تحديد رقم الخدمة تلقائيًا */
+
+  id.value =
+    String(serviceId || "");
+
+
+  /* إضافة اسم الخدمة إلى الملاحظات */
+
+  if (notes) {
+
+    notes.value =
+      "أرغب في طلب خدمة: " +
+      String(serviceName || "");
+
+  }
+
+
+  /* الانتقال إلى نموذج الطلب */
+
   const requestSection =
-    document.getElementById("request");
+    document.getElementById(
+      "request"
+    );
+
 
   if (requestSection) {
 
     requestSection.scrollIntoView({
-      behavior: "smooth"
+      behavior: "smooth",
+      block: "start"
     });
 
   }
+
 }
 
 
 /* =========================================
-   إرسال الطلب إلى Supabase
+   إرسال طلب الخدمة
 ========================================= */
 
-async function submitServiceRequest(event) {
+async function submitServiceRequest(
+  event
+) {
+
+  /* منع إعادة تحميل الصفحة */
 
   event.preventDefault();
+
+
+  /* =======================================
+     الحصول على عناصر النموذج
+  ======================================= */
 
   const form =
     document.getElementById(
@@ -65,71 +115,231 @@ async function submitServiceRequest(event) {
       "submitRequestBtn"
     );
 
-  if (!form || !message || !button) {
+
+  /* إذا كان أحد العناصر غير موجود */
+
+  if (
+    !form ||
+    !message ||
+    !button
+  ) {
+
+    console.error(
+      "Service request form elements not found."
+    );
+
     return;
+
   }
 
 
-  const requesterName =
-    document
-      .getElementById("requester_name")
-      .value
-      .trim();
+  /* =======================================
+     قراءة بيانات المستخدم
+  ======================================= */
 
-  const phone =
-    document
-      .getElementById("phone")
-      .value
-      .trim();
+  const requesterNameInput =
+    document.getElementById(
+      "requester_name"
+    );
 
-  const whatsapp =
-    document
-      .getElementById("whatsapp")
-      .value
-      .trim();
+  const phoneInput =
+    document.getElementById(
+      "phone"
+    );
 
-  const serviceType =
-    document
-      .getElementById("service_type")
-      .value;
+  const whatsappInput =
+    document.getElementById(
+      "whatsapp"
+    );
 
-  const serviceId =
-    document
-      .getElementById("service_id")
-      .value;
+  const serviceTypeInput =
+    document.getElementById(
+      "service_type"
+    );
 
-  const requestDate =
-    document
-      .getElementById("request_date")
-      .value;
+  const serviceIdInput =
+    document.getElementById(
+      "service_id"
+    );
 
-  const notes =
-    document
-      .getElementById("notes")
-      .value
-      .trim();
+  const requestDateInput =
+    document.getElementById(
+      "request_date"
+    );
 
+  const notesInput =
+    document.getElementById(
+      "notes"
+    );
+
+
+  /* التأكد من وجود الحقول الأساسية */
 
   if (
-    !requesterName ||
-    !serviceType ||
-    !serviceId
+    !requesterNameInput ||
+    !serviceTypeInput ||
+    !serviceIdInput
   ) {
 
     message.textContent =
-      "⚠️ يرجى ملء الحقول المطلوبة.";
+      "❌ تعذر قراءة بيانات الطلب.";
 
     return;
+
   }
 
 
-  button.disabled = true;
+  /* =======================================
+     تنظيف البيانات
+  ======================================= */
+
+  const requesterName =
+    requesterNameInput.value.trim();
+
+
+  const phone =
+    phoneInput
+      ? phoneInput.value.trim()
+      : "";
+
+
+  const whatsapp =
+    whatsappInput
+      ? whatsappInput.value.trim()
+      : "";
+
+
+  const serviceType =
+    serviceTypeInput.value.trim();
+
+
+  const serviceId =
+    serviceIdInput.value.trim();
+
+
+  const requestDate =
+    requestDateInput
+      ? requestDateInput.value
+      : "";
+
+
+  const notes =
+    notesInput
+      ? notesInput.value.trim()
+      : "";
+
+
+  /* =======================================
+     التحقق من البيانات المطلوبة
+  ======================================= */
+
+  if (!requesterName) {
+
+    message.textContent =
+      "⚠️ يرجى كتابة الاسم.";
+
+    requesterNameInput.focus();
+
+    return;
+
+  }
+
+
+  if (!serviceType) {
+
+    message.textContent =
+      "⚠️ يرجى اختيار نوع الخدمة.";
+
+    serviceTypeInput.focus();
+
+    return;
+
+  }
+
+
+  if (!serviceId) {
+
+    message.textContent =
+      "⚠️ يرجى اختيار الخدمة أولاً.";
+
+    serviceIdInput.focus();
+
+    return;
+
+  }
+
+
+  /* =======================================
+     التأكد من أن رقم الخدمة صالح
+  ======================================= */
+
+  const numericServiceId =
+    Number(serviceId);
+
+
+  if (
+    !Number.isInteger(
+      numericServiceId
+    ) ||
+    numericServiceId <= 0
+  ) {
+
+    message.textContent =
+      "⚠️ رقم الخدمة غير صالح.";
+
+    return;
+
+  }
+
+
+  /* =======================================
+     منع الضغط المتكرر
+  ======================================= */
+
+  if (
+    button.disabled
+  ) {
+
+    return;
+
+  }
+
+
+  button.disabled =
+    true;
+
 
   button.textContent =
     "⏳ جاري إرسال الطلب...";
 
-  message.textContent = "";
 
+  message.textContent =
+    "";
+
+
+  /* =======================================
+     إنشاء مهلة قصوى
+     حتى لا يبقى الزر معلقًا
+  ======================================= */
+
+  const controller =
+    new AbortController();
+
+
+  const timeout =
+    setTimeout(
+      () => {
+
+        controller.abort();
+
+      },
+      10000
+    );
+
+
+  /* =======================================
+     إرسال الطلب إلى Supabase
+  ======================================= */
 
   try {
 
@@ -156,7 +366,7 @@ async function submitServiceRequest(event) {
               serviceType,
 
             service_id:
-              Number(serviceId),
+              numericServiceId,
 
             requester_name:
               requesterName,
@@ -173,45 +383,143 @@ async function submitServiceRequest(event) {
             notes:
               notes || null
 
-          })
+          }),
+
+          signal:
+            controller.signal
+
         }
       );
 
+
+    /* =====================================
+       إلغاء المؤقت بعد انتهاء الطلب
+    ===================================== */
+
+    clearTimeout(
+      timeout
+    );
+
+
+    /* =====================================
+       فحص نتيجة Supabase
+    ===================================== */
 
     if (!response.ok) {
 
       const errorText =
         await response.text();
 
+
       throw new Error(
         `HTTP ${response.status}: ${errorText}`
       );
+
     }
 
 
+    /* =====================================
+       نجاح إرسال الطلب
+    ===================================== */
+
     message.textContent =
       "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
+
+
+    /* تنظيف النموذج */
 
     form.reset();
 
 
   } catch (error) {
 
+    /* التأكد من إلغاء المؤقت */
+
+    clearTimeout(
+      timeout
+    );
+
+
     console.error(
       "Service request error:",
       error
     );
 
-    message.textContent =
-      "❌ خطأ: " +
-      error.message;
 
+    /* =====================================
+       إذا انتهت المهلة
+    ===================================== */
+
+    if (
+      error.name ===
+      "AbortError"
+    ) {
+
+      message.textContent =
+        "❌ انتهت مهلة إرسال الطلب. يرجى المحاولة مرة أخرى.";
+
+    } else {
+
+      /* ===================================
+         خطأ آخر
+      =================================== */
+
+      message.textContent =
+        "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";
+
+    }
 
   } finally {
 
-    button.disabled = false;
+    /* =====================================
+       إعادة الزر إلى حالته الطبيعية
+    ===================================== */
+
+    button.disabled =
+      false;
+
 
     button.textContent =
       "📩 إرسال الطلب";
+
   }
+
+}
+
+
+/* =========================================
+   تشغيل نموذج طلب الخدمة
+========================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    const form =
+      document.getElementById(
+        "serviceRequestForm"
+      );
+
+
+    if (!form) {
+      return;
     }
+
+
+    /*
+       نستخدم addEventListener
+       حتى لا نحتاج إلى تعديل HTML
+    */
+
+    form.addEventListener(
+      "submit",
+      submitServiceRequest
+    );
+
+  }
+);
+
+
+/* =========================================
+   نهاية requests.js
+========================================= */
