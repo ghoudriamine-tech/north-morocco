@@ -185,8 +185,10 @@ function displayList(id, items, emptyMessage) {
         ? `
           <a
             href="tel:${escapeHTML(phone)}"
-            class="btn">
-            📞 اتصال
+            class="btn icon-btn"
+            aria-label="اتصال"
+            title="اتصال">
+            📞
           </a>
         `
         : "";
@@ -196,10 +198,12 @@ function displayList(id, items, emptyMessage) {
         ? `
           <a
             href="https://wa.me/${whatsapp}"
-            class="btn whatsapp-accommodation"
+            class="btn whatsapp-accommodation icon-btn"
             target="_blank"
-            rel="noopener">
-            💬 واتساب
+            rel="noopener"
+            aria-label="واتساب"
+            title="واتساب">
+            💬
           </a>
         `
         : "";
@@ -209,10 +213,12 @@ function displayList(id, items, emptyMessage) {
         ? `
           <a
             href="${escapeHTML(item.map_url)}"
-            class="btn"
+            class="btn icon-btn"
             target="_blank"
-            rel="noopener">
-            📍 الموقع
+            rel="noopener"
+            aria-label="الموقع"
+            title="الموقع">
+            📍
           </a>
         `
         : "";
@@ -220,13 +226,13 @@ function displayList(id, items, emptyMessage) {
     const requestButton = `
       <button
         type="button"
-        class="btn"
+        class="btn request-btn"
         onclick="selectService(
           'accommodation',
           '${escapeJS(item.id)}',
           '${escapeJS(item.name || "إقامة")}'
         )">
-        📋 اطلب هذه الخدمة
+        📋 طلب
       </button>
     `;
 
@@ -285,4 +291,4 @@ function displayList(id, items, emptyMessage) {
 
   }).join("");
 
-      }
+  }
