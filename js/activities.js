@@ -232,7 +232,7 @@ items.map(item => {
       ? `
         <a
           href="tel:${escapeHTML(phone)}"
-          class="btn"
+          class="btn activity-icon-btn"
           aria-label="اتصال"
           title="اتصال">
           📞
@@ -247,7 +247,7 @@ items.map(item => {
       ? `
         <a
           href="https://wa.me/${whatsapp}"
-          class="btn whatsapp-accommodation"
+          class="btn whatsapp-accommodation activity-icon-btn"
           target="_blank"
           rel="noopener"
           aria-label="واتساب"
@@ -264,7 +264,7 @@ items.map(item => {
       ? `
         <a
           href="${escapeHTML(item.map_url)}"
-          class="btn"
+          class="btn activity-icon-btn"
           target="_blank"
           rel="noopener"
           aria-label="الموقع"
@@ -283,7 +283,7 @@ items.map(item => {
   const requestButton = `
     <button
       type="button"
-      class="btn"
+      class="btn activity-request-btn"
       onclick="selectService(
         'activity',
         '${escapeJS(item.id)}',
@@ -342,7 +342,7 @@ items.map(item => {
           : ""
       }
 
-      <div class="accommodation-buttons">
+      <div class="accommodation-buttons activity-buttons">
 
         ${phoneButton}
 
@@ -364,4 +364,4 @@ items.map(item => {
 
 }).join("");
 
-}
+  }
