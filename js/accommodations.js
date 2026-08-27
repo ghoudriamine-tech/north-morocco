@@ -44,13 +44,17 @@ async function loadAccommodations() {
     let message;
 
     if (error.name === "AbortError") {
+
       message =
         "انتهت مهلة تحميل الإقامات. لم يستجب الخادم خلال 10 ثوانٍ.";
+
     } else {
+
       message =
         `خطأ في تحميل الإقامات:<br>${escapeHTML(
           error.message || String(error)
         )}`;
+
     }
 
     [
@@ -63,8 +67,10 @@ async function loadAccommodations() {
         document.getElementById(id);
 
       if (container) {
+
         container.innerHTML =
           `<p class="empty">${message}</p>`;
+
       }
 
     });
@@ -152,8 +158,10 @@ function displayList(id, items, emptyMessage) {
         : phone.replace(/\D/g, "");
 
     if (whatsapp.startsWith("0")) {
+
       whatsapp =
         "212" + whatsapp.substring(1);
+
     }
 
     const image =
@@ -258,15 +266,23 @@ function displayList(id, items, emptyMessage) {
         <div class="accommodation-buttons">
 
           ${phoneButton}
+
           ${whatsappButton}
+
           ${mapButton}
+
           ${requestButton}
 
         </div>
+
+        ${renderReviews(
+          "accommodation",
+          item.id
+        )}
 
       </div>
     `;
 
   }).join("");
 
-  }
+      }
