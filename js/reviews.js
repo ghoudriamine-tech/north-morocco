@@ -1,8 +1,13 @@
 /* =========================================
    ⭐ شمال المغرب
    نظام التقييمات والمراجعات
+   النسخة المحسنة للسرعة والاستقرار
 ========================================= */
 
+
+/* =========================================
+   تحميل تقييمات خدمة واحدة
+========================================= */
 
 async function loadReviews(
   serviceType,
@@ -17,7 +22,8 @@ async function loadReviews(
         `?select=id,service_type,service_id,reviewer_name,rating,comment,created_at` +
         `&service_type=eq.${encodeURIComponent(serviceType)}` +
         `&service_id=eq.${encodeURIComponent(serviceId)}` +
-        `&order=created_at.desc`,
+        `&order=created_at.desc` +
+        `&limit=50`,
         {
           method: "GET",
           headers: supabaseHeaders()
@@ -52,7 +58,7 @@ async function loadReviews(
 
 
 /* =========================================
-   متوسط التقييم
+   حساب متوسط التقييم
 ========================================= */
 
 function calculateAverageRating(
@@ -78,7 +84,7 @@ function calculateAverageRating(
 
 
 /* =========================================
-   النجوم
+   عرض النجوم
 ========================================= */
 
 function displayStars(
@@ -181,7 +187,7 @@ function reviewEscapeJS(
 
 
 /* =========================================
-   واجهة التقييم
+   إنشاء واجهة التقييم
 ========================================= */
 
 function renderReviews(
@@ -211,6 +217,7 @@ function renderReviews(
       id="${uniqueId}"
       data-service-type="${safeType}"
       data-service-id="${safeId}"
+      data-reviews-loaded="false"
     >
 
       <div class="reviews-summary">
@@ -348,7 +355,7 @@ function renderReviews(
 
 
 /* =========================================
-   فتح نموذج التقييم
+   فتح وإغلاق نموذج التقييم
 ========================================= */
 
 function toggleReviewForm(
@@ -445,6 +452,11 @@ async function submitReview(
     event.target;
 
 
+  if (!form) {
+    return;
+  }
+
+
   const nameInput =
     form.querySelector(
       ".reviewer-name"
@@ -475,6 +487,19 @@ async function submitReview(
     );
 
 
+  if (
+    !nameInput ||
+    !ratingInput ||
+    !commentInput ||
+    !message ||
+    !submitButton
+  ) {
+
+    return;
+
+  }
+
+
   const reviewerName =
     nameInput.value.trim();
 
@@ -489,6 +514,8 @@ async function submitReview(
     commentInput.value.trim();
 
 
+  /* التحقق من الاسم */
+
   if (!reviewerName) {
 
     message.textContent =
@@ -498,6 +525,8 @@ async function submitReview(
 
   }
 
+
+  /* التحقق من التقييم */
 
   if (
     !Number.isInteger(rating) ||
@@ -513,10 +542,23 @@ async function submitReview(
   }
 
 
+  /* التحقق من التعليق */
+
   if (comment.length > 500) {
 
     message.textContent =
       "⚠️ التعليق طويل جدًا.";
+
+    return;
+
+  }
+
+
+  /* منع الضغط المتكرر */
+
+  if (
+    submitButton.disabled
+  ) {
 
     return;
 
@@ -533,6 +575,21 @@ async function submitReview(
 
   message.textContent =
     "";
+
+
+  /* مهلة قصوى للطلب */
+
+  const controller =
+    new AbortController();
+
+
+  const timeout =
+    setTimeout(
+      () => {
+        controller.abort();
+      },
+      10000
+    );
 
 
   try {
@@ -571,10 +628,16 @@ async function submitReview(
             comment:
               comment || null
 
-          })
+          }),
+
+          signal:
+            controller.signal
 
         }
       );
+
+
+    clearTimeout(timeout);
 
 
     if (!response.ok) {
@@ -590,9 +653,13 @@ async function submitReview(
     }
 
 
+    /* نجاح الإرسال */
+
     message.textContent =
       "✅ تم إرسال تقييمك بنجاح.";
 
+
+    /* تنظيف النموذج */
 
     form.reset();
 
@@ -613,13 +680,22 @@ async function submitReview(
       );
 
 
+    /*
+       تحديث تقييمات هذه الخدمة فقط
+       وليس كل الموقع
+    */
+
     await refreshReviews(
       serviceType,
-      serviceId
+      serviceId,
+      true
     );
 
 
   } catch (error) {
+
+    clearTimeout(timeout);
+
 
     console.error(
       "Review submission error:",
@@ -627,8 +703,20 @@ async function submitReview(
     );
 
 
-    message.textContent =
-      "❌ تعذر إرسال التقييم حاليًا.";
+    if (
+      error.name === "AbortError"
+    ) {
+
+      message.textContent =
+        "❌ انتهت مهلة إرسال التقييم. حاول مرة أخرى.";
+
+    } else {
+
+      message.textContent =
+        "❌ تعذر إرسال التقييم حاليًا.";
+
+    }
+
 
   } finally {
 
@@ -645,12 +733,13 @@ async function submitReview(
 
 
 /* =========================================
-   تحديث التقييمات
+   تحديث تقييمات خدمة واحدة
 ========================================= */
 
 async function refreshReviews(
   serviceType,
-  serviceId
+  serviceId,
+  force = false
 ) {
 
   const section =
@@ -661,6 +750,21 @@ async function refreshReviews(
 
   if (!section) {
     return;
+  }
+
+
+  /*
+     منع تحميل نفس التقييمات عدة مرات
+     بسبب إعادة رسم الصفحة
+  */
+
+  if (
+    !force &&
+    section.dataset.reviewsLoaded === "true"
+  ) {
+
+    return;
+
   }
 
 
@@ -676,6 +780,22 @@ async function refreshReviews(
     );
 
 
+  if (
+    !averageElement ||
+    !listElement
+  ) {
+
+    return;
+
+  }
+
+
+  /* علامة أن التحميل بدأ */
+
+  section.dataset.reviewsLoaded =
+    "loading";
+
+
   const reviews =
     await loadReviews(
       serviceType,
@@ -688,6 +808,8 @@ async function refreshReviews(
       reviews
     );
 
+
+  /* عرض المتوسط */
 
   if (reviews.length) {
 
@@ -706,6 +828,8 @@ async function refreshReviews(
   }
 
 
+  /* عرض قائمة التقييمات */
+
   if (!reviews.length) {
 
     listElement.innerHTML =
@@ -715,103 +839,137 @@ async function refreshReviews(
         </p>
       `;
 
-    return;
+  } else {
+
+    listElement.innerHTML =
+      reviews.map(
+        review => {
+
+          const comment =
+            review.comment
+              ? `
+                <p class="review-comment-display">
+                  💬 ${reviewEscapeHTML(
+                    review.comment
+                  )}
+                </p>
+              `
+              : "";
+
+
+          return `
+            <div class="review-item">
+
+              <strong>
+                ${reviewEscapeHTML(
+                  review.reviewer_name
+                )}
+              </strong>
+
+              <div class="review-stars">
+                ${displayStars(
+                  review.rating
+                )}
+              </div>
+
+              ${comment}
+
+            </div>
+          `;
+
+        }
+      ).join("");
 
   }
 
 
-  listElement.innerHTML =
-    reviews.map(
-      review => {
+  /* انتهى التحميل */
 
-        const comment =
-          review.comment
-            ? `
-              <p class="review-comment-display">
-                💬 ${reviewEscapeHTML(
-                  review.comment
-                )}
-              </p>
-            `
-            : "";
-
-
-        return `
-          <div class="review-item">
-
-            <strong>
-              ${reviewEscapeHTML(
-                review.reviewer_name
-              )}
-            </strong>
-
-            <div class="review-stars">
-              ${displayStars(
-                review.rating
-              )}
-            </div>
-
-            ${comment}
-
-          </div>
-        `;
-
-      }
-    ).join("");
+  section.dataset.reviewsLoaded =
+    "true";
 
 }
 
 
 /* =========================================
-   تشغيل التقييمات
+   تشغيل التقييمات الموجودة
 ========================================= */
 
 function initReviews() {
 
-  document
-    .querySelectorAll(
+  const sections =
+    document.querySelectorAll(
       ".reviews-section"
-    )
-    .forEach(
-      section => {
-
-        const serviceType =
-          section.dataset.serviceType;
+    );
 
 
-        const serviceId =
-          section.dataset.serviceId;
+  sections.forEach(
+    section => {
+
+      const serviceType =
+        section.dataset.serviceType;
 
 
-        if (
-          serviceType &&
-          serviceId
-        ) {
+      const serviceId =
+        section.dataset.serviceId;
 
-          refreshReviews(
-            serviceType,
-            serviceId
-          );
 
-        }
+      if (
+        !serviceType ||
+        !serviceId
+      ) {
+
+        return;
 
       }
-    );
+
+
+      /*
+         لا نعيد تحميل التقييمات
+         إذا سبق تحميلها
+      */
+
+      if (
+        section.dataset.reviewsLoaded ===
+        "true"
+      ) {
+
+        return;
+
+      }
+
+
+      refreshReviews(
+        serviceType,
+        serviceId
+      );
+
+    }
+  );
 
 }
 
 
 /* =========================================
-   مراقبة ظهور بطاقات جديدة
+   مراقبة البطاقات الجديدة
 ========================================= */
 
 function startReviewsObserver() {
+
+  /*
+     متغير لمنع تشغيل initReviews
+     عشرات المرات في نفس اللحظة
+  */
+
+  let observerTimer =
+    null;
+
 
   const observer =
     new MutationObserver(
       mutations => {
 
-        let shouldRefresh =
+        let hasNewReviewSection =
           false;
 
 
@@ -819,28 +977,89 @@ function startReviewsObserver() {
           mutation => {
 
             if (
-              mutation.addedNodes &&
-              mutation.addedNodes.length
+              !mutation.addedNodes ||
+              !mutation.addedNodes.length
             ) {
 
-              shouldRefresh =
-                true;
+              return;
 
             }
+
+
+            mutation.addedNodes.forEach(
+              node => {
+
+                /*
+                   نفحص فقط العناصر الجديدة
+                   التي تحتوي على reviews-section
+                */
+
+                if (
+                  node.nodeType === 1 &&
+                  (
+                    node.matches?.(
+                      ".reviews-section"
+                    ) ||
+                    node.querySelector?.(
+                      ".reviews-section"
+                    )
+                  )
+                ) {
+
+                  hasNewReviewSection =
+                    true;
+
+                }
+
+              }
+            );
 
           }
         );
 
 
-        if (shouldRefresh) {
+        /*
+           إذا لم تتم إضافة قسم تقييم جديد
+           لا نفعل أي شيء
+        */
 
-          initReviews();
+        if (
+          !hasNewReviewSection
+        ) {
+
+          return;
 
         }
+
+
+        /*
+           تأخير بسيط وتجميع التغييرات
+           لمنع الطلبات المتكررة
+        */
+
+        clearTimeout(
+          observerTimer
+        );
+
+
+        observerTimer =
+          setTimeout(
+            () => {
+
+              initReviews();
+
+            },
+            150
+          );
 
       }
     );
 
+
+  /*
+     نراقب body فقط لاكتشاف
+     بطاقات الخدمات الجديدة
+  */
 
   observer.observe(
     document.body,
@@ -849,6 +1068,9 @@ function startReviewsObserver() {
       subtree: true
     }
   );
+
+
+  return observer;
 
 }
 
@@ -861,9 +1083,24 @@ document.addEventListener(
   "DOMContentLoaded",
   function () {
 
+    /*
+       تشغيل التقييمات الموجودة
+    */
+
     initReviews();
+
+
+    /*
+       مراقبة إضافة بطاقات جديدة فقط
+       بدون إعادة تحميل التقييمات القديمة
+    */
 
     startReviewsObserver();
 
   }
 );
+
+
+/* =========================================
+   نهاية reviews.js
+========================================= */
