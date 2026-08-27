@@ -448,6 +448,220 @@
 
 
   <!-- =========================
+       مقدمو الخدمات
+  ========================== -->
+
+  <section
+    id="providers"
+    class="section"
+  >
+
+    <div class="container">
+
+      <h2>
+        🏢 انضم كمقدم خدمة
+      </h2>
+
+
+      <div class="contact-card">
+
+        <p>
+          هل لديك إقامة أو خدمة سياحية في شمال المغرب؟
+        </p>
+
+        <p>
+          أرسل معلوماتك وسنراجع طلبك قبل نشره على الموقع.
+        </p>
+
+
+        <form
+          id="providerApplicationForm"
+        >
+
+
+          <!-- اسم مقدم الخدمة -->
+
+          <label for="provider_name">
+            اسم مقدم الخدمة
+          </label>
+
+          <input
+            type="text"
+            id="provider_name"
+            name="provider_name"
+            placeholder="اسمك أو اسم المؤسسة"
+            maxlength="150"
+            required
+          >
+
+
+          <!-- نوع الخدمة -->
+
+          <label for="provider_service_type">
+            نوع الخدمة
+          </label>
+
+          <select
+            id="provider_service_type"
+            name="service_type"
+            required
+          >
+
+            <option value="">
+              اختر نوع الخدمة
+            </option>
+
+            <option value="accommodation">
+              🏨 إقامة
+            </option>
+
+            <option value="transport">
+              🚗 مواصلات
+            </option>
+
+            <option value="activity">
+              🗺️ نشاط أو جولة
+            </option>
+
+            <option value="tour_guide">
+              🧭 مرشد سياحي
+            </option>
+
+          </select>
+
+
+          <!-- المدينة -->
+
+          <label for="provider_city">
+            المدينة
+          </label>
+
+          <input
+            type="text"
+            id="provider_city"
+            name="city"
+            placeholder="مثال: تطوان"
+            maxlength="100"
+            required
+          >
+
+
+          <!-- العنوان -->
+
+          <label for="provider_address">
+            العنوان
+          </label>
+
+          <input
+            type="text"
+            id="provider_address"
+            name="address"
+            placeholder="العنوان"
+            maxlength="250"
+          >
+
+
+          <!-- الوصف -->
+
+          <label for="provider_description">
+            وصف الخدمة
+          </label>
+
+          <textarea
+            id="provider_description"
+            name="description"
+            rows="4"
+            maxlength="1000"
+            placeholder="اكتب وصفًا مختصرًا عن خدمتك"
+          ></textarea>
+
+
+          <!-- الهاتف -->
+
+          <label for="provider_phone">
+            الهاتف
+          </label>
+
+          <input
+            type="tel"
+            id="provider_phone"
+            name="phone"
+            placeholder="رقم الهاتف"
+            maxlength="30"
+          >
+
+
+          <!-- واتساب -->
+
+          <label for="provider_whatsapp">
+            واتساب
+          </label>
+
+          <input
+            type="tel"
+            id="provider_whatsapp"
+            name="whatsapp"
+            placeholder="رقم واتساب"
+            maxlength="30"
+          >
+
+
+          <!-- رابط الصورة -->
+
+          <label for="provider_image_url">
+            رابط الصورة
+          </label>
+
+          <input
+            type="url"
+            id="provider_image_url"
+            name="image_url"
+            placeholder="رابط الصورة - اختياري"
+          >
+
+
+          <!-- رابط الموقع -->
+
+          <label for="provider_map_url">
+            رابط الموقع
+          </label>
+
+          <input
+            type="url"
+            id="provider_map_url"
+            name="map_url"
+            placeholder="رابط Google Maps - اختياري"
+          >
+
+
+          <!-- إرسال -->
+
+          <button
+            type="submit"
+            class="btn"
+            id="submitProviderBtn"
+          >
+            📩 إرسال طلب الانضمام
+          </button>
+
+
+          <p
+            id="providerMessage"
+            class="empty"
+          ></p>
+
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
        التواصل
   ========================== -->
 
@@ -512,9 +726,9 @@
       <span>الأنشطة</span>
     </a>
 
-    <a href="#contact">
-      📞
-      <span>التواصل</span>
+    <a href="#providers">
+      🏢
+      <span>مقدم الخدمة</span>
     </a>
 
   </nav>
@@ -554,6 +768,10 @@
   <script src="js/activities.js"></script>
 
   <script src="js/requests.js"></script>
+
+  <!-- ملف مقدمي الخدمات الجديد -->
+
+  <script src="js/providers.js"></script>
 
   <script src="js/main.js"></script>
 
