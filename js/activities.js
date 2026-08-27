@@ -225,50 +225,50 @@ items.map(item => {
       `
       : "";
 
-  /* 📞 اتصال — أيقونة فقط */
+  /* =========================
+     📞 اتصال — أيقونة فقط
+  ========================== */
 
   const phoneButton =
     phone
       ? `
         <a
           href="tel:${escapeHTML(phone)}"
-          class="btn activity-icon-btn"
-          aria-label="اتصال"
-          title="اتصال">
+          class="btn">
           📞
         </a>
       `
       : "";
 
-  /* 💬 واتساب — أيقونة فقط */
+  /* =========================
+     💬 واتساب — أيقونة فقط
+  ========================== */
 
   const whatsappButton =
     whatsapp
       ? `
         <a
           href="https://wa.me/${whatsapp}"
-          class="btn whatsapp-accommodation activity-icon-btn"
+          class="btn whatsapp-accommodation"
           target="_blank"
-          rel="noopener"
-          aria-label="واتساب"
-          title="واتساب">
+          rel="noopener">
           💬
         </a>
       `
       : "";
 
-  /* 📍 الموقع — أيقونة فقط */
+  /* =========================
+     📍 الموقع — أيقونة فقط
+  ========================== */
 
   const mapButton =
     item.map_url
       ? `
         <a
           href="${escapeHTML(item.map_url)}"
-          class="btn activity-icon-btn"
+          class="btn"
           target="_blank"
-          rel="noopener"
-          aria-label="الموقع"
-          title="الموقع">
+          rel="noopener">
           📍
         </a>
       `
@@ -278,12 +278,14 @@ items.map(item => {
     item.price ??
     "";
 
-  /* 📋 طلب الخدمة — يبقى مكتوبًا */
+  /* =========================
+     📋 طلب الخدمة
+  ========================== */
 
   const requestButton = `
     <button
       type="button"
-      class="btn activity-request-btn"
+      class="btn"
       onclick="selectService(
         'activity',
         '${escapeJS(item.id)}',
@@ -292,6 +294,10 @@ items.map(item => {
       📋 اطلب هذه الخدمة
     </button>
   `;
+
+  /* =========================
+     البطاقة
+  ========================== */
 
   return `
     <div class="accommodation-card">
@@ -342,7 +348,7 @@ items.map(item => {
           : ""
       }
 
-      <div class="accommodation-buttons activity-buttons">
+      <div class="accommodation-buttons">
 
         ${phoneButton}
 
