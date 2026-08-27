@@ -3,25 +3,39 @@
    نظام التقييمات والمراجعات
 ========================================= */
 
-async function loadReviews(serviceType, serviceId) {
+
+async function loadReviews(
+  serviceType,
+  serviceId
+) {
 
   try {
 
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/reviews?select=id,service_type,service_id,reviewer_name,rating,comment,created_at&service_type=eq.${encodeURIComponent(serviceType)}&service_id=eq.${encodeURIComponent(serviceId)}&order=created_at.desc`,
-      {
-        method: "GET",
-        headers: supabaseHeaders()
-      }
-    );
+    const response =
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/reviews` +
+        `?select=id,service_type,service_id,reviewer_name,rating,comment,created_at` +
+        `&service_type=eq.${encodeURIComponent(serviceType)}` +
+        `&service_id=eq.${encodeURIComponent(serviceId)}` +
+        `&order=created_at.desc`,
+        {
+          method: "GET",
+          headers: supabaseHeaders()
+        }
+      );
+
 
     if (!response.ok) {
+
       throw new Error(
         `HTTP ${response.status}: ${await response.text()}`
       );
+
     }
 
+
     return await response.json();
+
 
   } catch (error) {
 
@@ -38,14 +52,17 @@ async function loadReviews(serviceType, serviceId) {
 
 
 /* =========================================
-   حساب متوسط التقييم
+   متوسط التقييم
 ========================================= */
 
-function calculateAverageRating(reviews) {
+function calculateAverageRating(
+  reviews
+) {
 
   if (!reviews.length) {
     return 0;
   }
+
 
   const total =
     reviews.reduce(
@@ -54,49 +71,111 @@ function calculateAverageRating(reviews) {
       0
     );
 
+
   return total / reviews.length;
 
 }
 
 
 /* =========================================
-   عرض النجوم
+   النجوم
 ========================================= */
 
-function displayStars(rating) {
+function displayStars(
+  rating
+) {
 
   const value =
     Math.max(
       0,
       Math.min(
         5,
-        Math.round(Number(rating) || 0)
+        Math.round(
+          Number(rating) || 0
+        )
       )
     );
 
-  return "★".repeat(value) +
-         "☆".repeat(5 - value);
+
+  return (
+    "★".repeat(value) +
+    "☆".repeat(5 - value)
+  );
 
 }
 
 
 /* =========================================
-   حماية النص
+   حماية HTML
 ========================================= */
 
-function reviewEscapeHTML(value) {
+function reviewEscapeHTML(
+  value
+) {
 
-  return String(value ?? "")
+  return String(
+    value ?? ""
+  )
 
-    .replace(/&/g, "&amp;")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
 
-    .replace(/</g, "&lt;")
+    .replace(
+      /</g,
+      "&lt;"
+    )
 
-    .replace(/>/g, "&gt;")
+    .replace(
+      />/g,
+      "&gt;"
+    )
 
-    .replace(/"/g, "&quot;")
+    .replace(
+      /"/g,
+      "&quot;"
+    )
 
-    .replace(/'/g, "&#039;");
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================
+   حماية JavaScript
+========================================= */
+
+function reviewEscapeJS(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+
+    .replace(
+      /'/g,
+      "\\'"
+    )
+
+    .replace(
+      /"/g,
+      '\\"'
+    )
+
+    .replace(
+      /\r?\n/g,
+      " "
+    );
 
 }
 
@@ -105,16 +184,25 @@ function reviewEscapeHTML(value) {
    واجهة التقييم
 ========================================= */
 
-function renderReviews(serviceType, serviceId) {
+function renderReviews(
+  serviceType,
+  serviceId
+) {
 
   const safeType =
-    reviewEscapeHTML(serviceType);
+    reviewEscapeHTML(
+      serviceType
+    );
 
   const safeId =
-    reviewEscapeHTML(serviceId);
+    reviewEscapeHTML(
+      serviceId
+    );
+
 
   const uniqueId =
     `reviews-${serviceType}-${serviceId}`;
+
 
   return `
 
@@ -139,7 +227,6 @@ function renderReviews(serviceType, serviceId) {
 
 
       <div class="reviews-list">
-
       </div>
 
 
@@ -147,8 +234,8 @@ function renderReviews(serviceType, serviceId) {
         type="button"
         class="btn review-toggle-btn"
         onclick="toggleReviewForm(
-          '${escapeJS(serviceType)}',
-          '${escapeJS(serviceId)}'
+          '${reviewEscapeJS(serviceType)}',
+          '${reviewEscapeJS(serviceId)}'
         )"
       >
         ⭐ أضف تقييمك
@@ -165,8 +252,8 @@ function renderReviews(serviceType, serviceId) {
           onsubmit="
             submitReview(
               event,
-              '${escapeJS(serviceType)}',
-              '${escapeJS(serviceId)}'
+              '${reviewEscapeJS(serviceType)}',
+              '${reviewEscapeJS(serviceId)}'
             )
           "
         >
@@ -188,34 +275,36 @@ function renderReviews(serviceType, serviceId) {
             تقييمك
           </label>
 
+
           <div class="star-rating">
 
             <button
               type="button"
               onclick="setReviewRating(this, 1)"
-            >★</button>
+            >☆</button>
 
             <button
               type="button"
               onclick="setReviewRating(this, 2)"
-            >★</button>
+            >☆</button>
 
             <button
               type="button"
               onclick="setReviewRating(this, 3)"
-            >★</button>
+            >☆</button>
 
             <button
               type="button"
               onclick="setReviewRating(this, 4)"
-            >★</button>
+            >☆</button>
 
             <button
               type="button"
               onclick="setReviewRating(this, 5)"
-            >★</button>
+            >☆</button>
 
           </div>
+
 
           <input
             type="hidden"
@@ -227,6 +316,7 @@ function renderReviews(serviceType, serviceId) {
           <label>
             تعليقك
           </label>
+
 
           <textarea
             class="review-comment"
@@ -258,7 +348,7 @@ function renderReviews(serviceType, serviceId) {
 
 
 /* =========================================
-   فتح / إغلاق نموذج التقييم
+   فتح نموذج التقييم
 ========================================= */
 
 function toggleReviewForm(
@@ -271,9 +361,11 @@ function toggleReviewForm(
       `review-form-${serviceType}-${serviceId}`
     );
 
+
   if (!form) {
     return;
   }
+
 
   form.style.display =
     form.style.display === "none"
@@ -295,24 +387,32 @@ function setReviewRating(
   const form =
     button.closest("form");
 
+
   if (!form) {
     return;
   }
 
+
   const ratingInput =
-    form.querySelector(".review-rating");
+    form.querySelector(
+      ".review-rating"
+    );
+
 
   const buttons =
     form.querySelectorAll(
       ".star-rating button"
     );
 
+
   if (!ratingInput) {
     return;
   }
 
+
   ratingInput.value =
     String(rating);
+
 
   buttons.forEach(
     (star, index) => {
@@ -340,28 +440,34 @@ async function submitReview(
 
   event.preventDefault();
 
+
   const form =
     event.target;
+
 
   const nameInput =
     form.querySelector(
       ".reviewer-name"
     );
 
+
   const ratingInput =
     form.querySelector(
       ".review-rating"
     );
+
 
   const commentInput =
     form.querySelector(
       ".review-comment"
     );
 
+
   const message =
     form.querySelector(
       ".review-message"
     );
+
 
   const submitButton =
     form.querySelector(
@@ -372,8 +478,12 @@ async function submitReview(
   const reviewerName =
     nameInput.value.trim();
 
+
   const rating =
-    Number(ratingInput.value);
+    Number(
+      ratingInput.value
+    );
+
 
   const comment =
     commentInput.value.trim();
@@ -416,8 +526,10 @@ async function submitReview(
   submitButton.disabled =
     true;
 
+
   submitButton.textContent =
     "⏳ جاري إرسال التقييم...";
+
 
   message.textContent =
     "";
@@ -470,6 +582,7 @@ async function submitReview(
       const errorText =
         await response.text();
 
+
       throw new Error(
         `HTTP ${response.status}: ${errorText}`
       );
@@ -480,7 +593,9 @@ async function submitReview(
     message.textContent =
       "✅ تم إرسال تقييمك بنجاح.";
 
+
     form.reset();
+
 
     ratingInput.value =
       "0";
@@ -492,7 +607,8 @@ async function submitReview(
       )
       .forEach(
         star => {
-          star.textContent = "☆";
+          star.textContent =
+            "☆";
         }
       );
 
@@ -510,6 +626,7 @@ async function submitReview(
       error
     );
 
+
     message.textContent =
       "❌ تعذر إرسال التقييم حاليًا.";
 
@@ -517,6 +634,7 @@ async function submitReview(
 
     submitButton.disabled =
       false;
+
 
     submitButton.textContent =
       "📩 إرسال التقييم";
@@ -540,6 +658,7 @@ async function refreshReviews(
       `reviews-${serviceType}-${serviceId}`
     );
 
+
   if (!section) {
     return;
   }
@@ -549,6 +668,7 @@ async function refreshReviews(
     section.querySelector(
       ".reviews-average"
     );
+
 
   const listElement =
     section.querySelector(
@@ -601,84 +721,149 @@ async function refreshReviews(
 
 
   listElement.innerHTML =
-    reviews.map(review => {
+    reviews.map(
+      review => {
 
-      const comment =
-        review.comment
-          ? `
-            <p class="review-comment-display">
-              💬 ${reviewEscapeHTML(
-                review.comment
+        const comment =
+          review.comment
+            ? `
+              <p class="review-comment-display">
+                💬 ${reviewEscapeHTML(
+                  review.comment
+                )}
+              </p>
+            `
+            : "";
+
+
+        return `
+          <div class="review-item">
+
+            <strong>
+              ${reviewEscapeHTML(
+                review.reviewer_name
               )}
-            </p>
-          `
-          : "";
+            </strong>
 
+            <div class="review-stars">
+              ${displayStars(
+                review.rating
+              )}
+            </div>
 
-      return `
-        <div class="review-item">
+            ${comment}
 
-          <strong>
-            ${reviewEscapeHTML(
-              review.reviewer_name
-            )}
-          </strong>
-
-          <div class="review-stars">
-            ${displayStars(
-              review.rating
-            )}
           </div>
+        `;
 
-          ${comment}
-
-        </div>
-      `;
-
-    }).join("");
+      }
+    ).join("");
 
 }
 
 
 /* =========================================
-   تحميل تقييم خدمة واحدة
+   تشغيل التقييمات
 ========================================= */
 
-function initServiceReviews(
-  serviceType,
-  serviceId
-) {
+function initReviews() {
 
-  setTimeout(
-    () => {
+  document
+    .querySelectorAll(
+      ".reviews-section"
+    )
+    .forEach(
+      section => {
 
-      refreshReviews(
-        serviceType,
-        serviceId
-      );
+        const serviceType =
+          section.dataset.serviceType;
 
-    },
-    0
+
+        const serviceId =
+          section.dataset.serviceId;
+
+
+        if (
+          serviceType &&
+          serviceId
+        ) {
+
+          refreshReviews(
+            serviceType,
+            serviceId
+          );
+
+        }
+
+      }
+    );
+
+}
+
+
+/* =========================================
+   مراقبة ظهور بطاقات جديدة
+========================================= */
+
+function startReviewsObserver() {
+
+  const observer =
+    new MutationObserver(
+      mutations => {
+
+        let shouldRefresh =
+          false;
+
+
+        mutations.forEach(
+          mutation => {
+
+            if (
+              mutation.addedNodes &&
+              mutation.addedNodes.length
+            ) {
+
+              shouldRefresh =
+                true;
+
+            }
+
+          }
+        );
+
+
+        if (shouldRefresh) {
+
+          initReviews();
+
+        }
+
+      }
+    );
+
+
+  observer.observe(
+    document.body,
+    {
+      childList: true,
+      subtree: true
+    }
   );
 
 }
 
 
 /* =========================================
-   حماية JavaScript
+   تشغيل النظام
 ========================================= */
 
-function escapeJS(value) {
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
 
-  return String(value ?? "")
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'")
-    .replace(/"/g, '\\"')
-    .replace(/\r?\n/g, " ");
+    initReviews();
 
-}
+    startReviewsObserver();
 
-
-/* =========================================
-   نهاية reviews.js
-========================================= */
+  }
+);
