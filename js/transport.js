@@ -21,14 +21,17 @@ async function loadTransportServices() {
 
     if (!response.ok) {
 
-      const errorText = await response.text();
+      const errorText =
+        await response.text();
 
       throw new Error(
         `HTTP ${response.status}: ${errorText}`
       );
+
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     console.log(
       "Transport data:",
@@ -47,13 +50,17 @@ async function loadTransportServices() {
     let message;
 
     if (error.name === "AbortError") {
+
       message =
         "انتهت مهلة تحميل خدمات المواصلات. لم يستجب الخادم خلال 10 ثوانٍ.";
+
     } else {
+
       message =
         `خطأ في تحميل المواصلات:<br>${escapeHTML(
           error.message || String(error)
         )}`;
+
     }
 
     [
@@ -66,8 +73,10 @@ async function loadTransportServices() {
         document.getElementById(id);
 
       if (container) {
+
         container.innerHTML =
           `<p class="empty">${message}</p>`;
+
       }
 
     });
@@ -177,6 +186,7 @@ function displayTransportList(
       `<p class="empty">${emptyMessage}</p>`;
 
     return;
+
   }
 
   container.innerHTML = items.map(item => {
@@ -203,8 +213,10 @@ function displayTransportList(
         : phone.replace(/\D/g, "");
 
     if (whatsapp.startsWith("0")) {
+
       whatsapp =
         "212" + whatsapp.substring(1);
+
     }
 
     const image =
@@ -279,14 +291,21 @@ function displayTransportList(
         <div class="accommodation-buttons">
 
           ${phoneButton}
+
           ${whatsappButton}
+
           ${requestButton}
 
         </div>
+
+        ${renderReviews(
+          "transport",
+          item.id
+        )}
 
       </div>
     `;
 
   }).join("");
 
-      }
+}
