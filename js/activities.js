@@ -1,487 +1,255 @@
-/* =========================================
-🗺️ شمال المغرب
-الأنشطة والجولات
-🗺️ الرحلات + 🧭 المرشدون السياحيون
-========================================= */
-
-/* =========================================
-تحميل الأنشطة والجولات
+ /* =========================================
+   🗺️ شمال المغرب
+   الرحلات والمرشدون السياحيون
 ========================================= */
 
 async function loadActivities() {
+  const lists = ["tripsList", "guidesList"];
 
-const lists = [
-"tripsList",
-"guidesList"
-];
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
-try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/activities?select=*`,
+      {
+        headers: supabaseHeaders(),
+        signal: controller.signal
+      }
+    );
 
-const controller =
-  new AbortController();
+    clearTimeout(timeout);
 
-const timeout =
-  setTimeout(() => {
-    controller.abort();
-  }, 10000);
-
-
-const response =
-  await fetch(
-    `${SUPABASE_URL}/rest/v1/activities?select=*`,
-    {
-      method: "GET",
-      headers: supabaseHeaders(),
-      signal: controller.signal
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status}: ${await response.text()}`
+      );
     }
-  );
 
+    const data = await response.json();
+    displayActivities(Array.isArray(data) ? data : []);
 
-clearTimeout(timeout);
+  } catch (error) {
+    console.error("Activities error:", error);
 
+    const message =
+      error.name === "AbortError"
+        ? "انتهت مهلة تحميل الأنشطة والجولات."
+        : `خطأ في تحميل الأنشطة والجولات:<br>${escapeHTML(
+            error.message || String(error)
+          )}`;
 
-if (!response.ok) {
-
-  const errorText =
-    await response.text();
-
-  throw new Error(
-    `HTTP ${response.status}: ${errorText}`
-  );
-
-}
-
-
-const data =
-  await response.json();
-
-
-console.log(
-  "Activities data:",
-  data
-);
-
-
-displayActivities(
-  Array.isArray(data)
-    ? data
-    : []
-);
-
-} catch (error) {
-
-console.error(
-  "Activities error:",
-  error
-);
-
-
-let message;
-
-
-if (
-  error &&
-  error.name === "AbortError"
-) {
-
-  message =
-    "انتهت مهلة تحميل الأنشطة والجولات.";
-
-} else {
-
-  message =
-    `خطأ في تحميل الأنشطة والجولات:<br>${escapeHTML(
-      error?.message || String(error)
-    )}`;
-
-}
-
-
-lists.forEach(id => {
-
-  const container =
-    document.getElementById(id);
-
-  if (container) {
-
-    container.innerHTML =
-      `<p class="empty">${message}</p>`;
-
+    lists.forEach(id => {
+      const box = document.getElementById(id);
+      if (box)
+        box.innerHTML = `<p class="empty">${message}</p>`;
+    });
   }
-
-});
-
 }
 
-}
-
-/* =========================================
-تقسيم الأنشطة
-========================================= */
 
 function displayActivities(data) {
+  displayActivityList(
+    "tripsList",
+    data.filter(x => isActivityType(x, "trip")),
+    "لا توجد رحلات حالياً."
+  );
 
-const trips =
-data.filter(item =>
-isActivityType(
-item,
-"trip"
-)
-);
-
-const guides =
-data.filter(item =>
-isActivityType(
-item,
-"tour_guide"
-)
-);
-
-console.log(
-"Trips:",
-trips
-);
-
-console.log(
-"Guides:",
-guides
-);
-
-displayActivityList(
-"tripsList",
-trips,
-"لا توجد رحلات حالياً."
-);
-
-displayActivityList(
-"guidesList",
-guides,
-"لا يوجد مرشدون سياحيون حالياً."
-);
-
+  displayActivityList(
+    "guidesList",
+    data.filter(x => isActivityType(x, "tour_guide")),
+    "لا يوجد مرشدون سياحيون حالياً."
+  );
 }
 
-/* =========================================
-التحقق من نوع النشاط
-========================================= */
 
-function isActivityType(
-item,
-type
-) {
-
-if (!item) {
-return false;
+function isActivityType(item, type) {
+  return String(item?.activity_type || "")
+    .trim()
+    .toLowerCase() ===
+    String(type).trim().toLowerCase();
 }
 
-const value =
-String(
-item.activity_type || ""
-)
-.trim()
-.toLowerCase();
-
-return value ===
-String(type)
-.trim()
-.toLowerCase();
-
-}
-
-/* =========================================
-عرض بطاقات الرحلات والمرشدين
-========================================= */
 
 function displayActivityList(
-id,
-items,
-emptyMessage
+  id,
+  items,
+  emptyMessage
 ) {
+  const box = document.getElementById(id);
 
-const container =
-document.getElementById(id);
+  if (!box) return;
 
-if (!container) {
-return;
-}
-
-if (!Array.isArray(items) || !items.length) {
-
-container.innerHTML =
-  `<p class="empty">${emptyMessage}</p>`;
-
-return;
-
-}
-
-container.innerHTML =
-items.map(item => {
-
-  const name =
-    item.name ||
-    "خدمة سياحية";
-
-
-  const phone =
-    item.phone
-      ? String(item.phone).trim()
-      : "";
-
-
-  let whatsapp =
-    item.whatsapp
-      ? String(item.whatsapp)
-          .replace(/\D/g, "")
-      : phone.replace(/\D/g, "");
-
-
-  if (
-    whatsapp.startsWith("0")
-  ) {
-
-    whatsapp =
-      "212" +
-      whatsapp.substring(1);
-
+  if (!items.length) {
+    box.innerHTML =
+      `<p class="empty">${emptyMessage}</p>`;
+    return;
   }
 
-
-  /* ===============================
-     الصورة
-  =============================== */
-
-  const image =
-    item.image_url
-      ? `
-        <img
-          src="${escapeHTML(item.image_url)}"
-          alt="${escapeHTML(name)}"
-          class="accommodation-image"
-          loading="lazy">
-      `
-      : "";
+  box.innerHTML = items
+    .map(activityCard)
+    .join("");
+}
 
 
-  /* ===============================
-     اتصال
-  =============================== */
+function activityCard(item) {
+  const id = item.id;
+  const name = item.name || "خدمة سياحية";
+  const phone = String(item.phone || "").trim();
 
-  const phoneButton =
-    phone
-      ? `
-        <a
-          href="tel:${escapeHTML(phone)}"
-          class="btn"
-          onclick="event.stopPropagation();"
-          aria-label="اتصال"
-          title="اتصال">
-          📞
-        </a>
-      `
-      : "";
+  let whatsapp =
+    String(item.whatsapp || phone)
+      .replace(/\D/g, "");
 
-
-  /* ===============================
-     واتساب
-  =============================== */
-
-  const whatsappButton =
-    whatsapp
-      ? `
-        <a
-          href="https://wa.me/${whatsapp}"
-          class="btn whatsapp-accommodation"
-          target="_blank"
-          rel="noopener"
-          onclick="event.stopPropagation();"
-          aria-label="واتساب"
-          title="واتساب">
-          💬
-        </a>
-      `
-      : "";
-
-
-  /* ===============================
-     الموقع
-  =============================== */
-
-  const mapButton =
-    item.map_url
-      ? `
-        <a
-          href="${escapeHTML(item.map_url)}"
-          class="btn"
-          target="_blank"
-          rel="noopener"
-          onclick="event.stopPropagation();"
-          aria-label="الموقع"
-          title="الموقع">
-          📍
-        </a>
-      `
-      : "";
-
-
-  /* ===============================
-     طلب الخدمة
-  =============================== */
-
-  const requestButton = `
-    <button
-      type="button"
-      class="btn"
-      aria-label="طلب الخدمة"
-      title="طلب الخدمة"
-      onclick="
-        event.stopPropagation();
-        selectService(
-          'activity',
-          '${escapeJS(item.id)}',
-          '${escapeJS(name)}'
-        );
-      ">
-      📋
-    </button>
-  `;
-
-
-  /* ===============================
-     التقييم + الأزرار
-     مخفية حتى النقر على البطاقة
-  =============================== */
-
-  const details = `
-
-    <div
-      class="activity-card-details"
-      onclick="event.stopPropagation();"
-    >
-
-      <div class="accommodation-buttons">
-
-        ${phoneButton}
-
-        ${whatsappButton}
-
-        ${mapButton}
-
-        ${requestButton}
-
-      </div>
-
-
-      ${
-        typeof renderReviews === "function"
-          ? renderReviews(
-              "activity",
-              item.id
-            )
-          : ""
-      }
-
-    </div>
-
-  `;
-
-
-  /* ===============================
-     البطاقة
-  =============================== */
+  if (whatsapp.startsWith("0")) {
+    whatsapp =
+      "212" + whatsapp.substring(1);
+  }
 
   return `
-
     <div
       class="accommodation-card activity-card"
       onclick="toggleActivityCard(this)"
     >
 
-      ${image}
+      ${
+        item.image_url
+          ? `
+            <img
+              src="${escapeHTML(item.image_url)}"
+              alt="${escapeHTML(name)}"
+              class="accommodation-image"
+              loading="lazy">
+          `
+          : ""
+      }
 
-
-      <h3>
-        ${escapeHTML(name)}
-      </h3>
-
+      <h3>${escapeHTML(name)}</h3>
 
       ${
         item.city
-          ? `
-            <p>
-              📍 ${escapeHTML(item.city)}
-            </p>
-          `
+          ? `<p>📍 ${escapeHTML(item.city)}</p>`
           : ""
       }
-
 
       ${
         item.address
-          ? `
-            <p>
-              📌 ${escapeHTML(item.address)}
-            </p>
-          `
+          ? `<p>📌 ${escapeHTML(item.address)}</p>`
           : ""
       }
-
 
       ${
         item.description
-          ? `
-            <p>
-              ${escapeHTML(item.description)}
-            </p>
-          `
+          ? `<p>${escapeHTML(item.description)}</p>`
           : ""
       }
-
 
       ${
         item.price !== null &&
         item.price !== undefined &&
         item.price !== ""
-          ? `
-            <p>
-              💰 ${escapeHTML(item.price)} درهم
-            </p>
-          `
+          ? `<p>💰 ${escapeHTML(item.price)} درهم</p>`
           : ""
       }
 
+      <div
+        class="activity-card-details"
+        onclick="event.stopPropagation()"
+      >
 
-      ${details}
+        <div class="accommodation-buttons">
+
+          ${
+            phone
+              ? `
+                <a
+                  href="tel:${escapeHTML(phone)}"
+                  class="btn icon-btn"
+                  aria-label="اتصال"
+                  title="اتصال">
+                  📞
+                </a>
+              `
+              : ""
+          }
+
+          ${
+            whatsapp
+              ? `
+                <a
+                  href="https://wa.me/${whatsapp}"
+                  class="btn whatsapp-accommodation icon-btn"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="واتساب"
+                  title="واتساب">
+                  💬
+                </a>
+              `
+              : ""
+          }
+
+          ${
+            item.map_url
+              ? `
+                <a
+                  href="${escapeHTML(item.map_url)}"
+                  class="btn icon-btn"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="الموقع"
+                  title="الموقع">
+                  📍
+                </a>
+              `
+              : ""
+          }
+
+          <button
+            type="button"
+            class="btn request-btn"
+            onclick="
+              event.stopPropagation();
+              selectService(
+                'activity',
+                '${escapeJS(id)}',
+                '${escapeJS(name)}'
+              );
+            "
+            aria-label="طلب الخدمة"
+            title="طلب الخدمة">
+            📋
+          </button>
+
+        </div>
+
+        ${
+          typeof renderReviews === "function"
+            ? renderReviews("activity", id)
+            : ""
+        }
+
+      </div>
 
     </div>
-
   `;
-
-}).join("");
-
 }
 
-/* =========================================
-فتح وإغلاق بطاقة النشاط
-========================================= */
 
 function toggleActivityCard(card) {
+  if (!card) return;
 
-if (!card) {
-return;
-}
+  document
+    .querySelectorAll(".activity-card.activity-card-open")
+    .forEach(openCard => {
+      if (openCard !== card) {
+        openCard.classList.remove(
+          "activity-card-open"
+        );
+      }
+    });
 
-card.classList.toggle(
-"activity-card-open"
-);
-
-}
-
-/* =========================================
-ملاحظة:
-لا نضع DOMContentLoaded هنا.
-main.js هو المسؤول عن تشغيل loadActivities()
-========================================= */
-
-/* =========================================
-نهاية activities.js
-========================================= */
+  card.classList.toggle(
+    "activity-card-open"
+  );
+      }
