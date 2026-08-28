@@ -1,6 +1,6 @@
 /* =========================================
-   🌊 شمال المغرب
-   Supabase — الأدوات العامة
+🌊 شمال المغرب
+Supabase
 ========================================= */
 
 function supabaseHeaders() {
@@ -12,36 +12,32 @@ function supabaseHeaders() {
 }
 
 async function supabaseGet(table) {
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/${table}?select=*`,
-    {
-      method: "GET",
-      headers: supabaseHeaders()
-    }
+  const controller = new AbortController();
+
+  const timeout = setTimeout(
+    () => controller.abort(),
+    10000
   );
 
-  if (!response.ok) {
-    throw new Error(
-      `HTTP ${response.status}: ${await response.text()}`
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/${table}?select=*`,
+      {
+        method: "GET",
+        headers: supabaseHeaders(),
+        signal: controller.signal
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status}: ${await response.text()}`
+      );
+    }
+
+    return await response.json();
+
+  } finally {
+    clearTimeout(timeout);
   }
-
-  return response.json();
-}
-
-function escapeHTML(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-function escapeJS(value) {
-  return String(value ?? "")
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'")
-    .replace(/"/g, '\\"')
-    .replace(/\r?\n/g, " ");
-}
+        }
