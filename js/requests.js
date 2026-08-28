@@ -1,128 +1,116 @@
-/* =========================================
-📋 شمال المغرب — طلب الخدمة
-========================================= */
-
 function selectService(type, id, name) {
-const serviceType = document.getElementById("service_type");
-const serviceId = document.getElementById("service_id");
-const notes = document.getElementById("notes");
-const section = document.getElementById("request");
+  const serviceType = document.getElementById("service_type");
+  const serviceId = document.getElementById("service_id");
+  const notes = document.getElementById("notes");
 
-if (!serviceType || !serviceId) return;
+  if (!serviceType || !serviceId) return;
 
-serviceType.value = String(type || "");
-serviceId.value = String(id || "");
+  serviceType.value = String(type || "");
+  serviceId.value = String(id || "");
 
-if (notes) {
-notes.value = "أرغب في طلب خدمة: ${String(name || "")}";
+  if (notes) {
+    notes.value = `أرغب في طلب خدمة: ${String(name || "")}`;
+  }
+
+  const section = document.getElementById("services-actions");
+
+  if (section) {
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 }
 
-if (section) {
-section.scrollIntoView({
-behavior: "smooth",
-block: "start"
-});
-}
-}
+async function submitServiceRequest(e) {
+  e.preventDefault();
 
-async function submitServiceRequest(event) {
-event.preventDefault();
+  const form = document.getElementById("serviceRequestForm");
+  const msg = document.getElementById("requestMessage");
+  const btn = document.getElementById("submitRequestBtn");
 
-const form = document.getElementById("serviceRequestForm");
-const message = document.getElementById("requestMessage");
-const button = document.getElementById("submitRequestBtn");
+  if (!form || !msg || !btn) return;
 
-if (!form || !message || !button) return;
-if (button.disabled) return;
+  const value = id =>
+    document.getElementById(id)?.value.trim() || "";
 
-const get = id =>
-document.getElementById(id)?.value.trim() || "";
+  const serviceId = Number(value("service_id"));
 
-const serviceId = Number(get("service_id"));
+  const data = {
+    requester_name: value("requester_name"),
+    phone: value("phone") || null,
+    whatsapp: value("whatsapp") || null,
+    service_type: value("service_type"),
+    service_id: serviceId,
+    request_date: value("request_date") || null,
+    notes: value("notes") || null
+  };
 
-const data = {
-requester_name: get("requester_name"),
-phone: get("phone") || null,
-whatsapp: get("whatsapp") || null,
-service_type: get("service_type"),
-service_id: serviceId,
-request_date: document.getElementById("request_date")?.value || null,
-notes: get("notes") || null
-};
+  if (!data.requester_name) {
+    msg.textContent = "⚠️ يرجى كتابة الاسم.";
+    return;
+  }
 
-if (!data.requester_name) {
-message.textContent = "⚠️ يرجى كتابة الاسم.";
-return;
-}
+  if (!data.service_type) {
+    msg.textContent = "⚠️ يرجى اختيار نوع الخدمة.";
+    return;
+  }
 
-if (!data.service_type) {
-message.textContent = "⚠️ يرجى اختيار نوع الخدمة.";
-return;
-}
+  if (!Number.isInteger(serviceId) || serviceId <= 0) {
+    msg.textContent = "⚠️ يرجى اختيار الخدمة أولاً.";
+    return;
+  }
 
-if (!Number.isInteger(serviceId) || serviceId <= 0) {
-message.textContent = "⚠️ يرجى اختيار الخدمة أولاً.";
-return;
-}
+  btn.disabled = true;
+  btn.textContent = "⏳ جاري الإرسال...";
+  msg.textContent = "";
 
-button.disabled = true;
-button.textContent = "⏳ جاري إرسال الطلب...";
-message.textContent = "";
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
 
-const controller = new AbortController();
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/service_requests`,
+      {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify(data),
+        signal: controller.signal
+      }
+    );
 
-const timeout = setTimeout(
-() => controller.abort(),
-10000
-);
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
 
-try {
-const response = await fetch(
-"${SUPABASE_URL}/rest/v1/service_requests",
-{
-method: "POST",
-headers: {
-...supabaseHeaders(),
-Prefer: "return=minimal"
-},
-body: JSON.stringify(data),
-signal: controller.signal
-}
-);
+    msg.textContent =
+      "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
 
-if (!response.ok) {
-  throw new Error(
-    `HTTP ${response.status}: ${await response.text()}`
-  );
-}
+    form.reset();
 
-message.textContent =
-  "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
+  } catch (error) {
+    console.error("Service request error:", error);
 
-form.reset();
+    msg.textContent =
+      error.name === "AbortError"
+        ? "❌ انتهت مهلة إرسال الطلب. يرجى المحاولة مرة أخرى."
+        : "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";
 
-} catch (error) {
-console.error("Service request error:", error);
-
-message.textContent =
-  error.name === "AbortError"
-    ? "❌ انتهت مهلة إرسال الطلب. يرجى المحاولة مرة أخرى."
-    : "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";
-
-} finally {
-clearTimeout(timeout);
-button.disabled = false;
-button.textContent = "📩 إرسال الطلب";
-}
+  } finally {
+    clearTimeout(timeout);
+    btn.disabled = false;
+    btn.textContent = "📩 إرسال";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-const form = document.getElementById("serviceRequestForm");
+  const form = document.getElementById("serviceRequestForm");
 
-if (form) {
-form.addEventListener(
-"submit",
-submitServiceRequest
-);
-}
+  if (form) {
+    form.addEventListener("submit", submitServiceRequest);
+  }
 });
