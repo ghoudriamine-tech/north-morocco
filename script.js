@@ -1,7 +1,7 @@
 /* =========================================
    🌊 شمال المغرب 🇲🇦
    Supabase
-   النسخة الحالية المحسنة
+   النسخة المحسنة
 ========================================= */
 
 const SUPABASE_URL =
@@ -73,39 +73,120 @@ async function testSupabaseConnection() {
 
 /* =========================================
    تحميل الإقامات
+   + مقدمي الخدمات
+   + التقييمات
 ========================================= */
 
 async function loadAccommodations() {
 
   try {
 
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
-      {
-        method: "GET",
-        headers: supabaseHeaders()
-      }
-    );
+    const [
+      accommodationsResponse,
+      providersResponse,
+      reviewsResponse
+    ] = await Promise.all([
 
-    if (!response.ok) {
+      fetch(
+        `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
+        {
+          method: "GET",
+          headers: supabaseHeaders()
+        }
+      ),
+
+      fetch(
+        `${SUPABASE_URL}/rest/v1/providers?select=*`,
+        {
+          method: "GET",
+          headers: supabaseHeaders()
+        }
+      ),
+
+      fetch(
+        `${SUPABASE_URL}/rest/v1/reviews?select=*`,
+        {
+          method: "GET",
+          headers: supabaseHeaders()
+        }
+      )
+
+    ]);
+
+
+    if (!accommodationsResponse.ok) {
 
       const errorText =
-        await response.text();
+        await accommodationsResponse.text();
 
       throw new Error(
-        `HTTP ${response.status} - ${errorText}`
+        `Accommodations HTTP ${accommodationsResponse.status}: ${errorText}`
       );
     }
 
-    const data =
-      await response.json();
+
+    const accommodations =
+      await accommodationsResponse.json();
+
+
+    let providers = [];
+    let reviews = [];
+
+
+    if (providersResponse.ok) {
+
+      providers =
+        await providersResponse.json();
+
+    }
+    else {
+
+      console.warn(
+        "⚠️ تعذر تحميل مقدمي الخدمات."
+      );
+
+    }
+
+
+    if (reviewsResponse.ok) {
+
+      reviews =
+        await reviewsResponse.json();
+
+    }
+    else {
+
+      console.warn(
+        "⚠️ تعذر تحميل التقييمات."
+      );
+
+    }
+
 
     console.log(
       "🟢 Supabase accommodations:",
-      data
+      accommodations
     );
 
-    displayAccommodations(data);
+
+    console.log(
+      "🟢 Supabase providers:",
+      providers
+    );
+
+
+    console.log(
+      "🟢 Supabase reviews:",
+      reviews
+    );
+
+
+    displayAccommodations(
+      accommodations,
+      providers,
+      reviews
+    );
+
 
   } catch (error) {
 
@@ -126,7 +207,11 @@ async function loadAccommodations() {
    تصنيف الإقامات
 ========================================= */
 
-function displayAccommodations(data) {
+function displayAccommodations(
+  data,
+  providers,
+  reviews
+) {
 
   const apartments =
     data.filter(item => {
@@ -182,21 +267,27 @@ function displayAccommodations(data) {
   displayList(
     "apartmentsList",
     apartments,
-    "لا توجد شقق مفروشة حالياً."
+    "لا توجد شقق مفروشة حالياً.",
+    providers,
+    reviews
   );
 
 
   displayList(
     "hotelsList",
     hotels,
-    "لا توجد فنادق حالياً."
+    "لا توجد فنادق حالياً.",
+    providers,
+    reviews
   );
 
 
   displayList(
     "riadsList",
     riads,
-    "لا توجد رياضات حالياً."
+    "لا توجد رياضات حالياً.",
+    providers,
+    reviews
   );
 
 }
@@ -209,15 +300,19 @@ function displayAccommodations(data) {
 function displayList(
   id,
   items,
-  emptyMessage
+  emptyMessage,
+  providers = [],
+  reviews = []
 ) {
 
   const container =
     document.getElementById(id);
 
+
   if (!container) {
     return;
   }
+
 
   if (!items.length) {
 
@@ -270,6 +365,10 @@ function displayList(
       }
 
 
+      /* =================================
+         الصورة
+      ================================= */
+
       const image =
         item.image_url
           ? `
@@ -287,6 +386,10 @@ function displayList(
           `
           : "";
 
+
+      /* =================================
+         السعر
+      ================================= */
 
       let price = "";
 
@@ -327,19 +430,28 @@ function displayList(
       }
 
 
+      /* =================================
+         الاتصال
+      ================================= */
+
       const phoneButton =
         phone
           ? `
             <a
               href="tel:${escapeHTML(phone)}"
-              class="btn">
+              class="btn"
+              aria-label="اتصال">
 
-              📞 اتصال
+              📞
 
             </a>
           `
           : "";
 
+
+      /* =================================
+         واتساب
+      ================================= */
 
       const whatsappButton =
         whatsappNumber
@@ -348,9 +460,10 @@ function displayList(
               href="https://wa.me/${whatsappNumber}"
               class="btn whatsapp-accommodation"
               target="_blank"
-              rel="noopener">
+              rel="noopener"
+              aria-label="واتساب">
 
-              💬 واتساب
+              💬
 
             </a>
           `
@@ -358,7 +471,7 @@ function displayList(
 
 
       /* =================================
-         رابط الموقع
+         الموقع
       ================================= */
 
       const mapButton =
@@ -368,9 +481,10 @@ function displayList(
               href="${escapeHTML(item.map_url)}"
               class="btn"
               target="_blank"
-              rel="noopener">
+              rel="noopener"
+              aria-label="الموقع">
 
-              📍 الموقع
+              📍
 
             </a>
           `
@@ -378,32 +492,318 @@ function displayList(
 
 
       /* =================================
-         زر طلب الخدمة
-         الاختيار تلقائي
+         مقدم الخدمة
+      ================================= */
+
+      const provider =
+        providers.find(
+          p =>
+            String(p.id) ===
+            String(item.provider_id)
+        );
+
+
+      const providerHTML =
+        provider
+          ? `
+            <div
+              id="provider-${item.id}"
+              class="card-toggle-section">
+
+              <div class="provider-details">
+
+                <h4>
+                  🏢 ${escapeHTML(
+                    provider.name || "مقدم الخدمة"
+                  )}
+                </h4>
+
+                ${
+                  provider.service_type
+                    ? `
+                      <p>
+                        🏷️
+                        ${escapeHTML(
+                          provider.service_type
+                        )}
+                      </p>
+                    `
+                    : ""
+                }
+
+                ${
+                  provider.city
+                    ? `
+                      <p>
+                        📍
+                        ${escapeHTML(
+                          provider.city
+                        )}
+                      </p>
+                    `
+                    : ""
+                }
+
+                ${
+                  provider.address
+                    ? `
+                      <p>
+                        📌
+                        ${escapeHTML(
+                          provider.address
+                        )}
+                      </p>
+                    `
+                    : ""
+                }
+
+                ${
+                  provider.description
+                    ? `
+                      <p>
+                        ${escapeHTML(
+                          provider.description
+                        )}
+                      </p>
+                    `
+                    : ""
+                }
+
+                ${
+                  provider.phone
+                    ? `
+                      <p>
+                        📞
+                        ${escapeHTML(
+                          provider.phone
+                        )}
+                      </p>
+                    `
+                    : ""
+                }
+
+              </div>
+
+            </div>
+          `
+          : `
+            <div
+              id="provider-${item.id}"
+              class="card-toggle-section">
+
+              <div class="provider-details">
+
+                <p>
+                  لا توجد معلومات مقدم الخدمة حالياً.
+                </p>
+
+              </div>
+
+            </div>
+          `;
+
+
+      const providerButton =
+        `
+          <button
+            type="button"
+            class="btn card-toggle-btn"
+            aria-label="مقدم الخدمة"
+            aria-expanded="false"
+            onclick="toggleCardSection(
+              'provider-${item.id}',
+              this
+            )">
+
+            🏢
+
+          </button>
+        `;
+
+
+      /* =================================
+         التقييمات
+      ================================= */
+
+      const itemReviews =
+        reviews.filter(review =>
+          String(review.service_type || "")
+            .trim()
+            .toLowerCase() === "accommodation"
+          &&
+          String(review.service_id) ===
+            String(item.id)
+        );
+
+
+      const reviewCount =
+        itemReviews.length;
+
+
+      const ratingTotal =
+        itemReviews.reduce(
+          (sum, review) =>
+            sum +
+            Number(review.rating || 0),
+          0
+        );
+
+
+      const averageRating =
+        reviewCount
+          ? ratingTotal / reviewCount
+          : 0;
+
+
+      const roundedRating =
+        Math.round(
+          averageRating
+        );
+
+
+      const averageStars =
+        makeStars(roundedRating);
+
+
+      const reviewsHTML =
+        `
+          <div
+            id="reviews-${item.id}"
+            class="card-toggle-section">
+
+            <div class="card-reviews">
+
+              <div class="reviews-summary">
+
+                <strong>
+                  ⭐ التقييم
+                </strong>
+
+                <span class="reviews-average">
+
+                  ${
+                    reviewCount
+                      ? `
+                        ${averageStars}
+                        ${averageRating.toFixed(1)}/5
+                        ·
+                        ${reviewCount}
+                        ${reviewCount === 1 ? "تقييم" : "تقييمات"}
+                      `
+                      : `
+                        لا توجد تقييمات بعد
+                      `
+                  }
+
+                </span>
+
+              </div>
+
+
+              ${
+                itemReviews.length
+                  ? itemReviews.map(review => {
+
+                      const rating =
+                        Math.max(
+                          0,
+                          Math.min(
+                            5,
+                            Number(review.rating || 0)
+                          )
+                        );
+
+
+                      return `
+                        <div class="review-item">
+
+                          <strong>
+                            ${escapeHTML(
+                              review.reviewer_name ||
+                              "مستخدم"
+                            )}
+                          </strong>
+
+                          <div class="review-stars">
+                            ${makeStars(rating)}
+                          </div>
+
+                          ${
+                            review.comment
+                              ? `
+                                <div class="review-comment-display">
+                                  💬
+                                  ${escapeHTML(
+                                    review.comment
+                                  )}
+                                </div>
+                              `
+                              : ""
+                          }
+
+                        </div>
+                      `;
+
+                    }).join("")
+                  : ""
+              }
+
+            </div>
+
+          </div>
+        `;
+
+
+      const reviewButton =
+        `
+          <button
+            type="button"
+            class="btn card-toggle-btn"
+            aria-label="التقييم"
+            aria-expanded="false"
+            onclick="toggleCardSection(
+              'reviews-${item.id}',
+              this
+            )">
+
+            ⭐
+
+          </button>
+        `;
+
+
+      /* =================================
+         الطلب
       ================================= */
 
       const requestButton =
         `
           <button
             type="button"
-            class="btn"
+            class="btn card-toggle-btn"
+            aria-label="طلب الخدمة"
             onclick="selectService(
               'accommodation',
               '${escapeHTML(item.id)}',
               '${escapeJS(item.name || "إقامة")}'
             )">
 
-            📋 اطلب هذه الخدمة
+            📋
 
           </button>
         `;
 
+
+      /* =================================
+         البطاقة
+      ================================= */
 
       return `
 
         <div class="accommodation-card">
 
           ${image}
+
 
           <h3>
             ${escapeHTML(
@@ -458,15 +858,87 @@ function displayList(
 
             ${mapButton}
 
+            ${providerButton}
+
+            ${reviewButton}
+
             ${requestButton}
 
           </div>
+
+
+          ${providerHTML}
+
+          ${reviewsHTML}
 
         </div>
 
       `;
 
     }).join("");
+
+}
+
+
+/* =========================================
+   فتح / إغلاق قسم داخل البطاقة
+========================================= */
+
+function toggleCardSection(
+  sectionId,
+  button
+) {
+
+  const section =
+    document.getElementById(sectionId);
+
+
+  if (!section) {
+    return;
+  }
+
+
+  const isOpen =
+    section.classList.contains("show");
+
+
+  section.classList.toggle(
+    "show"
+  );
+
+
+  if (button) {
+
+    button.setAttribute(
+      "aria-expanded",
+      String(!isOpen)
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   النجوم
+========================================= */
+
+function makeStars(rating) {
+
+  const value =
+    Math.max(
+      0,
+      Math.min(
+        5,
+        Math.round(
+          Number(rating) || 0
+        )
+      )
+    );
+
+
+  return "★".repeat(value) +
+         "☆".repeat(5 - value);
 
 }
 
@@ -759,7 +1231,7 @@ function displayTransportList(
               href="tel:${escapeHTML(phone)}"
               class="btn">
 
-              📞 اتصال
+              📞
 
             </a>
           `
@@ -775,16 +1247,12 @@ function displayTransportList(
               target="_blank"
               rel="noopener">
 
-              💬 واتساب
+              💬
 
             </a>
           `
           : "";
 
-
-      /* =================================
-         رابط الموقع
-      ================================= */
 
       const mapButton =
         item.map_url
@@ -795,30 +1263,25 @@ function displayTransportList(
               target="_blank"
               rel="noopener">
 
-              📍 الموقع
+              📍
 
             </a>
           `
           : "";
 
 
-      /* =================================
-         زر طلب الخدمة
-         الاختيار تلقائي
-      ================================= */
-
       const requestButton =
         `
           <button
             type="button"
-            class="btn"
+            class="btn card-toggle-btn"
             onclick="selectService(
               'transport',
               '${escapeHTML(item.id)}',
               '${escapeJS(name)}'
             )">
 
-            📋 اطلب هذه الخدمة
+            📋
 
           </button>
         `;
@@ -829,6 +1292,7 @@ function displayTransportList(
         <div class="accommodation-card">
 
           ${image}
+
 
           <h3>
             ${escapeHTML(name)}
@@ -918,17 +1382,14 @@ function selectService(
   }
 
 
-  /* نوع الخدمة */
   type.value =
     String(serviceType).trim();
 
 
-  /* رقم الخدمة */
   id.value =
     String(serviceId).trim();
 
 
-  /* اسم الخدمة */
   if (notes) {
 
     notes.value =
@@ -948,7 +1409,10 @@ function selectService(
   );
 
 
-  /* الانتقال إلى نموذج الطلب */
+  /* =================================
+     إظهار نموذج الطلب العام
+  ================================= */
+
   const requestSection =
     document.getElementById(
       "request"
@@ -956,6 +1420,19 @@ function selectService(
 
 
   if (requestSection) {
+
+    requestSection.classList.add(
+      "show"
+    );
+
+    requestSection.classList.add(
+      "visible-request"
+    );
+
+    requestSection.classList.remove(
+      "hidden-request"
+    );
+
 
     requestSection.scrollIntoView({
       behavior: "smooth",
@@ -1188,11 +1665,9 @@ async function submitServiceRequest(event) {
       "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
 
 
-    /* إعادة ضبط النموذج */
     form.reset();
 
 
-    /* مسح الخدمة المختارة */
     if (serviceTypeElement) {
       serviceTypeElement.value = "";
     }
@@ -1312,19 +1787,39 @@ document.addEventListener(
   "DOMContentLoaded",
   function () {
 
-    /* اختبار الاتصال */
     testSupabaseConnection();
 
-
-    /* تحميل الإقامات */
     loadAccommodations();
 
-
-    /* تحميل المواصلات */
     loadTransportServices();
 
 
-    /* نموذج طلب الخدمة */
+    /* =================================
+       إخفاء نموذج الطلب في البداية
+    ================================= */
+
+    const requestSection =
+      document.getElementById(
+        "request"
+      );
+
+
+    if (requestSection) {
+
+      requestSection.classList.add(
+        "hidden-request"
+      );
+
+      requestSection.classList.remove(
+        "visible-request"
+      );
+
+    }
+
+
+    /* =================================
+       نموذج طلب الخدمة
+    ================================= */
 
     const form =
       document.getElementById(
