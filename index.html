@@ -258,332 +258,401 @@ content="width=device-width, initial-scale=1.0"
 
 </div>
 
-  </section>  <!-- =========================
-       طلب خدمة
-       مخفي حتى اختيار الخدمة
-  ========================== -->  <section
-    id="request"
-    class="section hidden-service-section"
+  </section>  <!-- ==================================================
+       ⭐ 📋 🏢 البطاقات الإضافية
+  ================================================== -->  <section
+    id="services-actions"
+    class="section"
   ><div class="container">
 
   <h2>
-    📋 طلب خدمة
+    خدمات الموقع
   </h2>
 
 
-  <div class="contact-card">
+  <div class="cards">
 
-    <form
-      id="serviceRequestForm"
+
+    <!-- =========================
+         ⭐ بطاقة التقييم
+    ========================== -->
+
+    <div
+      class="accommodation-card action-card"
+      onclick="toggleActionCard(this)"
     >
 
+      <h3>
+        ⭐ التقييم
+      </h3>
+
       <p>
-        أرسل طلبك وسنتواصل معك في أقرب وقت.
+        اضغط هنا لإضافة تقييم أو مشاهدة التقييمات.
       </p>
 
 
-      <label for="requester_name">
-        الاسم
-      </label>
-
-      <input
-        type="text"
-        id="requester_name"
-        name="requester_name"
-        placeholder="أدخل اسمك"
-        required
+      <div
+        class="action-card-content"
       >
 
+        <div id="generalReviewsContent">
 
-      <label for="phone">
-        الهاتف
-      </label>
+          <p class="empty">
+            اختر خدمة من البطاقات أعلاه لإضافة تقييم لها.
+          </p>
 
-      <input
-        type="tel"
-        id="phone"
-        name="phone"
-        placeholder="رقم الهاتف"
-      >
+        </div>
 
+      </div>
 
-      <label for="whatsapp">
-        واتساب
-      </label>
-
-      <input
-        type="tel"
-        id="whatsapp"
-        name="whatsapp"
-        placeholder="رقم واتساب"
-      >
+    </div>
 
 
-      <label for="service_type">
-        نوع الخدمة
-      </label>
 
-      <select
-        id="service_type"
-        name="service_type"
-        required
-      >
+    <!-- =========================
+         📋 بطاقة طلب خدمة
+    ========================== -->
 
-        <option value="">
-          اختر نوع الخدمة
-        </option>
-
-        <option value="accommodation">
-          🏨 إقامة
-        </option>
-
-        <option value="transport">
-          🚗 مواصلات
-        </option>
-
-        <option value="activity">
-          🗺️ نشاط أو جولة
-        </option>
-
-      </select>
-
-
-      <label for="service_id">
-        رقم الخدمة
-      </label>
-
-      <input
-        type="number"
-        id="service_id"
-        name="service_id"
-        placeholder="رقم الخدمة"
-        required
-      >
-
-
-      <label for="request_date">
-        تاريخ الطلب
-      </label>
-
-      <input
-        type="date"
-        id="request_date"
-        name="request_date"
-      >
-
-
-      <label for="notes">
-        ملاحظات
-      </label>
-
-      <textarea
-        id="notes"
-        name="notes"
-        rows="4"
-        placeholder="اكتب طلبك أو ملاحظاتك هنا"
-      ></textarea>
-
-
-      <button
-        type="submit"
-        class="btn"
-        id="submitRequestBtn"
-      >
-        📩
-      </button>
-
-
-      <p
-        id="requestMessage"
-        class="empty"
-      ></p>
-
-    </form>
-
-  </div>
-
-</div>
-
-  </section>  <!-- =========================
-       مقدمو الخدمات
-       مخفي
-  ========================== -->  <section
-    id="providers"
-    class="section hidden-service-section"
-  ><div class="container">
-
-  <h2>
-    🏢 انضم كمقدم خدمة
-  </h2>
-
-
-  <div class="contact-card">
-
-    <p>
-      هل لديك إقامة أو خدمة سياحية في شمال المغرب؟
-    </p>
-
-    <p>
-      أرسل معلوماتك وسنراجع طلبك قبل نشره على الموقع.
-    </p>
-
-
-    <form
-      id="providerApplicationForm"
+    <div
+      class="accommodation-card action-card"
+      onclick="toggleActionCard(this)"
     >
 
-      <label for="provider_name">
-        اسم مقدم الخدمة
-      </label>
+      <h3>
+        📋 طلب خدمة
+      </h3>
 
-      <input
-        type="text"
-        id="provider_name"
-        name="provider_name"
-        placeholder="اسمك أو اسم المؤسسة"
-        maxlength="150"
-        required
+      <p>
+        اضغط هنا لإرسال طلب خدمة.
+      </p>
+
+
+      <div
+        class="action-card-content"
       >
 
+        <form
+          id="serviceRequestForm"
+        >
 
-      <label for="provider_service_type">
-        نوع الخدمة
-      </label>
+          <p>
+            أرسل طلبك وسنتواصل معك في أقرب وقت.
+          </p>
 
-      <select
-        id="provider_service_type"
-        name="service_type"
-        required
+
+          <label for="requester_name">
+            الاسم
+          </label>
+
+          <input
+            type="text"
+            id="requester_name"
+            name="requester_name"
+            placeholder="أدخل اسمك"
+            required
+          >
+
+
+          <label for="phone">
+            الهاتف
+          </label>
+
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="رقم الهاتف"
+          >
+
+
+          <label for="whatsapp">
+            واتساب
+          </label>
+
+          <input
+            type="tel"
+            id="whatsapp"
+            name="whatsapp"
+            placeholder="رقم واتساب"
+          >
+
+
+          <label for="service_type">
+            نوع الخدمة
+          </label>
+
+          <select
+            id="service_type"
+            name="service_type"
+            required
+          >
+
+            <option value="">
+              اختر نوع الخدمة
+            </option>
+
+            <option value="accommodation">
+              🏨 إقامة
+            </option>
+
+            <option value="transport">
+              🚗 مواصلات
+            </option>
+
+            <option value="activity">
+              🗺️ نشاط أو جولة
+            </option>
+
+          </select>
+
+
+          <label for="service_id">
+            رقم الخدمة
+          </label>
+
+          <input
+            type="number"
+            id="service_id"
+            name="service_id"
+            placeholder="رقم الخدمة"
+            required
+          >
+
+
+          <label for="request_date">
+            تاريخ الطلب
+          </label>
+
+          <input
+            type="date"
+            id="request_date"
+            name="request_date"
+          >
+
+
+          <label for="notes">
+            ملاحظات
+          </label>
+
+          <textarea
+            id="notes"
+            name="notes"
+            rows="4"
+            placeholder="اكتب طلبك أو ملاحظاتك هنا"
+          ></textarea>
+
+
+          <button
+            type="submit"
+            class="btn"
+            id="submitRequestBtn"
+          >
+            📩
+          </button>
+
+
+          <p
+            id="requestMessage"
+            class="empty"
+          ></p>
+
+        </form>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         🏢 بطاقة مقدم الخدمة
+    ========================== -->
+
+    <div
+      class="accommodation-card action-card"
+      onclick="toggleActionCard(this)"
+    >
+
+      <h3>
+        🏢 مقدم الخدمة
+      </h3>
+
+      <p>
+        هل لديك خدمة سياحية؟ اضغط هنا للانضمام.
+      </p>
+
+
+      <div
+        class="action-card-content"
       >
 
-        <option value="">
-          اختر نوع الخدمة
-        </option>
-
-        <option value="accommodation">
-          🏨 إقامة
-        </option>
-
-        <option value="transport">
-          🚗 مواصلات
-        </option>
-
-        <option value="activity">
-          🗺️ نشاط أو جولة
-        </option>
-
-        <option value="tour_guide">
-          🧭 مرشد سياحي
-        </option>
-
-      </select>
+        <p>
+          أرسل معلوماتك وسنراجع طلبك قبل نشره على الموقع.
+        </p>
 
 
-      <label for="provider_city">
-        المدينة
-      </label>
-
-      <input
-        type="text"
-        id="provider_city"
-        name="city"
-        placeholder="مثال: تطوان"
-        maxlength="100"
-        required
-      >
+        <form
+          id="providerApplicationForm"
+        >
 
 
-      <label for="provider_address">
-        العنوان
-      </label>
+          <label for="provider_name">
+            اسم مقدم الخدمة
+          </label>
 
-      <input
-        type="text"
-        id="provider_address"
-        name="address"
-        placeholder="العنوان"
-        maxlength="250"
-      >
-
-
-      <label for="provider_description">
-        وصف الخدمة
-      </label>
-
-      <textarea
-        id="provider_description"
-        name="description"
-        rows="4"
-        maxlength="1000"
-        placeholder="اكتب وصفًا مختصرًا عن خدمتك"
-      ></textarea>
+          <input
+            type="text"
+            id="provider_name"
+            name="provider_name"
+            placeholder="اسمك أو اسم المؤسسة"
+            maxlength="150"
+            required
+          >
 
 
-      <label for="provider_phone">
-        الهاتف
-      </label>
+          <label for="provider_service_type">
+            نوع الخدمة
+          </label>
 
-      <input
-        type="tel"
-        id="provider_phone"
-        name="phone"
-        placeholder="رقم الهاتف"
-        maxlength="30"
-      >
+          <select
+            id="provider_service_type"
+            name="service_type"
+            required
+          >
 
+            <option value="">
+              اختر نوع الخدمة
+            </option>
 
-      <label for="provider_whatsapp">
-        واتساب
-      </label>
+            <option value="accommodation">
+              🏨 إقامة
+            </option>
 
-      <input
-        type="tel"
-        id="provider_whatsapp"
-        name="whatsapp"
-        placeholder="رقم واتساب"
-        maxlength="30"
-      >
+            <option value="transport">
+              🚗 مواصلات
+            </option>
 
+            <option value="activity">
+              🗺️ رحلة أو نشاط
+            </option>
 
-      <label for="provider_image_url">
-        رابط الصورة
-      </label>
+            <option value="tour_guide">
+              🧭 مرشد سياحي
+            </option>
 
-      <input
-        type="url"
-        id="provider_image_url"
-        name="image_url"
-        placeholder="رابط الصورة - اختياري"
-      >
+          </select>
 
 
-      <label for="provider_map_url">
-        رابط الموقع
-      </label>
+          <label for="provider_city">
+            المدينة
+          </label>
 
-      <input
-        type="url"
-        id="provider_map_url"
-        name="map_url"
-        placeholder="رابط Google Maps - اختياري"
-      >
-
-
-      <button
-        type="submit"
-        class="btn"
-        id="submitProviderBtn"
-      >
-        📩
-      </button>
+          <input
+            type="text"
+            id="provider_city"
+            name="city"
+            placeholder="مثال: تطوان"
+            maxlength="100"
+            required
+          >
 
 
-      <p
-        id="providerMessage"
-        class="empty"
-      ></p>
+          <label for="provider_address">
+            العنوان
+          </label>
 
-    </form>
+          <input
+            type="text"
+            id="provider_address"
+            name="address"
+            placeholder="العنوان"
+            maxlength="250"
+          >
+
+
+          <label for="provider_description">
+            وصف الخدمة
+          </label>
+
+          <textarea
+            id="provider_description"
+            name="description"
+            rows="4"
+            maxlength="1000"
+            placeholder="اكتب وصفًا مختصرًا عن خدمتك"
+          ></textarea>
+
+
+          <label for="provider_phone">
+            الهاتف
+          </label>
+
+          <input
+            type="tel"
+            id="provider_phone"
+            name="phone"
+            placeholder="رقم الهاتف"
+            maxlength="30"
+          >
+
+
+          <label for="provider_whatsapp">
+            واتساب
+          </label>
+
+          <input
+            type="tel"
+            id="provider_whatsapp"
+            name="whatsapp"
+            placeholder="رقم واتساب"
+            maxlength="30"
+          >
+
+
+          <label for="provider_image_url">
+            رابط الصورة
+          </label>
+
+          <input
+            type="url"
+            id="provider_image_url"
+            name="image_url"
+            placeholder="رابط الصورة - اختياري"
+          >
+
+
+          <label for="provider_map_url">
+            رابط الموقع
+          </label>
+
+          <input
+            type="url"
+            id="provider_map_url"
+            name="map_url"
+            placeholder="رابط Google Maps - اختياري"
+          >
+
+
+          <button
+            type="submit"
+            class="btn"
+            id="submitProviderBtn"
+          >
+            📩
+          </button>
+
+
+          <p
+            id="providerMessage"
+            class="empty"
+          ></p>
+
+        </form>
+
+      </div>
+
+    </div>
+
 
   </div>
 
@@ -659,11 +728,90 @@ content="width=device-width, initial-scale=1.0"
   شمال المغرب © 2026
 </p>
 
-
 <p>
   اكتشف • احجز • استمتع
 </p>
 
   </footer>  <!-- =========================
        JavaScript
-  ========================== -->  <script src="js/config.js"></script>  <script src="js/reviews.js"></script>  <script src="js/accommodations.js"></script>  <script src="js/transport.js"></script>  <script src="js/activities.js"></script>  <script src="js/requests.js"></script>  <script src="js/providers.js"></script>  <script src="js/main.js"></script></body></html>
+  ========================== -->  <script src="js/config.js"></script>  <script src="js/reviews.js"></script>  <script src="js/accommodations.js"></script>  <script src="js/transport.js"></script>  <script src="js/activities.js"></script>  <script src="js/requests.js"></script>  <script src="js/providers.js"></script>  <script src="js/main.js"></script>  <!-- =========================
+       فتح وإغلاق البطاقات
+  ========================== -->  <script>
+
+    function toggleActionCard(card) {
+
+      if (!card) return;
+
+      const content =
+        card.querySelector(
+          ".action-card-content"
+        );
+
+      if (!content) return;
+
+      const isOpen =
+        card.classList.contains(
+          "card-open"
+        );
+
+
+      /* إغلاق كل البطاقات الأخرى */
+
+      document
+        .querySelectorAll(
+          ".action-card.card-open"
+        )
+        .forEach(openCard => {
+
+          if (openCard !== card) {
+
+            openCard.classList.remove(
+              "card-open"
+            );
+
+          }
+
+        });
+
+
+      /* فتح أو إغلاق البطاقة */
+
+      if (isOpen) {
+
+        card.classList.remove(
+          "card-open"
+        );
+
+      } else {
+
+        card.classList.add(
+          "card-open"
+        );
+
+      }
+
+    }
+
+
+    /* منع إغلاق البطاقة عند استعمال النموذج */
+
+    document.addEventListener(
+      "click",
+      function (event) {
+
+        const form =
+          event.target.closest(
+            ".action-card-content form"
+          );
+
+        if (form) {
+
+          event.stopPropagation();
+
+        }
+
+      },
+      true
+    );
+
+  </script></body></html>
