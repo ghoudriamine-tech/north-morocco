@@ -1,281 +1,154 @@
 /* =========================================
    🌊 شمال المغرب
    الإقامات
-   البطاقة + التفاصيل المخفية
-========================================= */
-
-
-/* =========================================
-   تحميل الإقامات
 ========================================= */
 
 async function loadAccommodations() {
+  const lists = [
+    "apartmentsList",
+    "hotelsList",
+    "riadsList"
+  ];
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
-    const controller =
-      new AbortController();
-
-    const timeout =
-      setTimeout(() => {
-        controller.abort();
-      }, 10000);
-
-
-    const response =
-      await fetch(
-        `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
-        {
-          method: "GET",
-          headers: supabaseHeaders(),
-          signal: controller.signal
-        }
-      );
-
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
+      {
+        headers: supabaseHeaders(),
+        signal: controller.signal
+      }
+    );
 
     clearTimeout(timeout);
 
-
     if (!response.ok) {
-
-      const errorText =
-        await response.text();
-
       throw new Error(
-        `HTTP ${response.status}: ${errorText}`
+        `HTTP ${response.status}: ${await response.text()}`
       );
-
     }
 
+    const data = await response.json();
 
-    const data =
-      await response.json();
-
-
-    console.log(
-      "Accommodations data:",
-      data
+    displayAccommodations(
+      Array.isArray(data) ? data : []
     );
-
-
-    displayAccommodations(data);
-
 
   } catch (error) {
+    console.error("Accommodations error:", error);
 
-    console.error(
-      "Accommodations error:",
-      error
-    );
-
-
-    let message;
-
-
-    if (
+    const message =
       error.name === "AbortError"
-    ) {
+        ? "انتهت مهلة تحميل الإقامات."
+        : `خطأ في تحميل الإقامات:<br>${escapeHTML(
+            error.message || String(error)
+          )}`;
 
-      message =
-        "انتهت مهلة تحميل الإقامات.";
-
-    } else {
-
-      message =
-        `خطأ في تحميل الإقامات:<br>${escapeHTML(
-          error.message || String(error)
-        )}`;
-
-    }
-
-
-    [
-      "apartmentsList",
-      "hotelsList",
-      "riadsList"
-    ].forEach(id => {
-
-      const container =
-        document.getElementById(id);
-
-
-      if (container) {
-
-        container.innerHTML =
-          `<p class="empty">${message}</p>`;
-
-      }
-
+    lists.forEach(id => {
+      const box = document.getElementById(id);
+      if (box)
+        box.innerHTML = `<p class="empty">${message}</p>`;
     });
-
   }
-
 }
 
 
-/* =========================================
-   تقسيم الإقامات
-========================================= */
-
 function displayAccommodations(data) {
-
-
-  const apartments =
-    data.filter(item =>
-      isAccommodationType(
-        item,
-        [
-          "شقق مفروشة",
-          "شقة مفروشة",
-          "apartment"
-        ]
-      )
-    );
-
-
-  const hotels =
-    data.filter(item =>
-      isAccommodationType(
-        item,
-        [
-          "فنادق",
-          "فندق",
-          "hotel"
-        ]
-      )
-    );
-
-
-  const riads =
-    data.filter(item =>
-      isAccommodationType(
-        item,
-        [
-          "رياضات",
-          "رياض",
-          "riad"
-        ]
-      )
-    );
-
-
   displayAccommodationList(
     "apartmentsList",
-    apartments,
+    data.filter(x =>
+      isAccommodationType(x, [
+        "شقق مفروشة",
+        "شقة مفروشة",
+        "apartment"
+      ])
+    ),
     "لا توجد شقق مفروشة حالياً."
   );
 
-
   displayAccommodationList(
     "hotelsList",
-    hotels,
+    data.filter(x =>
+      isAccommodationType(x, [
+        "فنادق",
+        "فندق",
+        "hotel"
+      ])
+    ),
     "لا توجد فنادق حالياً."
   );
 
-
   displayAccommodationList(
     "riadsList",
-    riads,
+    data.filter(x =>
+      isAccommodationType(x, [
+        "رياضات",
+        "رياض",
+        "riad"
+      ])
+    ),
     "لا توجد رياضات حالياً."
   );
-
 }
 
 
-/* =========================================
-   التحقق من نوع الإقامة
-========================================= */
-
-function isAccommodationType(
-  item,
-  types
-) {
-
+function isAccommodationType(item, types) {
   const value =
-    String(
-      item.type || ""
-    )
+    String(item?.type || "")
       .trim()
       .toLowerCase();
 
-
   return types.some(type =>
-    value ===
-    String(type)
-      .trim()
-      .toLowerCase()
+    value === String(type).trim().toLowerCase()
   );
-
 }
 
 
-/* =========================================
-   عرض قائمة الإقامات
-========================================= */
+function displayAccommodationList(id, items, emptyMessage) {
+  const box = document.getElementById(id);
 
-function displayAccommodationList(
-  id,
-  items,
-  emptyMessage
-) {
-
-  const container =
-    document.getElementById(id);
-
-
-  if (!container) {
-    return;
-  }
-
+  if (!box) return;
 
   if (!items.length) {
-
-    container.innerHTML =
+    box.innerHTML =
       `<p class="empty">${emptyMessage}</p>`;
-
     return;
-
   }
 
-
-  container.innerHTML =
-    items.map(item => {
-
-
-      const name =
-        item.name ||
-        "إقامة";
+  box.innerHTML = items
+    .map(accommodationCard)
+    .join("");
+}
 
 
-      const phone =
-        item.phone
-          ? String(item.phone).trim()
-          : "";
+function accommodationCard(item) {
+  const id = item.id;
+  const name = item.name || "إقامة";
+  const phone = String(item.phone || "").trim();
 
+  let whatsapp =
+    String(item.whatsapp || phone)
+      .replace(/\D/g, "");
 
-      let whatsapp =
-        item.whatsapp
-          ? String(item.whatsapp)
-              .replace(/\D/g, "")
-          : phone.replace(/\D/g, "");
+  if (whatsapp.startsWith("0")) {
+    whatsapp =
+      "212" + whatsapp.substring(1);
+  }
 
+  const price =
+    item.price_per_night ??
+    item.price ??
+    "";
 
-      if (
-        whatsapp.startsWith("0")
-      ) {
+  return `
+    <div
+      class="accommodation-card service-card"
+      onclick="toggleAccommodationCard(this)"
+    >
 
-        whatsapp =
-          "212" +
-          whatsapp.substring(1);
-
-      }
-
-
-      /* ===============================
-         الصورة
-      =============================== */
-
-      const image =
+      ${
         item.image_url
           ? `
             <img
@@ -284,264 +157,137 @@ function displayAccommodationList(
               class="accommodation-image"
               loading="lazy">
           `
-          : "";
+          : ""
+      }
 
+      <h3>${escapeHTML(name)}</h3>
 
-      /* ===============================
-         السعر
-      =============================== */
+      ${
+        item.city
+          ? `<p>📍 ${escapeHTML(item.city)}</p>`
+          : ""
+      }
 
-      const price =
-        item.price_per_night ??
-        item.price ??
-        "";
+      ${
+        item.address
+          ? `<p>📌 ${escapeHTML(item.address)}</p>`
+          : ""
+      }
 
+      ${
+        item.description
+          ? `<p>${escapeHTML(item.description)}</p>`
+          : ""
+      }
 
-      /* ===============================
-         الهاتف
-      =============================== */
+      ${
+        price !== ""
+          ? `<p>💰 ${escapeHTML(price)} درهم / ليلة</p>`
+          : ""
+      }
 
-      const phoneButton =
-        phone
-          ? `
-            <a
-              href="tel:${escapeHTML(phone)}"
-              class="btn icon-btn"
-              aria-label="اتصال"
-              title="اتصال">
-              📞
-            </a>
-          `
-          : "";
+      <div
+        class="service-card-details"
+        onclick="event.stopPropagation()"
+      >
 
-
-      /* ===============================
-         واتساب
-      =============================== */
-
-      const whatsappButton =
-        whatsapp
-          ? `
-            <a
-              href="https://wa.me/${whatsapp}"
-              class="btn whatsapp-accommodation icon-btn"
-              target="_blank"
-              rel="noopener"
-              aria-label="واتساب"
-              title="واتساب">
-              💬
-            </a>
-          `
-          : "";
-
-
-      /* ===============================
-         الموقع
-      =============================== */
-
-      const mapButton =
-        item.map_url
-          ? `
-            <a
-              href="${escapeHTML(item.map_url)}"
-              class="btn icon-btn"
-              target="_blank"
-              rel="noopener"
-              aria-label="الموقع"
-              title="الموقع">
-              📍
-            </a>
-          `
-          : "";
-
-
-      /* ===============================
-         طلب الخدمة
-      =============================== */
-
-      const requestButton = `
-        <button
-          type="button"
-          class="btn request-btn"
-          aria-label="طلب الخدمة"
-          title="طلب الخدمة"
-          onclick="
-            event.stopPropagation();
-
-            selectService(
-              'accommodation',
-              '${escapeJS(item.id)}',
-              '${escapeJS(name)}'
-            );
-          "
-        >
-          📋
-        </button>
-      `;
-
-
-      /* ===============================
-         البطاقة
-      =============================== */
-
-      return `
-
-        <div
-          class="accommodation-card service-card"
-          onclick="toggleAccommodationCard(this)"
-        >
-
-          ${image}
-
-
-          <h3>
-            ${escapeHTML(name)}
-          </h3>
-
+        <div class="accommodation-buttons">
 
           ${
-            item.city
+            phone
               ? `
-                <p>
-                  📍 ${escapeHTML(item.city)}
-                </p>
+                <a
+                  href="tel:${escapeHTML(phone)}"
+                  class="btn icon-btn"
+                  aria-label="اتصال"
+                  title="اتصال">
+                  📞
+                </a>
               `
               : ""
           }
 
-
           ${
-            item.address
+            whatsapp
               ? `
-                <p>
-                  📌 ${escapeHTML(item.address)}
-                </p>
+                <a
+                  href="https://wa.me/${whatsapp}"
+                  class="btn whatsapp-accommodation icon-btn"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="واتساب"
+                  title="واتساب">
+                  💬
+                </a>
               `
               : ""
           }
 
-
           ${
-            item.description
+            item.map_url
               ? `
-                <p>
-                  ${escapeHTML(item.description)}
-                </p>
+                <a
+                  href="${escapeHTML(item.map_url)}"
+                  class="btn icon-btn"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="الموقع"
+                  title="الموقع">
+                  📍
+                </a>
               `
               : ""
           }
 
-
-          ${
-            price !== ""
-              ? `
-                <p>
-                  💰 ${escapeHTML(price)}
-                  درهم / ليلة
-                </p>
-              `
-              : ""
-          }
-
-
-          <!-- =========================
-               التفاصيل المخفية
-          ========================== -->
-
-          <div
-            class="service-card-details"
-            onclick="event.stopPropagation()"
-          >
-
-            <div class="accommodation-buttons">
-
-              ${phoneButton}
-
-              ${whatsappButton}
-
-              ${mapButton}
-
-              ${requestButton}
-
-            </div>
-
-
-            <!-- التقييم مخفي -->
-
-            <div class="reviews-hidden-area">
-
-              ${renderReviews(
-                "accommodation",
-                item.id
-              )}
-
-            </div>
-
-
-          </div>
+          <button
+            type="button"
+            class="btn request-btn"
+            onclick="
+              event.stopPropagation();
+              selectService(
+                'accommodation',
+                '${escapeJS(id)}',
+                '${escapeJS(name)}'
+              );
+            "
+            aria-label="طلب الخدمة"
+            title="طلب الخدمة">
+            📋
+          </button>
 
         </div>
 
-      `;
+        <div class="reviews-hidden-area">
+          ${
+            typeof renderReviews === "function"
+              ? renderReviews("accommodation", id)
+              : ""
+          }
+        </div>
 
-    }).join("");
+      </div>
 
+    </div>
+  `;
 }
 
 
-/* =========================================
-   فتح وإغلاق بطاقة الإقامة
-========================================= */
-
 function toggleAccommodationCard(card) {
-
-  if (!card) {
-    return;
-  }
-
-
-  /* إغلاق البطاقات الأخرى */
+  if (!card) return;
 
   document
     .querySelectorAll(
       ".service-card.service-card-open"
     )
     .forEach(openCard => {
-
       if (openCard !== card) {
-
         openCard.classList.remove(
           "service-card-open"
         );
-
       }
-
     });
-
-
-  /* فتح / إغلاق البطاقة */
 
   card.classList.toggle(
     "service-card-open"
   );
-
-}
-
-
-/* =========================================
-   تشغيل الإقامات
-========================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
-
-    loadAccommodations();
-
   }
-);
-
-
-/* =========================================
-   نهاية accommodations.js
-========================================= */
