@@ -1,329 +1,113 @@
 /* =========================================
-🌊 شمال المغرب
-تشغيل الموقع + البحث
+   🌊 شمال المغرب
+   التشغيل + البحث
 ========================================= */
 
-document.addEventListener(
-"DOMContentLoaded",
-function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-/* =====================================
-   الإقامات
-===================================== */
+  if (typeof loadAccommodations === "function")
+    loadAccommodations();
 
-if (
-  typeof loadAccommodations === "function"
-) {
+  if (typeof loadTransportServices === "function")
+    loadTransportServices();
 
-  loadAccommodations();
+  if (typeof loadActivities === "function")
+    loadActivities();
 
-}
+  setupGlobalSearch();
+});
 
-
-/* =====================================
-   المواصلات
-===================================== */
-
-if (
-  typeof loadTransportServices === "function"
-) {
-
-  loadTransportServices();
-
-}
-
-
-/* =====================================
-   الأنشطة والجولات
-===================================== */
-
-if (
-  typeof loadActivities === "function"
-) {
-
-  loadActivities();
-
-}
-
-
-/* =====================================
-   نموذج طلب الخدمة
-===================================== */
-
-const form =
-  document.getElementById(
-    "serviceRequestForm"
-  );
-
-
-if (
-  form &&
-  typeof submitServiceRequest === "function"
-) {
-
-  form.addEventListener(
-    "submit",
-    submitServiceRequest
-  );
-
-}
-
-
-/* =====================================
-   نموذج مقدم الخدمة
-===================================== */
-
-const providerForm =
-  document.getElementById(
-    "providerApplicationForm"
-  );
-
-
-if (
-  providerForm &&
-  typeof submitProviderApplication === "function"
-) {
-
-  providerForm.addEventListener(
-    "submit",
-    submitProviderApplication
-  );
-
-}
-
-
-/* =====================================
-   🔎 البحث
-===================================== */
-
-setupGlobalSearch();
-
-}
-);
 
 /* =========================================
-🔎 البحث العام
+   🔎 البحث العام
 ========================================= */
 
 function setupGlobalSearch() {
 
-const searchInput =
-document.getElementById(
-"globalSearch"
-);
+  const input = document.getElementById("globalSearch");
+  const message = document.getElementById("searchMessage");
 
-const searchMessage =
-document.getElementById(
-"searchMessage"
-);
+  if (!input) return;
 
-if (!searchInput) {
+  input.addEventListener("input", () => {
 
-return;
+    const query = input.value.trim().toLowerCase();
 
-}
+    const cards =
+      document.querySelectorAll(".accommodation-card");
 
-searchInput.addEventListener(
-"input",
-function () {
+    let count = 0;
 
-  const query =
-    String(
-      this.value || ""
-    )
-    .trim()
-    .toLowerCase();
+    cards.forEach(card => {
 
-
-  const cards =
-    document.querySelectorAll(
-      ".accommodation-card"
-    );
-
-
-  let visibleCount = 0;
-
-
-  /* ===================================
-     البحث فارغ
-  =================================== */
-
-  if (!query) {
-
-
-    cards.forEach(
-      card => {
-
+      if (!query) {
         card.style.display = "";
-
+        return;
       }
-    );
-
-
-    if (searchMessage) {
-
-      searchMessage.textContent = "";
-
-    }
-
-
-    return;
-
-  }
-
-
-  /* ===================================
-     البحث داخل البطاقات
-  =================================== */
-
-  cards.forEach(
-    card => {
-
 
       const text =
-        String(
-          card.textContent || ""
-        )
-        .toLowerCase();
+        (card.textContent || "").toLowerCase();
 
+      const match = text.includes(query);
 
-      if (
-        text.includes(query)
-      ) {
+      card.style.display = match ? "" : "none";
 
-        card.style.display = "";
+      if (match) count++;
+    });
 
-        visibleCount++;
+    if (!message) return;
 
-      } else {
-
-        card.style.display = "none";
-
-      }
-
-    }
-  );
-
-
-  /* ===================================
-     رسالة البحث
-  =================================== */
-
-  if (searchMessage) {
-
-
-    if (
-      visibleCount > 0
-    ) {
-
-      searchMessage.textContent =
-        `🔎 تم العثور على ${visibleCount} خدمة.`;
-
+    if (!query) {
+      message.textContent = "";
+    } else if (count) {
+      message.textContent =
+        `🔎 تم العثور على ${count} خدمة.`;
     } else {
-
-      searchMessage.textContent =
+      message.textContent =
         "لم يتم العثور على نتائج مطابقة.";
-
     }
-
-  }
-
+  });
 }
 
-);
-
-}
 
 /* =========================================
-🔐 حماية HTML
+   🔐 حماية HTML
 ========================================= */
 
 function escapeHTML(value) {
-
-return String(value)
-
-.replace(
-  /&/g,
-  "&amp;"
-)
-
-.replace(
-  /</g,
-  "&lt;"
-)
-
-.replace(
-  />/g,
-  "&gt;"
-)
-
-.replace(
-  /"/g,
-  "&quot;"
-)
-
-.replace(
-  /'/g,
-  "&#039;"
-);
-
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
+
 /* =========================================
-🔐 حماية JavaScript
+   🔐 حماية JavaScript
 ========================================= */
 
 function escapeJS(value) {
-
-return String(value)
-
-.replace(
-  /\\/g,
-  "\\\\"
-)
-
-.replace(
-  /'/g,
-  "\\'"
-)
-
-.replace(
-  /"/g,
-  '\\"'
-)
-
-.replace(
-  /\n/g,
-  "\\n"
-)
-
-.replace(
-  /\r/g,
-  "\\r"
-);
-
+  return String(value ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r");
 }
 
+
 /* =========================================
-⚠️ رسالة الخطأ العامة
+   ⚠️ رسالة الخطأ
 ========================================= */
 
 function showError(id) {
 
-const container =
-document.getElementById(id);
+  const container = document.getElementById(id);
 
-if (!container) {
-
-return;
-
-}
-
-container.innerHTML =
-"<p class="empty"> تعذر تحميل البيانات حالياً. </p>";
-
-}
-
-/* =========================================
-نهاية main.js
-========================================= */
+  if (container) {
+    container.innerHTML =
+      '<p class="empty">تعذر تحميل البيانات حالياً.</p>';
+  }
+       }
