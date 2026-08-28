@@ -685,3 +685,80 @@ min-width: 44px;
 /* =========================================
 نهاية style.css
 ========================================= */
+/* =========================================
+   الأقسام التفاعلية داخل بطاقة الإقامة
+========================================= */
+
+.card-toggle-section {
+  display: none;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #d8eef3;
+}
+
+.card-toggle-section.show {
+  display: block;
+}
+
+.card-toggle-btn {
+  width: auto;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+}
+
+.provider-details {
+  background: #f4fbfd;
+  border-radius: 13px;
+  padding: 12px;
+}
+
+.provider-details h4 {
+  color: #006b88;
+  margin-bottom: 7px;
+  font-size: 16px;
+}
+
+.provider-details p {
+  color: #405c64;
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+.card-reviews {
+  margin-top: 0;
+}
+
+.card-reviews .review-item {
+  margin-top: 8px;
+}
+
+/* جعل نموذج الطلب مخفيًا حتى اختيار الخدمة */
+#request.hidden-request {
+  display: none;
+}
+
+#request.visible-request {
+  display: block;
+}
+
+/* الحفاظ على تناسق البطاقات */
+.accommodation-card {
+  height: fit-content;
+}
+
+.accommodation-buttons {
+  align-items: center;
+}
+
+@media (max-width: 599px) {
+  .accommodation-buttons {
+    gap: 7px;
+  }
+
+  .card-toggle-btn {
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+  }
+}
