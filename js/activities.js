@@ -97,6 +97,7 @@ async function loadActivities() {
       const container =
         document.getElementById(id);
 
+
       if (container) {
 
         container.innerHTML =
@@ -122,9 +123,7 @@ function displayActivities(data) {
     data.filter(item =>
       isActivityType(
         item,
-        [
-          "trip"
-        ]
+        ["trip"]
       )
     );
 
@@ -133,9 +132,7 @@ function displayActivities(data) {
     data.filter(item =>
       isActivityType(
         item,
-        [
-          "tour_guide"
-        ]
+        ["tour_guide"]
       )
     );
 
@@ -245,6 +242,10 @@ function displayActivityList(
       }
 
 
+      /* ===============================
+         الصورة
+      =============================== */
+
       const image =
         item.image_url
           ? `
@@ -257,25 +258,27 @@ function displayActivityList(
           : "";
 
 
-      /* =================================
-         زر الاتصال
-      ================================= */
+      /* ===============================
+         اتصال
+      =============================== */
 
       const phoneButton =
         phone
           ? `
             <a
               href="tel:${escapeHTML(phone)}"
-              class="btn">
+              class="btn"
+              aria-label="اتصال"
+              title="اتصال">
               📞
             </a>
           `
           : "";
 
 
-      /* =================================
-         زر واتساب
-      ================================= */
+      /* ===============================
+         واتساب
+      =============================== */
 
       const whatsappButton =
         whatsapp
@@ -284,16 +287,18 @@ function displayActivityList(
               href="https://wa.me/${whatsapp}"
               class="btn whatsapp-accommodation"
               target="_blank"
-              rel="noopener">
+              rel="noopener"
+              aria-label="واتساب"
+              title="واتساب">
               💬
             </a>
           `
           : "";
 
 
-      /* =================================
-         زر الموقع
-      ================================= */
+      /* ===============================
+         الموقع
+      =============================== */
 
       const mapButton =
         item.map_url
@@ -302,30 +307,41 @@ function displayActivityList(
               href="${escapeHTML(item.map_url)}"
               class="btn"
               target="_blank"
-              rel="noopener">
+              rel="noopener"
+              aria-label="الموقع"
+              title="الموقع">
               📍
             </a>
           `
           : "";
 
 
-      /* =================================
+      /* ===============================
          طلب الخدمة
-      ================================= */
+      =============================== */
 
       const requestButton = `
         <button
           type="button"
           class="btn"
-          onclick="selectService(
-            'activity',
-            '${escapeJS(item.id)}',
-            '${escapeJS(name)}'
-          )">
+          aria-label="طلب الخدمة"
+          title="طلب الخدمة"
+          onclick="
+            event.stopPropagation();
+            selectService(
+              'activity',
+              '${escapeJS(item.id)}',
+              '${escapeJS(name)}'
+            );
+          ">
           📋
         </button>
       `;
 
+
+      /* ===============================
+         البطاقة
+      =============================== */
 
       return `
 
@@ -389,7 +405,9 @@ function displayActivityList(
           }
 
 
-          <!-- الأزرار تظهر عند فتح البطاقة -->
+          <!-- =========================
+               التفاصيل المخفية
+          ========================== -->
 
           <div
             class="activity-card-details"
@@ -403,7 +421,11 @@ function displayActivityList(
 
               ${whatsappButton}
 
-              ${mapButton}
+              ${
+                item.map_url
+                  ? mapButton
+                  : ""
+              }
 
               ${requestButton}
 
@@ -429,7 +451,7 @@ function displayActivityList(
 
 
 /* =========================================
-   فتح وإغلاق بطاقة النشاط
+   فتح وإغلاق البطاقة
 ========================================= */
 
 function toggleActivityCard(card) {
@@ -447,7 +469,7 @@ function toggleActivityCard(card) {
 
 
 /* =========================================
-   تشغيل التحميل
+   تشغيل الأنشطة
 ========================================= */
 
 document.addEventListener(
@@ -458,3 +480,8 @@ document.addEventListener(
 
   }
 );
+
+
+/* =========================================
+   نهاية activities.js
+========================================= */
