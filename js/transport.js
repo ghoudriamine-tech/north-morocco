@@ -1,324 +1,268 @@
+ /* =========================================
+   🌊 شمال المغرب
+   المواصلات
+========================================= */
+
 async function loadTransportServices() {
+  const lists = [
+    "carRentalList",
+    "taxiList",
+    "busList"
+  ];
 
-try {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
-const controller = new AbortController();
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/transport_services?select=*`,
+      {
+        headers: supabaseHeaders(),
+        signal: controller.signal
+      }
+    );
 
-const timeout = setTimeout(() => {
-  controller.abort();
-}, 10000);
+    clearTimeout(timeout);
 
-const response = await fetch(
-  `${SUPABASE_URL}/rest/v1/transport_services?select=*`,
-  {
-    method: "GET",
-    headers: supabaseHeaders(),
-    signal: controller.signal
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status}: ${await response.text()}`
+      );
+    }
+
+    const data = await response.json();
+
+    displayTransportServices(
+      Array.isArray(data) ? data : []
+    );
+
+  } catch (error) {
+    console.error("Transport error:", error);
+
+    const message =
+      error.name === "AbortError"
+        ? "انتهت مهلة تحميل خدمات المواصلات."
+        : `خطأ في تحميل المواصلات:<br>${escapeHTML(
+            error.message || String(error)
+          )}`;
+
+    lists.forEach(id => {
+      const box = document.getElementById(id);
+      if (box)
+        box.innerHTML = `<p class="empty">${message}</p>`;
+    });
   }
-);
-
-clearTimeout(timeout);
-
-if (!response.ok) {
-
-  const errorText =
-    await response.text();
-
-  throw new Error(
-    `HTTP ${response.status}: ${errorText}`
-  );
-
 }
 
-const data =
-  await response.json();
-
-console.log(
-  "Transport data:",
-  data
-);
-
-displayTransportServices(data);
-
-} catch (error) {
-
-console.error(
-  "Transport error:",
-  error
-);
-
-let message;
-
-if (error.name === "AbortError") {
-
-  message =
-    "انتهت مهلة تحميل خدمات المواصلات. لم يستجب الخادم خلال 10 ثوانٍ.";
-
-} else {
-
-  message =
-    `خطأ في تحميل المواصلات:<br>${escapeHTML(
-      error.message || String(error)
-    )}`;
-
-}
-
-[
-  "carRentalList",
-  "taxiList",
-  "busList"
-].forEach(id => {
-
-  const container =
-    document.getElementById(id);
-
-  if (container) {
-
-    container.innerHTML =
-      `<p class="empty">${message}</p>`;
-
-  }
-
-});
-
-}
-
-}
 
 function displayTransportServices(data) {
+  displayTransportList(
+    "carRentalList",
+    data.filter(x =>
+      isTransportType(x, [
+        "car_rental",
+        "car rental",
+        "كراء السيارات",
+        "تأجير السيارات",
+        "سيارات للكراء"
+      ])
+    ),
+    "لا توجد خدمات كراء السيارات حالياً."
+  );
 
-const cars = data.filter(item =>
-isTransportType(item, [
-"car_rental",
-"car rental",
-"كراء السيارات",
-"تأجير السيارات",
-"سيارات للكراء"
-])
-);
+  displayTransportList(
+    "taxiList",
+    data.filter(x =>
+      isTransportType(x, [
+        "taxi",
+        "سيارات الأجرة",
+        "سيارة أجرة",
+        "taxi service"
+      ])
+    ),
+    "لا توجد خدمات سيارات الأجرة حالياً."
+  );
 
-const taxis = data.filter(item =>
-isTransportType(item, [
-"taxi",
-"سيارات الأجرة",
-"سيارة أجرة",
-"taxi service"
-])
-);
-
-const buses = data.filter(item =>
-isTransportType(item, [
-"bus",
-"tourist_bus",
-"tourist bus",
-"حافلات",
-"حافلات سياحية صغيرة",
-"الحافلات السياحية الصغيرة"
-])
-);
-
-displayTransportList(
-"carRentalList",
-cars,
-"لا توجد خدمات كراء السيارات حالياً."
-);
-
-displayTransportList(
-"taxiList",
-taxis,
-"لا توجد خدمات سيارات الأجرة حالياً."
-);
-
-displayTransportList(
-"busList",
-buses,
-"لا توجد خدمات الحافلات السياحية حالياً."
-);
-
+  displayTransportList(
+    "busList",
+    data.filter(x =>
+      isTransportType(x, [
+        "bus",
+        "tourist_bus",
+        "tourist bus",
+        "حافلات",
+        "حافلات سياحية صغيرة",
+        "الحافلات السياحية الصغيرة"
+      ])
+    ),
+    "لا توجد خدمات الحافلات السياحية حالياً."
+  );
 }
+
 
 function isTransportType(item, types) {
+  const values = [
+    item?.service_type,
+    item?.type,
+    item?.category,
+    item?.transport_type
+  ];
 
-const values = [
-item.service_type,
-item.type,
-item.category,
-item.transport_type
-];
+  return values.some(value => {
+    if (!value) return false;
 
-return values.some(value => {
+    const normalized =
+      String(value).trim().toLowerCase();
 
-if (!value) return false;
-
-const normalized =
-  String(value)
-    .trim()
-    .toLowerCase();
-
-return types.some(type =>
-  normalized ===
-  String(type)
-    .trim()
-    .toLowerCase()
-);
-
-});
-
+    return types.some(type =>
+      normalized ===
+      String(type).trim().toLowerCase()
+    );
+  });
 }
+
 
 function displayTransportList(
-id,
-items,
-emptyMessage
+  id,
+  items,
+  emptyMessage
 ) {
+  const box = document.getElementById(id);
 
-const container =
-document.getElementById(id);
+  if (!box) return;
 
-if (!container) return;
+  if (!items.length) {
+    box.innerHTML =
+      `<p class="empty">${emptyMessage}</p>`;
+    return;
+  }
 
-if (!items.length) {
-
-container.innerHTML =
-  `<p class="empty">${emptyMessage}</p>`;
-
-return;
-
+  box.innerHTML = items
+    .map(transportCard)
+    .join("");
 }
 
-container.innerHTML = items.map(item => {
 
-const name =
-  item.name ||
-  item.title ||
-  "خدمة نقل";
+function transportCard(item) {
+  const id = item.id;
+  const name =
+    item.name ||
+    item.title ||
+    "خدمة نقل";
 
-const description =
-  item.description || "";
+  const phone =
+    String(item.phone || "").trim();
 
-const city =
-  item.city || "";
+  let whatsapp =
+    String(item.whatsapp || phone)
+      .replace(/\D/g, "");
 
-const phone =
-  item.phone
-    ? String(item.phone).trim()
-    : "";
+  if (whatsapp.startsWith("0")) {
+    whatsapp =
+      "212" + whatsapp.substring(1);
+  }
 
-let whatsapp =
-  item.whatsapp
-    ? String(item.whatsapp).replace(/\D/g, "")
-    : phone.replace(/\D/g, "");
+  return `
+    <div class="accommodation-card service-card">
 
-if (whatsapp.startsWith("0")) {
+      ${
+        item.image_url
+          ? `
+            <img
+              src="${escapeHTML(item.image_url)}"
+              alt="${escapeHTML(name)}"
+              class="accommodation-image"
+              loading="lazy">
+          `
+          : ""
+      }
 
-  whatsapp =
-    "212" + whatsapp.substring(1);
+      <h3>${escapeHTML(name)}</h3>
 
-}
+      ${
+        item.city
+          ? `<p>📍 ${escapeHTML(item.city)}</p>`
+          : ""
+      }
 
-const image =
-  item.image_url
-    ? `
-      <img
-        src="${escapeHTML(item.image_url)}"
-        alt="${escapeHTML(name)}"
-        class="accommodation-image"
-        loading="lazy">
-    `
-    : "";
+      ${
+        item.description
+          ? `<p>${escapeHTML(item.description)}</p>`
+          : ""
+      }
 
-/*
-  📞 الاتصال — أيقونة فقط
-*/
+      <div class="accommodation-buttons">
 
-const phoneButton =
-  phone
-    ? `
-      <a
-        href="tel:${escapeHTML(phone)}"
-        class="btn"
-        aria-label="اتصال"
-        title="اتصال">
-        📞
-      </a>
-    `
-    : "";
+        ${
+          phone
+            ? `
+              <a
+                href="tel:${escapeHTML(phone)}"
+                class="btn icon-btn"
+                aria-label="اتصال"
+                title="اتصال">
+                📞
+              </a>
+            `
+            : ""
+        }
 
-/*
-  💬 واتساب — أيقونة فقط
-*/
+        ${
+          whatsapp
+            ? `
+              <a
+                href="https://wa.me/${whatsapp}"
+                class="btn whatsapp-accommodation icon-btn"
+                target="_blank"
+                rel="noopener"
+                aria-label="واتساب"
+                title="واتساب">
+                💬
+              </a>
+            `
+            : ""
+        }
 
-const whatsappButton =
-  whatsapp
-    ? `
-      <a
-        href="https://wa.me/${whatsapp}"
-        class="btn whatsapp-accommodation"
-        target="_blank"
-        rel="noopener"
-        aria-label="واتساب"
-        title="واتساب">
-        💬
-      </a>
-    `
-    : "";
+        ${
+          item.map_url
+            ? `
+              <a
+                href="${escapeHTML(item.map_url)}"
+                class="btn icon-btn"
+                target="_blank"
+                rel="noopener"
+                aria-label="الموقع"
+                title="الموقع">
+                📍
+              </a>
+            `
+            : ""
+        }
 
-/*
-  📋 طلب الخدمة — يبقى مكتوبًا
-*/
+        <button
+          type="button"
+          class="btn request-btn"
+          onclick="
+            event.stopPropagation();
+            selectService(
+              'transport',
+              '${escapeJS(id)}',
+              '${escapeJS(name)}'
+            );
+          "
+          aria-label="طلب الخدمة"
+          title="طلب الخدمة">
+          📋
+        </button>
 
-const requestButton = `
-  <button
-    type="button"
-    class="btn"
-    onclick="selectService(
-      'transport',
-      '${escapeJS(item.id)}',
-      '${escapeJS(name)}'
-    )">
-    📋 اطلب هذه الخدمة
-  </button>
-`;
+      </div>
 
-return `
-  <div class="accommodation-card">
-
-    ${image}
-
-    <h3>
-      ${escapeHTML(name)}
-    </h3>
-
-    ${
-      city
-        ? `<p>📍 ${escapeHTML(city)}</p>`
-        : ""
-    }
-
-    ${
-      description
-        ? `<p>${escapeHTML(description)}</p>`
-        : ""
-    }
-
-    <div class="accommodation-buttons">
-
-      ${phoneButton}
-
-      ${whatsappButton}
-
-      ${requestButton}
+      ${
+        typeof renderReviews === "function"
+          ? renderReviews("transport", id)
+          : ""
+      }
 
     </div>
-
-    ${renderReviews(
-      "transport",
-      item.id
-    )}
-
-  </div>
-`;
-
-}).join("");
-
-  }
+  `;
+    }
