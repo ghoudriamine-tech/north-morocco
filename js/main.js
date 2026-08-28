@@ -11,8 +11,12 @@ function () {
    الإقامات
 ===================================== */
 
-if (typeof loadAccommodations === "function") {
+if (
+  typeof loadAccommodations === "function"
+) {
+
   loadAccommodations();
+
 }
 
 
@@ -20,8 +24,12 @@ if (typeof loadAccommodations === "function") {
    المواصلات
 ===================================== */
 
-if (typeof loadTransportServices === "function") {
+if (
+  typeof loadTransportServices === "function"
+) {
+
   loadTransportServices();
+
 }
 
 
@@ -29,8 +37,12 @@ if (typeof loadTransportServices === "function") {
    الأنشطة والجولات
 ===================================== */
 
-if (typeof loadActivities === "function") {
+if (
+  typeof loadActivities === "function"
+) {
+
   loadActivities();
+
 }
 
 
@@ -52,6 +64,29 @@ if (
   form.addEventListener(
     "submit",
     submitServiceRequest
+  );
+
+}
+
+
+/* =====================================
+   نموذج مقدم الخدمة
+===================================== */
+
+const providerForm =
+  document.getElementById(
+    "providerApplicationForm"
+  );
+
+
+if (
+  providerForm &&
+  typeof submitProviderApplication === "function"
+) {
+
+  providerForm.addEventListener(
+    "submit",
+    submitProviderApplication
   );
 
 }
@@ -82,16 +117,22 @@ document.getElementById(
 "searchMessage"
 );
 
-if (!searchInput) return;
+if (!searchInput) {
+
+return;
+
+}
 
 searchInput.addEventListener(
 "input",
 function () {
 
   const query =
-    String(this.value || "")
-      .trim()
-      .toLowerCase();
+    String(
+      this.value || ""
+    )
+    .trim()
+    .toLowerCase();
 
 
   const cards =
@@ -103,15 +144,20 @@ function () {
   let visibleCount = 0;
 
 
-  /* إذا كان البحث فارغًا */
+  /* ===================================
+     البحث فارغ
+  =================================== */
 
   if (!query) {
 
-    cards.forEach(card => {
 
-      card.style.display = "";
+    cards.forEach(
+      card => {
 
-    });
+        card.style.display = "";
+
+      }
+    );
 
 
     if (searchMessage) {
@@ -120,43 +166,55 @@ function () {
 
     }
 
+
     return;
 
   }
 
 
-  /* البحث داخل البطاقات */
+  /* ===================================
+     البحث داخل البطاقات
+  =================================== */
 
-  cards.forEach(card => {
-
-    const text =
-      String(
-        card.textContent || ""
-      ).toLowerCase();
+  cards.forEach(
+    card => {
 
 
-    if (
-      text.includes(query)
-    ) {
+      const text =
+        String(
+          card.textContent || ""
+        )
+        .toLowerCase();
 
-      card.style.display = "";
 
-      visibleCount++;
+      if (
+        text.includes(query)
+      ) {
 
-    } else {
+        card.style.display = "";
 
-      card.style.display = "none";
+        visibleCount++;
+
+      } else {
+
+        card.style.display = "none";
+
+      }
 
     }
+  );
 
-  });
 
-
-  /* نتيجة البحث */
+  /* ===================================
+     رسالة البحث
+  =================================== */
 
   if (searchMessage) {
 
-    if (visibleCount > 0) {
+
+    if (
+      visibleCount > 0
+    ) {
 
       searchMessage.textContent =
         `🔎 تم العثور على ${visibleCount} خدمة.`;
@@ -184,15 +242,30 @@ function escapeHTML(value) {
 
 return String(value)
 
-.replace(/&/g, "&amp;")
+.replace(
+  /&/g,
+  "&amp;"
+)
 
-.replace(/</g, "&lt;")
+.replace(
+  /</g,
+  "&lt;"
+)
 
-.replace(/>/g, "&gt;")
+.replace(
+  />/g,
+  "&gt;"
+)
 
-.replace(/"/g, "&quot;")
+.replace(
+  /"/g,
+  "&quot;"
+)
 
-.replace(/'/g, "&#039;");
+.replace(
+  /'/g,
+  "&#039;"
+);
 
 }
 
@@ -204,11 +277,30 @@ function escapeJS(value) {
 
 return String(value)
 
-.replace(/\\/g, "\\\\")
-.replace(/'/g, "\\'")
-.replace(/"/g, '\\"')
-.replace(/\n/g, "\\n")
-.replace(/\r/g, "\\r");
+.replace(
+  /\\/g,
+  "\\\\"
+)
+
+.replace(
+  /'/g,
+  "\\'"
+)
+
+.replace(
+  /"/g,
+  '\\"'
+)
+
+.replace(
+  /\n/g,
+  "\\n"
+)
+
+.replace(
+  /\r/g,
+  "\\r"
+);
 
 }
 
@@ -221,8 +313,17 @@ function showError(id) {
 const container =
 document.getElementById(id);
 
-if (!container) return;
+if (!container) {
 
-container.innerHTML = "<p class="empty"> تعذر تحميل البيانات حالياً. </p>";
+return;
 
-       }
+}
+
+container.innerHTML =
+"<p class="empty"> تعذر تحميل البيانات حالياً. </p>";
+
+}
+
+/* =========================================
+نهاية main.js
+========================================= */
