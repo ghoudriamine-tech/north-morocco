@@ -1,697 +1,687 @@
+/* =========================================
+🌊 شمال المغرب
+STYLE.CSS — النسخة المحسنة
+========================================= */
+
+/* =========================================
+الإعدادات العامة
+========================================= */
+
 * {
   box-sizing: border-box;
-}
+  margin: 0;
+  padding: 0;
+  }
 
 html {
-  scroll-behavior: smooth;
+scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, Tahoma, sans-serif;
-  direction: rtl;
-  background: #bfe8f5;
-  color: #17324d;
-  line-height: 1.7;
-  overflow-x: hidden;
+direction: rtl;
+font-family: Arial, Tahoma, sans-serif;
+background:
+linear-gradient(
+180deg,
+#e8f8fc 0%,
+#d7f2f8 45%,
+#c5edf5 100%
+);
+color: #12343d;
+line-height: 1.7;
+padding-bottom: 78px;
 }
+
+img {
+max-width: 100%;
+display: block;
+}
+
+a {
+text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+font-family: inherit;
+}
+
+/* =========================================
+الحاوية
+========================================= */
 
 .container {
-  width: min(1100px, 92%);
-  margin: auto;
+width: min(1100px, 94%);
+margin: 0 auto;
 }
 
-/* =========================
-   الرئيسية
-========================= */
+/* =========================================
+الرئيسية
+========================================= */
 
 .hero {
-  min-height: 290px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  background: linear-gradient(
-    135deg,
-    #05779f,
-    #32b9d8
-  );
-
-  color: white;
-  padding: 45px 15px;
+background:
+linear-gradient(
+135deg,
+#006f91 0%,
+#079bc0 48%,
+#42c7df 100%
+);
+color: white;
+text-align: center;
+padding: 42px 0 36px;
+border-radius: 0 0 28px 28px;
+box-shadow: 0 5px 18px rgba(0, 90, 120, 0.20);
 }
 
 .hero h1 {
-  margin: 0;
-  font-size: clamp(32px, 8vw, 54px);
-  font-weight: 800;
+font-size: clamp(28px, 7vw, 46px);
+font-weight: 800;
+margin-bottom: 8px;
 }
 
 .hero-subtitle {
-  margin: 10px 0 0;
-  font-size: clamp(18px, 4.5vw, 25px);
+font-size: clamp(15px, 4vw, 20px);
+opacity: 0.95;
 }
 
-/* =========================
-   الأقسام
-========================= */
+/* =========================================
+الأقسام
+========================================= */
 
 .section {
-  padding: 48px 0;
-}
-
-.section:nth-of-type(even) {
-  background: rgba(255, 255, 255, 0.35);
+padding: 28px 0;
 }
 
 .section h2 {
-  text-align: center;
-  margin: 0 0 34px;
-  font-size: clamp(27px, 6vw, 38px);
-  color: #075f86;
-  font-weight: 800;
+text-align: center;
+color: #006b88;
+font-size: clamp(23px, 6vw, 32px);
+margin-bottom: 22px;
+font-weight: 800;
 }
 
-.section h2::after {
-  content: "";
-  display: block;
-  width: 45px;
-  height: 3px;
-  margin: 9px auto 0;
-  background: #087ea8;
-  border-radius: 10px;
+/* =========================================
+البحث
+========================================= */
+
+.search-section {
+padding-top: 22px;
 }
 
-/* =========================
-   التصنيفات
-========================= */
+.search-card {
+background: rgba(255, 255, 255, 0.96);
+border-radius: 20px;
+padding: 20px;
+box-shadow: 0 5px 18px rgba(0, 90, 120, 0.12);
+border: 1px solid rgba(0, 145, 180, 0.15);
+}
+
+.search-card h2 {
+margin-bottom: 15px;
+font-size: 22px;
+}
+
+#globalSearch {
+width: 100%;
+border: 2px solid #9bdbea;
+border-radius: 14px;
+padding: 13px 15px;
+font-size: 16px;
+outline: none;
+background: #f8fdff;
+color: #12343d;
+}
+
+#globalSearch:focus {
+border-color: #079bc0;
+box-shadow: 0 0 0 3px rgba(7, 155, 192, 0.12);
+}
+
+.search-message {
+margin-top: 10px;
+text-align: center;
+color: #55727b;
+font-size: 14px;
+}
+
+/* =========================================
+التصنيفات
+========================================= */
 
 .accommodation-category {
-  margin-bottom: 42px;
-}
-
-.accommodation-category:last-child {
-  margin-bottom: 0;
+margin-bottom: 28px;
 }
 
 .category-title {
-  font-size: clamp(21px, 5vw, 29px);
-  color: #075f86;
-  border-right: 4px solid #087ea8;
-  padding: 6px 13px;
-  margin: 0 0 20px;
+background:
+linear-gradient(
+135deg,
+#087da8,
+#39b8d8
+);
+color: white;
+padding: 11px 15px;
+border-radius: 14px;
+text-align: center;
+font-size: 19px;
+margin-bottom: 15px;
+box-shadow: 0 4px 12px rgba(0, 100, 130, 0.15);
 }
 
-/* =========================
-   البطاقات
-========================= */
+/* =========================================
+شبكة البطاقات
+========================================= */
 
 .cards {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(260px, 1fr)
-  );
-  gap: 20px;
+display: grid;
+grid-template-columns: 1fr;
+gap: 18px;
 }
 
-.card,
-.accommodation-card,
-.contact-card {
-  background: #ffffff;
-  border-radius: 17px;
-  padding: 19px;
-  border: 1px solid #d5edf5;
-  box-shadow:
-    0 5px 18px rgba(0, 70, 100, 0.10);
+/* =========================================
+البطاقة الموحدة
+========================================= */
+
+.accommodation-card {
+background: rgba(255, 255, 255, 0.97);
+border: 1px solid rgba(0, 130, 160, 0.13);
+border-radius: 20px;
+padding: 15px;
+box-shadow: 0 5px 18px rgba(0, 80, 110, 0.12);
+overflow: hidden;
+transition:
+transform 0.2s ease,
+box-shadow 0.2s ease;
 }
 
-.card {
-  text-align: center;
+.accommodation-card:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 22px rgba(0, 80, 110, 0.16);
 }
 
-.card h3,
-.accommodation-card h3 {
-  margin: 9px 0;
-  color: #075f86;
-  font-size: 21px;
-}
-
-.card p,
-.accommodation-card p {
-  margin: 7px 0;
-}
-
-/* =========================
-   الأيقونات
-========================= */
-
-.service-icon {
-  font-size: 45px;
-  margin-bottom: 7px;
-  text-align: center;
-}
-
-/* =========================
-   صور الإقامات
-========================= */
+/* =========================================
+صور البطاقات
+========================================= */
 
 .accommodation-image {
-  display: block;
-  width: 100%;
-  height: 205px;
-  object-fit: cover;
-  border-radius: 13px;
-  margin-bottom: 14px;
-  background: #e8f5fa;
+width: 100%;
+height: 190px;
+object-fit: cover;
+border-radius: 15px;
+margin-bottom: 13px;
+background: #dff4f9;
 }
 
-/* =========================
-   الأزرار
-========================= */
+/* =========================================
+محتوى البطاقة
+========================================= */
+
+.accommodation-card h3 {
+color: #006b88;
+font-size: 20px;
+margin-bottom: 8px;
+}
+
+.accommodation-card > p {
+color: #405c64;
+font-size: 14px;
+margin: 5px 0;
+}
+
+/* =========================================
+الأزرار
+========================================= */
 
 .accommodation-buttons {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 17px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 15px;
 }
 
-.btn,
-.whatsapp,
+.btn {
+width: 46px;
+height: 46px;
+min-width: 46px;
+border: 0;
+border-radius: 13px;
+background:
+linear-gradient(
+135deg,
+#087da8,
+#16a8c9
+);
+color: white;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-size: 20px;
+cursor: pointer;
+box-shadow: 0 3px 8px rgba(0, 100, 130, 0.18);
+transition:
+transform 0.15s ease,
+opacity 0.15s ease;
+}
+
+.btn:hover {
+opacity: 0.92;
+transform: translateY(-1px);
+}
+
+.btn:active {
+transform: scale(0.96);
+}
+
+/* =========================================
+واتساب
+========================================= */
+
 .whatsapp-accommodation {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  text-decoration: none;
-  border: 0;
-  border-radius: 10px;
-
-  min-height: 44px;
-  padding: 10px 15px;
-
-  background: #087ea8;
-  color: white;
-
-  font-family: inherit;
-  font-weight: bold;
-  font-size: 15px;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    opacity 0.2s ease,
-    box-shadow 0.2s ease;
+background:
+linear-gradient(
+135deg,
+#087da8,
+#16a8c9
+);
 }
 
-.btn:hover,
-.whatsapp:hover,
-.whatsapp-accommodation:hover {
-  transform: translateY(-2px);
-  opacity: 0.94;
-  box-shadow:
-    0 4px 12px rgba(0, 70, 100, 0.16);
+/* =========================================
+بطاقة النشاط عند النقر
+========================================= */
+
+.activity-card {
+cursor: pointer;
 }
 
-.btn:active,
-.whatsapp:active,
-.whatsapp-accommodation:active {
-  transform: translateY(0);
+.activity-card-details {
+display: none;
+margin-top: 12px;
+padding-top: 10px;
+border-top: 1px solid #d8eef3;
 }
 
-.whatsapp,
-.whatsapp-accommodation {
-  background: #20a85a;
+.activity-card-open .activity-card-details {
+display: block;
 }
 
-/* أزرار الأيقونات */
-
-.icon-btn {
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
-  padding: 0;
-  flex: 0 0 44px;
-  font-size: 20px;
+.activity-card-open {
+box-shadow:
+0 8px 25px rgba(0, 100, 130, 0.20);
 }
 
-.request-btn {
-  flex: 1;
-  min-height: 44px;
-}
-
-/* =========================
-   التقييمات
-========================= */
+/* =========================================
+التقييمات
+========================================= */
 
 .reviews-section {
-  margin-top: 17px;
-  padding-top: 14px;
-  border-top: 1px solid #e0f0f5;
+margin-top: 12px;
+padding-top: 10px;
+border-top: 1px solid #d8eef3;
 }
 
 .reviews-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-
-  padding: 9px 11px;
-
-  background: #f3fbfe;
-  border-radius: 10px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 8px;
+flex-wrap: wrap;
 }
 
 .reviews-summary strong {
-  color: #075f86;
-  font-size: 14px;
+color: #006b88;
+font-size: 14px;
 }
 
 .reviews-average {
-  color: #17324d;
-  font-size: 14px;
-  font-weight: bold;
-  white-space: nowrap;
+color: #55727b;
+font-size: 13px;
 }
+
+.review-stars {
+color: #f4a400;
+font-size: 15px;
+letter-spacing: 1px;
+}
+
+.review-item {
+background: #f4fbfd;
+border-radius: 12px;
+padding: 9px;
+margin-top: 8px;
+font-size: 13px;
+}
+
+.review-item strong {
+color: #006b88;
+}
+
+.review-comment-display {
+color: #526970;
+margin-top: 4px;
+}
+
+/* =========================================
+زر إضافة التقييم
+========================================= */
 
 .review-toggle-btn {
-  width: 100%;
-  margin-top: 9px;
-  min-height: 42px;
+width: auto;
+min-width: 46px;
+padding: 0 14px;
+margin-top: 10px;
+font-size: 17px;
 }
+
+/* =========================================
+نموذج التقييم
+========================================= */
 
 .review-form-container {
-  margin-top: 12px;
-  padding: 14px;
-
-  background: #f7fcfe;
-  border: 1px solid #dceff5;
-  border-radius: 12px;
-}
-
-.review-form-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+margin-top: 12px;
+background: #f4fbfd;
+padding: 13px;
+border-radius: 14px;
 }
 
 .review-form-container label {
-  color: #075f86;
-  font-weight: bold;
-  margin-top: 5px;
+display: block;
+margin: 8px 0 5px;
+font-size: 13px;
+font-weight: bold;
+color: #35545d;
 }
 
 .review-form-container input,
 .review-form-container textarea {
-  width: 100%;
-  padding: 11px 12px;
-
-  border: 1px solid #cfe6ef;
-  border-radius: 9px;
-
-  background: white;
-  color: #17324d;
-
-  font-family: inherit;
-  font-size: 16px;
-  outline: none;
-}
-
-.review-form-container input:focus,
-.review-form-container textarea:focus {
-  border-color: #21a7c8;
-  box-shadow:
-    0 0 0 3px rgba(33, 167, 200, 0.12);
+width: 100%;
+border: 1px solid #b9dfe8;
+border-radius: 10px;
+padding: 10px;
+outline: none;
+background: white;
 }
 
 .star-rating {
-  display: flex;
-  direction: ltr;
-  gap: 3px;
+display: flex;
+justify-content: center;
+direction: ltr;
+gap: 3px;
+margin: 8px 0;
 }
 
 .star-rating button {
-  border: 0;
-  background: transparent;
-  color: #f2a900;
-
-  font-size: 27px;
-
-  padding: 1px 4px;
-  cursor: pointer;
+border: 0;
+background: transparent;
+color: #f4a400;
+font-size: 27px;
+cursor: pointer;
 }
 
 .review-submit-btn {
-  width: 100%;
-  margin-top: 8px;
+width: auto;
+padding: 0 16px;
+margin-top: 10px;
+font-size: 16px;
 }
 
-.review-message {
-  min-height: 22px;
-  margin: 4px 0 0;
-  font-weight: bold;
-}
-
-.review-list {
-  margin-top: 10px;
-}
-
-.review-item {
-  padding: 10px 0;
-  border-bottom: 1px solid #e3f0f4;
-}
-
-.review-item:last-child {
-  border-bottom: 0;
-}
-
-.review-stars {
-  color: #f2a900;
-  font-size: 14px;
-}
-
-.review-comment-display {
-  font-size: 14px;
-}
-
-/* =========================
-   التواصل
-========================= */
-
-.contact-card {
-  max-width: 650px;
-  margin: auto;
-  text-align: center;
-}
-
-.contact-card p {
-  font-size: 17px;
-  margin: 0 0 18px;
-}
-
-.contact-card form {
-  width: 100%;
-}
-
-/* =========================
-   نموذج طلب الخدمة
-========================= */
-
-#serviceRequestForm {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  text-align: right;
-}
-
-#serviceRequestForm label {
-  font-weight: bold;
-  color: #075f86;
-  margin-top: 7px;
-}
-
-#serviceRequestForm input,
-#serviceRequestForm select,
-#serviceRequestForm textarea,
-#providerApplicationForm input,
-#providerApplicationForm select,
-#providerApplicationForm textarea {
-  width: 100%;
-  padding: 12px 14px;
-
-  border: 1px solid #cfe6ef;
-  border-radius: 10px;
-
-  background: #fafdff;
-  color: #17324d;
-
-  font-family: inherit;
-  font-size: 16px;
-  outline: none;
-}
-
-#serviceRequestForm input:focus,
-#serviceRequestForm select:focus,
-#serviceRequestForm textarea:focus,
-#providerApplicationForm input:focus,
-#providerApplicationForm select:focus,
-#providerApplicationForm textarea:focus {
-  border-color: #21a7c8;
-  box-shadow:
-    0 0 0 3px rgba(33, 167, 200, 0.12);
-}
-
-#serviceRequestForm textarea,
-#providerApplicationForm textarea {
-  resize: vertical;
-  min-height: 110px;
-}
-
-#serviceRequestForm .btn,
-#providerApplicationForm .btn {
-  width: 100%;
-  min-height: 48px;
-  margin-top: 12px;
-}
-
-#requestMessage,
-#providerMessage {
-  min-height: 25px;
-  margin: 5px 0 0;
-  font-weight: bold;
-}
-
-/* =========================
-   نموذج مقدم الخدمة
-========================= */
-
-#providerApplicationForm {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  text-align: right;
-}
-
-#providerApplicationForm label {
-  font-weight: bold;
-  color: #075f86;
-  margin-top: 7px;
-}
-
-/* =========================
-   القائمة السفلية
-========================= */
-
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  left: 0;
-
-  z-index: 9999;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-
-  background: rgba(255, 255, 255, 0.97);
-
-  border-top: 1px solid #d8edf5;
-
-  box-shadow:
-    0 -4px 18px rgba(0, 70, 100, 0.12);
-
-  padding: 6px 3px;
-}
-
-.bottom-nav a {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  gap: 1px;
-
-  text-align: center;
-  text-decoration: none;
-
-  color: #075f86;
-
-  font-size: 11px;
-  font-weight: bold;
-
-  padding: 5px 2px;
-
-  border-radius: 9px;
-}
-
-.bottom-nav a:hover {
-  color: #16a0c5;
-  background: #f0faff;
-}
-
-/* =========================
-   الفوتر
-========================= */
-
-footer {
-  text-align: center;
-
-  background: #075f86;
-  color: white;
-
-  padding: 26px 15px 92px;
-}
-
-footer p {
-  margin: 5px 0;
-}
-
-/* =========================
-   التحميل والرسائل
-========================= */
+/* =========================================
+الرسائل
+========================================= */
 
 .loading,
 .empty {
-  text-align: center;
-  padding: 18px;
-  color: #557080;
+text-align: center;
+color: #617b82;
+background: rgba(255, 255, 255, 0.75);
+border-radius: 13px;
+padding: 12px;
+font-size: 14px;
 }
 
-.loading {
-  background: #fafdff;
-  border-radius: 11px;
+.search-message {
+min-height: 20px;
 }
 
-/* =========================
-   الهاتف
-========================= */
+/* =========================================
+النماذج
+========================================= */
 
-@media (max-width: 600px) {
-
-  .container {
-    width: 92%;
-  }
-
-  .hero {
-    min-height: 255px;
-    padding: 40px 12px;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-
-  .hero-subtitle {
-    font-size: 17px;
-  }
-
-  .section {
-    padding: 38px 0;
-  }
-
-  .section h2 {
-    font-size: 27px;
-    margin-bottom: 28px;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .card,
-  .accommodation-card,
-  .contact-card {
-    padding: 15px;
-    border-radius: 15px;
-  }
-
-  .accommodation-image {
-    height: 190px;
-  }
-
-  .accommodation-buttons {
-    gap: 7px;
-  }
-
-  .icon-btn {
-    width: 43px;
-    height: 43px;
-    flex-basis: 43px;
-  }
-
-  .request-btn {
-    flex: 1;
-  }
-
-  .reviews-summary {
-    padding: 8px 10px;
-  }
-
-  .reviews-average {
-    font-size: 13px;
-  }
-
-  .service-icon {
-    font-size: 42px;
-  }
-
-  .bottom-nav {
-    padding: 5px 2px;
-  }
-
-  .bottom-nav a {
-    font-size: 10px;
-  }
+.contact-card {
+background: rgba(255, 255, 255, 0.97);
+border-radius: 20px;
+padding: 20px;
+box-shadow: 0 5px 18px rgba(0, 80, 110, 0.12);
 }
 
-/* =========================
-   شاشات صغيرة جدًا
-========================= */
-
-@media (max-width: 380px) {
-
-  .hero h1 {
-    font-size: 27px;
-  }
-
-  .hero-subtitle {
-    font-size: 15px;
-  }
-
-  .section h2 {
-    font-size: 24px;
-  }
-
-  .category-title {
-    font-size: 20px;
-  }
-
-  .accommodation-image {
-    height: 175px;
-  }
-
-  .bottom-nav a {
-    font-size: 9px;
-  }
+.contact-card p {
+margin-bottom: 10px;
+color: #405c64;
 }
 
-/* =========================
-   التركيز
-========================= */
+.contact-card label {
+display: block;
+margin: 12px 0 5px;
+color: #35545d;
+font-weight: bold;
+font-size: 14px;
+}
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid rgba(33, 167, 200, 0.25);
-  outline-offset: 2px;
-   }
+.contact-card input,
+.contact-card select,
+.contact-card textarea {
+width: 100%;
+border: 1px solid #b9dfe8;
+border-radius: 12px;
+padding: 11px;
+background: #fbfeff;
+color: #12343d;
+font-size: 15px;
+outline: none;
+}
+
+.contact-card input:focus,
+.contact-card select:focus,
+.contact-card textarea:focus {
+border-color: #079bc0;
+box-shadow: 0 0 0 3px rgba(7, 155, 192, 0.10);
+}
+
+.contact-card textarea {
+resize: vertical;
+}
+
+/* =========================================
+إخفاء طلب الخدمة ومقدم الخدمة
+========================================= */
+
+.hidden-service-section {
+display: none;
+}
+
+.hidden-service-section.show {
+display: block;
+}
+
+/* =========================================
+رابط واتساب التواصل
+========================================= */
+
+.whatsapp {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: 100%;
+min-height: 48px;
+border-radius: 13px;
+background:
+linear-gradient(
+135deg,
+#087da8,
+#16a8c9
+);
+color: white;
+font-weight: bold;
+margin-top: 10px;
+}
+
+/* =========================================
+القائمة السفلية
+========================================= */
+
+.bottom-nav {
+position: fixed;
+right: 0;
+bottom: 0;
+left: 0;
+z-index: 1000;
+
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+
+background:
+linear-gradient(
+135deg,
+#006f91,
+#079bc0
+);
+
+box-shadow:
+0 -4px 16px rgba(0, 70, 100, 0.20);
+
+padding:
+7px
+5px
+calc(7px + env(safe-area-inset-bottom));
+}
+
+.bottom-nav a {
+color: white;
+text-align: center;
+font-size: 20px;
+line-height: 1.1;
+padding: 3px;
+border-radius: 10px;
+}
+
+.bottom-nav a:hover {
+background: rgba(255, 255, 255, 0.12);
+}
+
+.bottom-nav span {
+display: block;
+font-size: 10px;
+margin-top: 3px;
+}
+
+/* =========================================
+الفوتر
+========================================= */
+
+footer {
+background:
+linear-gradient(
+135deg,
+#00627f,
+#078eaf
+);
+color: white;
+text-align: center;
+padding: 25px 15px 95px;
+margin-top: 25px;
+}
+
+footer p {
+margin: 4px 0;
+font-size: 13px;
+}
+
+/* =========================================
+الشاشات المتوسطة
+========================================= */
+
+@media (min-width: 600px) {
+
+.cards {
+grid-template-columns:
+repeat(2, minmax(0, 1fr));
+}
+
+.accommodation-image {
+height: 210px;
+}
+
+}
+
+/* =========================================
+الشاشات الكبيرة
+========================================= */
+
+@media (min-width: 900px) {
+
+.cards {
+grid-template-columns:
+repeat(3, minmax(0, 1fr));
+}
+
+.section {
+padding: 38px 0;
+}
+
+.accommodation-card {
+padding: 17px;
+}
+
+}
+
+/* =========================================
+تحسين الهاتف
+========================================= */
+
+@media (max-width: 599px) {
+
+.container {
+width: 94%;
+}
+
+.section {
+padding: 22px 0;
+}
+
+.accommodation-card {
+border-radius: 18px;
+}
+
+.accommodation-image {
+height: 185px;
+}
+
+.accommodation-buttons {
+gap: 7px;
+}
+
+.btn {
+width: 44px;
+height: 44px;
+min-width: 44px;
+}
+
+}
+
+/* =========================================
+منع تحديد الأزرار بالخطأ
+========================================= */
+
+.btn,
+.bottom-nav a,
+.star-rating button {
+-webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+نهاية style.css
+========================================= */
