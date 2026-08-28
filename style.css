@@ -1,764 +1,407 @@
-/* =========================================
-🌊 شمال المغرب
-STYLE.CSS — النسخة المحسنة
-========================================= */
+*{box-sizing:border-box;margin:0;padding:0}
 
-/* =========================================
-الإعدادات العامة
-========================================= */
+html{scroll-behavior:smooth}
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  }
-
-html {
-scroll-behavior: smooth;
+body{
+  direction:rtl;
+  font-family:Arial,Tahoma,sans-serif;
+  background:linear-gradient(180deg,#e8f8fc 0%,#d7f2f8 45%,#c5edf5 100%);
+  color:#12343d;
+  line-height:1.7;
+  padding-bottom:78px
 }
 
-body {
-direction: rtl;
-font-family: Arial, Tahoma, sans-serif;
-background:
-linear-gradient(
-180deg,
-#e8f8fc 0%,
-#d7f2f8 45%,
-#c5edf5 100%
-);
-color: #12343d;
-line-height: 1.7;
-padding-bottom: 78px;
+img{max-width:100%;display:block}
+a{text-decoration:none}
+button,input,select,textarea{font-family:inherit}
+
+.container{width:min(1100px,94%);margin:auto}
+
+.hero{
+  background:linear-gradient(135deg,#006f91,#079bc0 48%,#42c7df);
+  color:#fff;
+  text-align:center;
+  padding:42px 0 36px;
+  border-radius:0 0 28px 28px;
+  box-shadow:0 5px 18px rgba(0,90,120,.2)
 }
 
-img {
-max-width: 100%;
-display: block;
+.hero h1{
+  font-size:clamp(28px,7vw,46px);
+  font-weight:800;
+  margin-bottom:8px
 }
 
-a {
-text-decoration: none;
+.hero-subtitle{font-size:clamp(15px,4vw,20px);opacity:.95}
+
+.section{padding:28px 0}
+
+.section h2{
+  text-align:center;
+  color:#006b88;
+  font-size:clamp(23px,6vw,32px);
+  margin-bottom:22px;
+  font-weight:800
 }
 
-button,
-input,
-select,
-textarea {
-font-family: inherit;
+.search-section{padding-top:22px}
+
+.search-card,
+.contact-card,
+.accommodation-card{
+  background:rgba(255,255,255,.97);
+  border:1px solid rgba(0,130,160,.13);
+  border-radius:20px;
+  box-shadow:0 5px 18px rgba(0,80,110,.12)
 }
 
-/* =========================================
-الحاوية
-========================================= */
+.search-card{padding:20px}
 
-.container {
-width: min(1100px, 94%);
-margin: 0 auto;
+.search-card h2{margin-bottom:15px;font-size:22px}
+
+#globalSearch{
+  width:100%;
+  border:2px solid #9bdbea;
+  border-radius:14px;
+  padding:13px 15px;
+  font-size:16px;
+  outline:none;
+  background:#f8fdff;
+  color:#12343d
 }
 
-/* =========================================
-الرئيسية
-========================================= */
-
-.hero {
-background:
-linear-gradient(
-135deg,
-#006f91 0%,
-#079bc0 48%,
-#42c7df 100%
-);
-color: white;
-text-align: center;
-padding: 42px 0 36px;
-border-radius: 0 0 28px 28px;
-box-shadow: 0 5px 18px rgba(0, 90, 120, 0.20);
+#globalSearch:focus{
+  border-color:#079bc0;
+  box-shadow:0 0 0 3px rgba(7,155,192,.12)
 }
 
-.hero h1 {
-font-size: clamp(28px, 7vw, 46px);
-font-weight: 800;
-margin-bottom: 8px;
+.search-message{
+  min-height:20px;
+  margin-top:10px;
+  text-align:center;
+  color:#55727b;
+  font-size:14px
 }
 
-.hero-subtitle {
-font-size: clamp(15px, 4vw, 20px);
-opacity: 0.95;
+.accommodation-category{margin-bottom:28px}
+
+.category-title{
+  background:linear-gradient(135deg,#087da8,#39b8d8);
+  color:#fff;
+  padding:11px 15px;
+  border-radius:14px;
+  text-align:center;
+  font-size:19px;
+  margin-bottom:15px;
+  box-shadow:0 4px 12px rgba(0,100,130,.15)
 }
 
-/* =========================================
-الأقسام
-========================================= */
-
-.section {
-padding: 28px 0;
+.cards{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px
 }
 
-.section h2 {
-text-align: center;
-color: #006b88;
-font-size: clamp(23px, 6vw, 32px);
-margin-bottom: 22px;
-font-weight: 800;
+.accommodation-card{
+  padding:15px;
+  overflow:hidden;
+  transition:transform .2s,box-shadow .2s
 }
 
-/* =========================================
-البحث
-========================================= */
-
-.search-section {
-padding-top: 22px;
+.accommodation-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(0,80,110,.16)
 }
 
-.search-card {
-background: rgba(255, 255, 255, 0.96);
-border-radius: 20px;
-padding: 20px;
-box-shadow: 0 5px 18px rgba(0, 90, 120, 0.12);
-border: 1px solid rgba(0, 145, 180, 0.15);
+.accommodation-card h3{
+  color:#006b88;
+  font-size:20px;
+  margin-bottom:8px
 }
 
-.search-card h2 {
-margin-bottom: 15px;
-font-size: 22px;
+.accommodation-card>p{
+  color:#405c64;
+  font-size:14px;
+  margin:5px 0
 }
 
-#globalSearch {
-width: 100%;
-border: 2px solid #9bdbea;
-border-radius: 14px;
-padding: 13px 15px;
-font-size: 16px;
-outline: none;
-background: #f8fdff;
-color: #12343d;
+.accommodation-image{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  border-radius:15px;
+  margin-bottom:13px;
+  background:#dff4f9
 }
 
-#globalSearch:focus {
-border-color: #079bc0;
-box-shadow: 0 0 0 3px rgba(7, 155, 192, 0.12);
+.accommodation-buttons{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:15px
 }
 
-.search-message {
-margin-top: 10px;
-text-align: center;
-color: #55727b;
-font-size: 14px;
+.btn{
+  width:46px;
+  height:46px;
+  min-width:46px;
+  border:0;
+  border-radius:13px;
+  background:linear-gradient(135deg,#087da8,#16a8c9);
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,100,130,.18);
+  transition:transform .15s,opacity .15s
 }
 
-/* =========================================
-التصنيفات
-========================================= */
+.btn:hover{opacity:.92;transform:translateY(-1px)}
+.btn:active{transform:scale(.96)}
 
-.accommodation-category {
-margin-bottom: 28px;
+.whatsapp-accommodation,
+.whatsapp{
+  background:linear-gradient(135deg,#087da8,#16a8c9)
 }
 
-.category-title {
-background:
-linear-gradient(
-135deg,
-#087da8,
-#39b8d8
-);
-color: white;
-padding: 11px 15px;
-border-radius: 14px;
-text-align: center;
-font-size: 19px;
-margin-bottom: 15px;
-box-shadow: 0 4px 12px rgba(0, 100, 130, 0.15);
+.whatsapp{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:48px;
+  border-radius:13px;
+  color:#fff;
+  font-weight:bold;
+  margin-top:10px
 }
 
-/* =========================================
-شبكة البطاقات
-========================================= */
-
-.cards {
-display: grid;
-grid-template-columns: 1fr;
-gap: 18px;
+.loading,.empty{
+  text-align:center;
+  color:#617b82;
+  background:rgba(255,255,255,.75);
+  border-radius:13px;
+  padding:12px;
+  font-size:14px
 }
 
-/* =========================================
-البطاقة الموحدة
-========================================= */
+/* التقييمات */
 
-.accommodation-card {
-background: rgba(255, 255, 255, 0.97);
-border: 1px solid rgba(0, 130, 160, 0.13);
-border-radius: 20px;
-padding: 15px;
-box-shadow: 0 5px 18px rgba(0, 80, 110, 0.12);
-overflow: hidden;
-transition:
-transform 0.2s ease,
-box-shadow 0.2s ease;
+.reviews-section,
+.card-toggle-section{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid #d8eef3
 }
 
-.accommodation-card:hover {
-transform: translateY(-2px);
-box-shadow: 0 8px 22px rgba(0, 80, 110, 0.16);
+.card-toggle-section{display:none}
+.card-toggle-section.show{display:block}
+
+.reviews-summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap
 }
 
-/* =========================================
-صور البطاقات
-========================================= */
-
-.accommodation-image {
-width: 100%;
-height: 190px;
-object-fit: cover;
-border-radius: 15px;
-margin-bottom: 13px;
-background: #dff4f9;
+.reviews-summary strong,
+.provider-details h4,
+.review-item strong{
+  color:#006b88
 }
 
-/* =========================================
-محتوى البطاقة
-========================================= */
+.reviews-average{color:#55727b;font-size:13px}
 
-.accommodation-card h3 {
-color: #006b88;
-font-size: 20px;
-margin-bottom: 8px;
+.review-stars{
+  color:#f4a400;
+  font-size:15px;
+  letter-spacing:1px
 }
 
-.accommodation-card > p {
-color: #405c64;
-font-size: 14px;
-margin: 5px 0;
+.review-item{
+  background:#f4fbfd;
+  border-radius:12px;
+  padding:9px;
+  margin-top:8px;
+  font-size:13px
 }
 
-/* =========================================
-الأزرار
-========================================= */
+.review-comment-display{color:#526970;margin-top:4px}
 
-.accommodation-buttons {
-display: flex;
-align-items: center;
-justify-content: center;
-flex-wrap: wrap;
-gap: 8px;
-margin-top: 15px;
+.review-toggle-btn,
+.review-submit-btn{
+  width:auto;
+  padding:0 14px;
+  margin-top:10px
 }
 
-.btn {
-width: 46px;
-height: 46px;
-min-width: 46px;
-border: 0;
-border-radius: 13px;
-background:
-linear-gradient(
-135deg,
-#087da8,
-#16a8c9
-);
-color: white;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-font-size: 20px;
-cursor: pointer;
-box-shadow: 0 3px 8px rgba(0, 100, 130, 0.18);
-transition:
-transform 0.15s ease,
-opacity 0.15s ease;
+.review-form-container,
+.provider-details{
+  margin-top:12px;
+  background:#f4fbfd;
+  padding:13px;
+  border-radius:14px
 }
 
-.btn:hover {
-opacity: 0.92;
-transform: translateY(-1px);
-}
-
-.btn:active {
-transform: scale(0.96);
-}
-
-/* =========================================
-واتساب
-========================================= */
-
-.whatsapp-accommodation {
-background:
-linear-gradient(
-135deg,
-#087da8,
-#16a8c9
-);
-}
-
-/* =========================================
-بطاقة النشاط عند النقر
-========================================= */
-
-.activity-card {
-cursor: pointer;
-}
-
-.activity-card-details {
-display: none;
-margin-top: 12px;
-padding-top: 10px;
-border-top: 1px solid #d8eef3;
-}
-
-.activity-card-open .activity-card-details {
-display: block;
-}
-
-.activity-card-open {
-box-shadow:
-0 8px 25px rgba(0, 100, 130, 0.20);
-}
-
-/* =========================================
-التقييمات
-========================================= */
-
-.reviews-section {
-margin-top: 12px;
-padding-top: 10px;
-border-top: 1px solid #d8eef3;
-}
-
-.reviews-summary {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 8px;
-flex-wrap: wrap;
-}
-
-.reviews-summary strong {
-color: #006b88;
-font-size: 14px;
-}
-
-.reviews-average {
-color: #55727b;
-font-size: 13px;
-}
-
-.review-stars {
-color: #f4a400;
-font-size: 15px;
-letter-spacing: 1px;
-}
-
-.review-item {
-background: #f4fbfd;
-border-radius: 12px;
-padding: 9px;
-margin-top: 8px;
-font-size: 13px;
-}
-
-.review-item strong {
-color: #006b88;
-}
-
-.review-comment-display {
-color: #526970;
-margin-top: 4px;
-}
-
-/* =========================================
-زر إضافة التقييم
-========================================= */
-
-.review-toggle-btn {
-width: auto;
-min-width: 46px;
-padding: 0 14px;
-margin-top: 10px;
-font-size: 17px;
-}
-
-/* =========================================
-نموذج التقييم
-========================================= */
-
-.review-form-container {
-margin-top: 12px;
-background: #f4fbfd;
-padding: 13px;
-border-radius: 14px;
-}
-
-.review-form-container label {
-display: block;
-margin: 8px 0 5px;
-font-size: 13px;
-font-weight: bold;
-color: #35545d;
+.review-form-container label,
+.contact-card label{
+  display:block;
+  margin:8px 0 5px;
+  font-size:13px;
+  font-weight:bold;
+  color:#35545d
 }
 
 .review-form-container input,
-.review-form-container textarea {
-width: 100%;
-border: 1px solid #b9dfe8;
-border-radius: 10px;
-padding: 10px;
-outline: none;
-background: white;
-}
-
-.star-rating {
-display: flex;
-justify-content: center;
-direction: ltr;
-gap: 3px;
-margin: 8px 0;
-}
-
-.star-rating button {
-border: 0;
-background: transparent;
-color: #f4a400;
-font-size: 27px;
-cursor: pointer;
-}
-
-.review-submit-btn {
-width: auto;
-padding: 0 16px;
-margin-top: 10px;
-font-size: 16px;
-}
-
-/* =========================================
-الرسائل
-========================================= */
-
-.loading,
-.empty {
-text-align: center;
-color: #617b82;
-background: rgba(255, 255, 255, 0.75);
-border-radius: 13px;
-padding: 12px;
-font-size: 14px;
-}
-
-.search-message {
-min-height: 20px;
-}
-
-/* =========================================
-النماذج
-========================================= */
-
-.contact-card {
-background: rgba(255, 255, 255, 0.97);
-border-radius: 20px;
-padding: 20px;
-box-shadow: 0 5px 18px rgba(0, 80, 110, 0.12);
-}
-
-.contact-card p {
-margin-bottom: 10px;
-color: #405c64;
-}
-
-.contact-card label {
-display: block;
-margin: 12px 0 5px;
-color: #35545d;
-font-weight: bold;
-font-size: 14px;
-}
-
+.review-form-container textarea,
 .contact-card input,
 .contact-card select,
-.contact-card textarea {
-width: 100%;
-border: 1px solid #b9dfe8;
-border-radius: 12px;
-padding: 11px;
-background: #fbfeff;
-color: #12343d;
-font-size: 15px;
-outline: none;
+.contact-card textarea{
+  width:100%;
+  border:1px solid #b9dfe8;
+  border-radius:12px;
+  padding:11px;
+  background:#fbfeff;
+  color:#12343d;
+  font-size:15px;
+  outline:none
 }
 
+.review-form-container input:focus,
+.review-form-container textarea:focus,
 .contact-card input:focus,
 .contact-card select:focus,
-.contact-card textarea:focus {
-border-color: #079bc0;
-box-shadow: 0 0 0 3px rgba(7, 155, 192, 0.10);
+.contact-card textarea:focus{
+  border-color:#079bc0;
+  box-shadow:0 0 0 3px rgba(7,155,192,.1)
 }
 
-.contact-card textarea {
-resize: vertical;
+.star-rating{
+  display:flex;
+  justify-content:center;
+  direction:ltr;
+  gap:3px;
+  margin:8px 0
 }
 
-/* =========================================
-إخفاء طلب الخدمة ومقدم الخدمة
-========================================= */
-
-.hidden-service-section {
-display: none;
+.star-rating button{
+  border:0;
+  background:transparent;
+  color:#f4a400;
+  font-size:27px;
+  cursor:pointer
 }
 
-.hidden-service-section.show {
-display: block;
+.provider-details{margin-top:0}
+
+.provider-details h4{
+  margin-bottom:7px;
+  font-size:16px
 }
 
-/* =========================================
-رابط واتساب التواصل
-========================================= */
-
-.whatsapp {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-width: 100%;
-min-height: 48px;
-border-radius: 13px;
-background:
-linear-gradient(
-135deg,
-#087da8,
-#16a8c9
-);
-color: white;
-font-weight: bold;
-margin-top: 10px;
+.provider-details p{
+  color:#405c64;
+  font-size:13px;
+  margin:4px 0
 }
 
-/* =========================================
-القائمة السفلية
-========================================= */
+/* بطاقات خدمات الموقع */
 
-.bottom-nav {
-position: fixed;
-right: 0;
-bottom: 0;
-left: 0;
-z-index: 1000;
+.action-card{cursor:pointer}
 
-display: grid;
-grid-template-columns: repeat(5, 1fr);
-
-background:
-linear-gradient(
-135deg,
-#006f91,
-#079bc0
-);
-
-box-shadow:
-0 -4px 16px rgba(0, 70, 100, 0.20);
-
-padding:
-7px
-5px
-calc(7px + env(safe-area-inset-bottom));
+.action-card-content{
+  display:none;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid #d8eef3
 }
 
-.bottom-nav a {
-color: white;
-text-align: center;
-font-size: 20px;
-line-height: 1.1;
-padding: 3px;
-border-radius: 10px;
+.action-card.card-open .action-card-content{display:block}
+
+/* نماذج التواصل */
+
+.contact-card{padding:20px}
+
+.contact-card p{
+  margin-bottom:10px;
+  color:#405c64
 }
 
-.bottom-nav a:hover {
-background: rgba(255, 255, 255, 0.12);
+.contact-card textarea{resize:vertical}
+
+/* القائمة السفلية */
+
+.bottom-nav{
+  position:fixed;
+  right:0;
+  bottom:0;
+  left:0;
+  z-index:1000;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  background:linear-gradient(135deg,#006f91,#079bc0);
+  box-shadow:0 -4px 16px rgba(0,70,100,.2);
+  padding:7px 5px calc(7px + env(safe-area-inset-bottom))
 }
 
-.bottom-nav span {
-display: block;
-font-size: 10px;
-margin-top: 3px;
+.bottom-nav a{
+  color:#fff;
+  text-align:center;
+  font-size:20px;
+  line-height:1.1;
+  padding:3px;
+  border-radius:10px
 }
 
-/* =========================================
-الفوتر
-========================================= */
+.bottom-nav a:hover{background:rgba(255,255,255,.12)}
 
-footer {
-background:
-linear-gradient(
-135deg,
-#00627f,
-#078eaf
-);
-color: white;
-text-align: center;
-padding: 25px 15px 95px;
-margin-top: 25px;
+.bottom-nav span{
+  display:block;
+  font-size:10px;
+  margin-top:3px
 }
 
-footer p {
-margin: 4px 0;
-font-size: 13px;
+/* الفوتر */
+
+footer{
+  background:linear-gradient(135deg,#00627f,#078eaf);
+  color:#fff;
+  text-align:center;
+  padding:25px 15px 95px;
+  margin-top:25px
 }
 
-/* =========================================
-الشاشات المتوسطة
-========================================= */
-
-@media (min-width: 600px) {
-
-.cards {
-grid-template-columns:
-repeat(2, minmax(0, 1fr));
-}
-
-.accommodation-image {
-height: 210px;
-}
-
-}
-
-/* =========================================
-الشاشات الكبيرة
-========================================= */
-
-@media (min-width: 900px) {
-
-.cards {
-grid-template-columns:
-repeat(3, minmax(0, 1fr));
-}
-
-.section {
-padding: 38px 0;
-}
-
-.accommodation-card {
-padding: 17px;
-}
-
-}
-
-/* =========================================
-تحسين الهاتف
-========================================= */
-
-@media (max-width: 599px) {
-
-.container {
-width: 94%;
-}
-
-.section {
-padding: 22px 0;
-}
-
-.accommodation-card {
-border-radius: 18px;
-}
-
-.accommodation-image {
-height: 185px;
-}
-
-.accommodation-buttons {
-gap: 7px;
-}
-
-.btn {
-width: 44px;
-height: 44px;
-min-width: 44px;
-}
-
-}
-
-/* =========================================
-منع تحديد الأزرار بالخطأ
-========================================= */
+footer p{margin:4px 0;font-size:13px}
 
 .btn,
 .bottom-nav a,
-.star-rating button {
--webkit-tap-highlight-color: transparent;
+.star-rating button{
+  -webkit-tap-highlight-color:transparent
 }
 
-/* =========================================
-نهاية style.css
-========================================= */
-/* =========================================
-   الأقسام التفاعلية داخل بطاقة الإقامة
-========================================= */
+.accommodation-card{height:fit-content}
 
-.card-toggle-section {
-  display: none;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid #d8eef3;
+@media(min-width:600px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .accommodation-image{height:210px}
 }
 
-.card-toggle-section.show {
-  display: block;
+@media(min-width:900px){
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .section{padding:38px 0}
+  .accommodation-card{padding:17px}
 }
 
-.card-toggle-btn {
-  width: auto;
-  min-width: 44px;
-  height: 44px;
-  padding: 0 12px;
-}
-
-.provider-details {
-  background: #f4fbfd;
-  border-radius: 13px;
-  padding: 12px;
-}
-
-.provider-details h4 {
-  color: #006b88;
-  margin-bottom: 7px;
-  font-size: 16px;
-}
-
-.provider-details p {
-  color: #405c64;
-  font-size: 13px;
-  margin: 4px 0;
-}
-
-.card-reviews {
-  margin-top: 0;
-}
-
-.card-reviews .review-item {
-  margin-top: 8px;
-}
-
-/* جعل نموذج الطلب مخفيًا حتى اختيار الخدمة */
-#request.hidden-request {
-  display: none;
-}
-
-#request.visible-request {
-  display: block;
-}
-
-/* الحفاظ على تناسق البطاقات */
-.accommodation-card {
-  height: fit-content;
-}
-
-.accommodation-buttons {
-  align-items: center;
-}
-
-@media (max-width: 599px) {
-  .accommodation-buttons {
-    gap: 7px;
-  }
-
-  .card-toggle-btn {
-    width: 44px;
-    min-width: 44px;
-    padding: 0;
-  }
+@media(max-width:599px){
+  .container{width:94%}
+  .section{padding:22px 0}
+  .accommodation-card{border-radius:18px}
+  .accommodation-image{height:185px}
+  .accommodation-buttons{gap:7px}
+  .btn{width:44px;height:44px;min-width:44px}
 }
