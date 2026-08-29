@@ -50,6 +50,10 @@ function initGlobalSearch() {
 
   if (!search) return;
 
+  /*
+     منع تكرار تشغيل البحث
+  */
+
   if (search.dataset.initialized === "true") {
     return;
   }
@@ -83,6 +87,10 @@ function performGlobalSearch() {
       .trim()
       .toLowerCase();
 
+  /*
+     إذا كان البحث فارغًا
+  */
+
   if (!query) {
 
     clearSearchResults();
@@ -94,7 +102,14 @@ function performGlobalSearch() {
     return;
   }
 
+
   let found = 0;
+
+
+  /*
+     البحث داخل بطاقات الخدمات
+     مع استثناء بطاقات الإجراءات
+  */
 
   document
     .querySelectorAll(
@@ -108,9 +123,11 @@ function performGlobalSearch() {
         return;
       }
 
+
       const text =
         (card.textContent || "")
           .toLowerCase();
+
 
       if (text.includes(query)) {
 
@@ -124,6 +141,11 @@ function performGlobalSearch() {
       }
 
     });
+
+
+  /*
+     رسالة البحث
+  */
 
   if (message) {
 
@@ -175,71 +197,12 @@ document.addEventListener(
     );
 
 
-    /* ================================
-       🔎 البحث
-    ================================= */
+    /*
+       تشغيل البحث فقط
+       لا يوجد هنا أي تحميل من Supabase
+    */
 
     initGlobalSearch();
-
-
-    /* ================================
-       🏨 تحميل الإقامات
-    ================================= */
-
-    if (
-      typeof loadAccommodations ===
-      "function"
-    ) {
-
-      loadAccommodations();
-
-    } else {
-
-      console.error(
-        "❌ loadAccommodations غير موجودة"
-      );
-
-    }
-
-
-    /* ================================
-       🚗 تحميل المواصلات
-    ================================= */
-
-    if (
-      typeof loadTransportServices ===
-      "function"
-    ) {
-
-      loadTransportServices();
-
-    } else {
-
-      console.error(
-        "❌ loadTransportServices غير موجودة"
-      );
-
-    }
-
-
-    /* ================================
-       🗺️ تحميل الرحلات والمرشدين
-    ================================= */
-
-    if (
-      typeof loadActivities ===
-      "function"
-    ) {
-
-      loadActivities();
-
-    } else {
-
-      console.error(
-        "❌ loadActivities غير موجودة"
-      );
-
-    }
 
   }
 );
