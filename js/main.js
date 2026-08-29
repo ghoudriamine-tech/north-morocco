@@ -3,28 +3,39 @@
    MAIN.JS
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+function toggleActionCard(card) {
+  if (!card) return;
 
-  console.log("🌊 شمال المغرب — بدء التشغيل");
+  document
+    .querySelectorAll(".action-card.card-open")
+    .forEach(openCard => {
+      if (openCard !== card) {
+        openCard.classList.remove("card-open");
+      }
+    });
 
-  /* البحث */
-  if (typeof initGlobalSearch === "function") {
-    initGlobalSearch();
-  }
+  card.classList.toggle("card-open");
+}
 
-  /* الإقامات */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  console.log("MAIN JS OK");
+
   if (typeof loadAccommodations === "function") {
     loadAccommodations();
   }
 
-  /* المواصلات */
   if (typeof loadTransportServices === "function") {
     loadTransportServices();
   }
 
-  /* الرحلات والمرشدون */
   if (typeof loadActivities === "function") {
     loadActivities();
+  }
+
+  if (typeof initGlobalSearch === "function") {
+    initGlobalSearch();
   }
 
 });
