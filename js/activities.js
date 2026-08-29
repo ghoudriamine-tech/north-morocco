@@ -1,4 +1,4 @@
- /* =========================================
+/* =========================================
    🗺️ شمال المغرب
    الرحلات والمرشدون السياحيون
 ========================================= */
@@ -8,7 +8,10 @@ async function loadActivities() {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 10000);
 
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/activities?select=*`,
@@ -27,7 +30,10 @@ async function loadActivities() {
     }
 
     const data = await response.json();
-    displayActivities(Array.isArray(data) ? data : []);
+
+    displayActivities(
+      Array.isArray(data) ? data : []
+    );
 
   } catch (error) {
     console.error("Activities error:", error);
@@ -41,33 +47,78 @@ async function loadActivities() {
 
     lists.forEach(id => {
       const box = document.getElementById(id);
-      if (box)
-        box.innerHTML = `<p class="empty">${message}</p>`;
+
+      if (box) {
+        box.innerHTML =
+          `<p class="empty">${message}</p>`;
+      }
     });
   }
 }
 
 
 function displayActivities(data) {
+
   displayActivityList(
     "tripsList",
-    data.filter(x => isActivityType(x, "trip")),
+    data.filter(x =>
+      isActivityType(x, "trip")
+    ),
     "لا توجد رحلات حالياً."
   );
 
   displayActivityList(
     "guidesList",
-    data.filter(x => isActivityType(x, "tour_guide")),
+    data.filter(x =>
+      isActivityType(x, "tour_guide")
+    ),
     "لا يوجد مرشدون سياحيون حالياً."
   );
+
+  /*
+    التقييمات يتم تشغيلها بعد إنشاء البطاقات
+    حتى تكون عناصر reviews-section موجودة في الصفحة.
+  */
+
+  if (typeof refreshReviews === "function") {
+
+    document
+      .querySelectorAll(
+        "#tripsList .reviews-section, #guidesList .reviews-section"
+      )
+      .forEach(section => {
+
+        const type =
+          section.dataset.serviceType;
+
+        const id =
+          section.dataset.serviceId;
+
+        if (type && id) {
+
+          refreshReviews(
+            type,
+            id
+          );
+
+        }
+
+      });
+
+  }
 }
 
 
 function isActivityType(item, type) {
-  return String(item?.activity_type || "")
+
+  return String(
+    item?.activity_type || ""
+  )
     .trim()
     .toLowerCase() ===
-    String(type).trim().toLowerCase();
+    String(type)
+      .trim()
+      .toLowerCase();
 }
 
 
@@ -76,35 +127,54 @@ function displayActivityList(
   items,
   emptyMessage
 ) {
-  const box = document.getElementById(id);
+
+  const box =
+    document.getElementById(id);
 
   if (!box) return;
 
   if (!items.length) {
+
     box.innerHTML =
       `<p class="empty">${emptyMessage}</p>`;
+
     return;
   }
 
-  box.innerHTML = items
-    .map(activityCard)
-    .join("");
+  box.innerHTML =
+    items
+      .map(activityCard)
+      .join("");
 }
 
 
 function activityCard(item) {
-  const id = item.id;
-  const name = item.name || "خدمة سياحية";
-  const phone = String(item.phone || "").trim();
+
+  const id =
+    item.id;
+
+  const name =
+    item.name || "خدمة سياحية";
+
+  const phone =
+    String(item.phone || "").trim();
+
 
   let whatsapp =
-    String(item.whatsapp || phone)
+    String(
+      item.whatsapp || phone
+    )
       .replace(/\D/g, "");
 
+
   if (whatsapp.startsWith("0")) {
+
     whatsapp =
-      "212" + whatsapp.substring(1);
+      "212" +
+      whatsapp.substring(1);
+
   }
+
 
   return `
     <div
@@ -124,7 +194,9 @@ function activityCard(item) {
           : ""
       }
 
-      <h3>${escapeHTML(name)}</h3>
+      <h3>
+        ${escapeHTML(name)}
+      </h3>
 
       ${
         item.city
@@ -225,7 +297,10 @@ function activityCard(item) {
 
         ${
           typeof renderReviews === "function"
-            ? renderReviews("activity", id)
+            ? renderReviews(
+                "activity",
+                id
+              )
             : ""
         }
 
@@ -237,19 +312,26 @@ function activityCard(item) {
 
 
 function toggleActivityCard(card) {
+
   if (!card) return;
 
   document
-    .querySelectorAll(".activity-card.activity-card-open")
+    .querySelectorAll(
+      ".activity-card.activity-card-open"
+    )
     .forEach(openCard => {
+
       if (openCard !== card) {
+
         openCard.classList.remove(
           "activity-card-open"
         );
+
       }
+
     });
 
   card.classList.toggle(
     "activity-card-open"
   );
-      }
+}
