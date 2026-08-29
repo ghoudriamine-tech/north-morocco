@@ -22,9 +22,7 @@ async function loadAccommodations() {
     );
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}`
-      );
+      throw new Error(`HTTP ${response.status}`);
     }
 
     const data = await response.json();
@@ -32,6 +30,11 @@ async function loadAccommodations() {
     displayAccommodations(
       Array.isArray(data) ? data : []
     );
+
+    // تشغيل تحميل التقييمات بعد ظهور البطاقات
+    if (typeof initReviews === "function") {
+      initReviews();
+    }
 
   } catch (error) {
 
@@ -131,6 +134,9 @@ function accommodationCard(item) {
   const name =
     item.name || "إقامة";
 
+  const id =
+    String(item.id || "");
+
   const phone =
     String(item.phone || "").trim();
 
@@ -191,13 +197,23 @@ function accommodationCard(item) {
           : ""
       }
 
+
+      <!-- أزرار الإقامة -->
+
       <div class="accommodation-buttons">
 
         ${
           phone
-            ? `<a class="btn" href="tel:${escapeHTML(phone)}">📞</a>`
+            ? `
+              <a
+                class="btn"
+                href="tel:${escapeHTML(phone)}"
+                aria-label="اتصال"
+              >📞</a>
+            `
             : ""
         }
+
 
         ${
           wa
@@ -207,10 +223,12 @@ function accommodationCard(item) {
                 href="https://wa.me/${wa}"
                 target="_blank"
                 rel="noopener"
+                aria-label="واتساب"
               >💬</a>
             `
             : ""
         }
+
 
         ${
           item.map_url
@@ -220,12 +238,39 @@ function accommodationCard(item) {
                 href="${escapeHTML(item.map_url)}"
                 target="_blank"
                 rel="noopener"
+                aria-label="الموقع"
               >📍</a>
             `
             : ""
         }
 
+
+        <!-- طلب خدمة -->
+
+        <button
+          type="button"
+          class="btn"
+          aria-label="طلب خدمة"
+          onclick="selectService(
+            'accommodation',
+            '${escapeJS(id)}',
+            '${escapeJS(name)}'
+          )"
+        >📋</button>
+
       </div>
+
+
+      <!-- التقييم -->
+
+      ${
+        typeof renderReviews === "function"
+          ? renderReviews(
+              "accommodation",
+              id
+            )
+          : ""
+      }
 
     </div>
   `;
