@@ -1,12 +1,13 @@
 /* =========================================
    🌊 شمال المغرب
    MAIN.JS
+   تشغيل الموقع
 ========================================= */
 
 
 /* =========================================
    خدمات الموقع
-   فتح وإغلاق البطاقات
+   فتح / إغلاق البطاقات
 ========================================= */
 
 function toggleActionCard(card) {
@@ -40,184 +41,20 @@ function toggleActionCard(card) {
 
 
 /* =========================================
-   🔎 البحث
-========================================= */
-
-function initGlobalSearch() {
-
-  const search =
-    document.getElementById("globalSearch");
-
-  if (!search) return;
-
-  if (search.dataset.initialized === "true") {
-    return;
-  }
-
-  search.dataset.initialized = "true";
-
-  search.addEventListener(
-    "input",
-    performGlobalSearch
-  );
-
-}
-
-
-/* =========================================
-   تنفيذ البحث
-========================================= */
-
-function performGlobalSearch() {
-
-  const search =
-    document.getElementById("globalSearch");
-
-  const message =
-    document.getElementById("searchMessage");
-
-  if (!search) return;
-
-  const query =
-    search.value
-      .trim()
-      .toLowerCase();
-
-  if (!query) {
-
-    clearSearchResults();
-
-    if (message) {
-      message.textContent = "";
-    }
-
-    return;
-  }
-
-  let found = 0;
-
-  document
-    .querySelectorAll(
-      ".accommodation-card, .service-card"
-    )
-    .forEach(card => {
-
-      if (
-        card.classList.contains("action-card")
-      ) {
-        return;
-      }
-
-      const text =
-        (card.textContent || "")
-          .toLowerCase();
-
-      if (text.includes(query)) {
-
-        card.style.display = "";
-        found++;
-
-      } else {
-
-        card.style.display = "none";
-
-      }
-
-    });
-
-
-  document
-    .querySelectorAll(
-      ".accommodation-category"
-    )
-    .forEach(category => {
-
-      const visibleCards =
-        Array.from(
-          category.querySelectorAll(
-            ".accommodation-card, .service-card"
-          )
-        )
-        .filter(card =>
-          card.style.display !== "none"
-        );
-
-      category.style.display =
-        visibleCards.length
-          ? ""
-          : "none";
-
-    });
-
-
-  if (message) {
-
-    message.textContent =
-      found > 0
-        ? `🔎 تم العثور على ${found} خدمة.`
-        : "🔎 لم يتم العثور على خدمة مطابقة.";
-
-  }
-
-}
-
-
-/* =========================================
-   إلغاء البحث
-========================================= */
-
-function clearSearchResults() {
-
-  document
-    .querySelectorAll(
-      ".accommodation-card, .service-card"
-    )
-    .forEach(card => {
-
-      if (
-        !card.classList.contains("action-card")
-      ) {
-
-        card.style.display = "";
-
-      }
-
-    });
-
-
-  document
-    .querySelectorAll(
-      ".accommodation-category"
-    )
-    .forEach(category => {
-
-      category.style.display = "";
-
-    });
-
-}
-
-
-/* =========================================
    التشغيل الرئيسي
 ========================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
-  async () => {
+  () => {
 
     console.log(
-      "🌊 شمال المغرب — MAIN.JS يعمل"
+      "🌊 شمال المغرب — بدء تشغيل الموقع"
     );
 
 
-    /* البحث */
-
-    initGlobalSearch();
-
-
     /* =====================================
-       🏨 تحميل الإقامات
+       🏨 الإقامات
     ===================================== */
 
     if (
@@ -225,13 +62,19 @@ document.addEventListener(
       "function"
     ) {
 
-      await loadAccommodations();
+      loadAccommodations();
+
+    } else {
+
+      console.error(
+        "❌ loadAccommodations غير موجودة"
+      );
 
     }
 
 
     /* =====================================
-       🚗 تحميل المواصلات
+       🚗 المواصلات
     ===================================== */
 
     if (
@@ -239,13 +82,19 @@ document.addEventListener(
       "function"
     ) {
 
-      await loadTransportServices();
+      loadTransportServices();
+
+    } else {
+
+      console.error(
+        "❌ loadTransportServices غير موجودة"
+      );
 
     }
 
 
     /* =====================================
-       🗺️ تحميل الرحلات والمرشدين
+       🗺️ الرحلات والمرشدون
     ===================================== */
 
     if (
@@ -253,29 +102,92 @@ document.addEventListener(
       "function"
     ) {
 
-      await loadActivities();
+      loadActivities();
+
+    } else {
+
+      console.error(
+        "❌ loadActivities غير موجودة"
+      );
 
     }
 
 
     /* =====================================
-       ⭐ تشغيل التقييمات
-       بعد ظهور جميع البطاقات
+       📋 طلب الخدمة
+       requests.js مسؤول عن الربط
+    ===================================== */
+
+    const requestForm =
+      document.getElementById(
+        "serviceRequestForm"
+      );
+
+    if (requestForm) {
+
+      console.log(
+        "✅ نموذج طلب الخدمة موجود"
+      );
+
+    }
+
+
+    /* =====================================
+       🏢 طلب مقدم الخدمة
+       providers.js مسؤول عن الربط
+    ===================================== */
+
+    const providerForm =
+      document.getElementById(
+        "providerApplicationForm"
+      );
+
+    if (providerForm) {
+
+      console.log(
+        "✅ نموذج مقدم الخدمة موجود"
+      );
+
+    }
+
+
+    /* =====================================
+       ⭐ التقييمات
+       يتم تشغيلها بعد إنشاء البطاقات
+    ===================================== */
+
+    /*
+       لا نشغل initReviews هنا مباشرة،
+       لأن البطاقات يتم إنشاؤها
+       بشكل غير متزامن من Supabase.
+
+       loadAccommodations / transport /
+       activities ستنشئ البطاقات أولاً.
+    */
+
+
+    /* =====================================
+       🔎 البحث
+       search.js مسؤول عن البحث
     ===================================== */
 
     if (
-      typeof initReviews ===
+      typeof initGlobalSearch ===
       "function"
     ) {
 
-      initReviews();
+      initGlobalSearch();
 
     }
 
 
     console.log(
-      "✅ تم تشغيل جميع خدمات الموقع"
+      "🌊 شمال المغرب — تم تشغيل جميع الخدمات"
     );
 
   }
 );
+
+ملاحظة مهمة: في كودك الحالي، "accommodations.js" يستدعي "initReviews()" بعد تحميل الإقامات، بينما المواصلات والأنشطة لا يفعلان ذلك. لذلك بعد إصلاح "main.js" قد تظهر الإقامات أولًا، لكن سنحتاج لاحقًا إلى ضبط توقيت التقييمات لكل البطاقات بدون تخريب التحميل.
+
+وأيضًا لن أضع تحميلًا مزدوجًا للنماذج في "main.js" لأن "requests.js" و"providers.js" هما المسؤولان عن الإرسال.
