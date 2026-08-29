@@ -1,89 +1,79 @@
 /* =========================================
    🌊 شمال المغرب
-   فحص تشغيل الملفات
+   MAIN.JS
 ========================================= */
 
 function toggleActionCard(card) {
+
   if (!card) return;
 
   document
     .querySelectorAll(".action-card.card-open")
     .forEach(openCard => {
+
       if (openCard !== card) {
         openCard.classList.remove("card-open");
       }
+
     });
 
   card.classList.toggle("card-open");
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
+/* =========================================
+   التشغيل
+========================================= */
 
-  const checks = [];
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
 
-  checks.push(
-    typeof loadAccommodations === "function"
-      ? "✅ accommodations.js"
-      : "❌ accommodations.js"
-  );
-
-  checks.push(
-    typeof loadTransportServices === "function"
-      ? "✅ transport.js"
-      : "❌ transport.js"
-  );
-
-  checks.push(
-    typeof loadActivities === "function"
-      ? "✅ activities.js"
-      : "❌ activities.js"
-  );
-
-  checks.push(
-    typeof supabaseHeaders === "function"
-      ? "✅ supabase.js"
-      : "❌ supabase.js"
-  );
-
-  checks.push(
-    typeof SUPABASE_URL !== "undefined"
-      ? "✅ config.js"
-      : "❌ config.js"
-  );
+    console.log("🌊 MAIN JS يعمل");
 
 
-  const box = document.createElement("div");
+    /* الإقامات */
 
-  box.style.cssText =
-    "position:fixed;top:0;left:0;right:0;" +
-    "z-index:99999;background:#fff;" +
-    "padding:15px;font-size:16px;" +
-    "direction:rtl;border-bottom:2px solid #000;";
+    if (
+      typeof loadAccommodations === "function"
+    ) {
 
-  box.innerHTML =
-    "<strong>فحص الملفات:</strong><br>" +
-    checks.join("<br>");
+      loadAccommodations();
 
-  document.body.prepend(box);
+    }
 
 
-  /* تشغيل البيانات */
+    /* المواصلات */
 
-  if (typeof loadAccommodations === "function") {
-    loadAccommodations();
+    if (
+      typeof loadTransportServices === "function"
+    ) {
+
+      loadTransportServices();
+
+    }
+
+
+    /* الأنشطة والمرشدون */
+
+    if (
+      typeof loadActivities === "function"
+    ) {
+
+      loadActivities();
+
+    }
+
+
+    /* البحث */
+
+    if (
+      typeof initGlobalSearch === "function"
+    ) {
+
+      initGlobalSearch();
+
+    }
+
   }
-
-  if (typeof loadTransportServices === "function") {
-    loadTransportServices();
-  }
-
-  if (typeof loadActivities === "function") {
-    loadActivities();
-  }
-
-  if (typeof initGlobalSearch === "function") {
-    initGlobalSearch();
-  }
-
-});
+);
