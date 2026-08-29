@@ -5,16 +5,20 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  if (typeof loadAccommodations === "function")
+  if (typeof loadAccommodations === "function") {
     loadAccommodations();
+  }
 
-  if (typeof loadTransportServices === "function")
+  if (typeof loadTransportServices === "function") {
     loadTransportServices();
+  }
 
-  if (typeof loadActivities === "function")
+  if (typeof loadActivities === "function") {
     loadActivities();
+  }
 
   setupGlobalSearch();
+
 });
 
 
@@ -24,17 +28,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setupGlobalSearch() {
 
-  const input = document.getElementById("globalSearch");
-  const message = document.getElementById("searchMessage");
+  const input =
+    document.getElementById("globalSearch");
+
+  const message =
+    document.getElementById("searchMessage");
 
   if (!input) return;
 
   input.addEventListener("input", () => {
 
-    const query = input.value.trim().toLowerCase();
+    const query =
+      input.value.trim().toLowerCase();
 
     const cards =
-      document.querySelectorAll(".accommodation-card");
+      document.querySelectorAll(
+        ".accommodation-card"
+      );
 
     let count = 0;
 
@@ -48,25 +58,36 @@ function setupGlobalSearch() {
       const text =
         (card.textContent || "").toLowerCase();
 
-      const match = text.includes(query);
+      const match =
+        text.includes(query);
 
-      card.style.display = match ? "" : "none";
+      card.style.display =
+        match ? "" : "none";
 
       if (match) count++;
+
     });
 
     if (!message) return;
 
     if (!query) {
+
       message.textContent = "";
+
     } else if (count) {
+
       message.textContent =
         `🔎 تم العثور على ${count} خدمة.`;
+
     } else {
+
       message.textContent =
         "لم يتم العثور على نتائج مطابقة.";
+
     }
+
   });
+
 }
 
 
@@ -75,12 +96,14 @@ function setupGlobalSearch() {
 ========================================= */
 
 function escapeHTML(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
 
@@ -89,12 +112,14 @@ function escapeHTML(value) {
 ========================================= */
 
 function escapeJS(value) {
+
   return String(value ?? "")
     .replace(/\\/g, "\\\\")
     .replace(/'/g, "\\'")
     .replace(/"/g, '\\"')
     .replace(/\n/g, "\\n")
     .replace(/\r/g, "\\r");
+
 }
 
 
@@ -104,10 +129,14 @@ function escapeJS(value) {
 
 function showError(id) {
 
-  const container = document.getElementById(id);
+  const container =
+    document.getElementById(id);
 
   if (container) {
+
     container.innerHTML =
       '<p class="empty">تعذر تحميل البيانات حالياً.</p>';
+
   }
-       }
+
+                  }
