@@ -1,6 +1,73 @@
 /* =========================================
    🌊 شمال المغرب
    MAIN.JS
+   تشغيل الموقع فقط
+   بدون رسائل فحص ظاهرة
+========================================= */
+
+
+/* =========================================
+   تشغيل الموقع
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  console.log("North Morocco site started.");
+
+  /* الإقامات */
+  if (typeof loadAccommodations === "function") {
+    loadAccommodations();
+  }
+
+  /* المواصلات */
+  if (typeof loadTransportServices === "function") {
+    loadTransportServices();
+  }
+
+  /* الرحلات والمرشدون */
+  if (typeof loadActivities === "function") {
+    loadActivities();
+  }
+
+  /* التقييمات */
+  if (typeof initReviews === "function") {
+    initReviews();
+  }
+
+  /* البحث */
+  if (typeof initGlobalSearch === "function") {
+    initGlobalSearch();
+  }
+
+  /* طلب الخدمة */
+  if (typeof initServiceRequests === "function") {
+    initServiceRequests();
+  }
+
+  /* طلب مقدم الخدمة */
+  if (typeof submitProviderApplication === "function") {
+
+    const providerForm =
+      document.getElementById(
+        "providerApplicationForm"
+      );
+
+    if (providerForm) {
+
+      providerForm.addEventListener(
+        "submit",
+        submitProviderApplication
+      );
+
+    }
+
+  }
+
+});
+
+
+/* =========================================
+   بطاقات خدمات الموقع
 ========================================= */
 
 function toggleActionCard(card) {
@@ -8,72 +75,131 @@ function toggleActionCard(card) {
   if (!card) return;
 
   document
-    .querySelectorAll(".action-card.card-open")
+    .querySelectorAll(".action-card")
     .forEach(openCard => {
 
       if (openCard !== card) {
-        openCard.classList.remove("card-open");
+        openCard.classList.remove(
+          "action-card-open"
+        );
       }
 
     });
 
-  card.classList.toggle("card-open");
+  card.classList.toggle(
+    "action-card-open"
+  );
+
 }
 
 
 /* =========================================
-   التشغيل
+   اختيار الخدمة
+   من زر 📋 داخل البطاقة
 ========================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
+function selectService(
+  serviceType,
+  serviceId,
+  serviceName
+) {
 
-    console.log("🌊 MAIN JS يعمل");
+  const type =
+    document.getElementById("service_type");
 
+  const id =
+    document.getElementById("service_id");
 
-    /* الإقامات */
+  if (type) {
+    type.value = serviceType;
+  }
 
-    if (
-      typeof loadAccommodations === "function"
-    ) {
+  if (id) {
+    id.value = serviceId;
+  }
 
-      loadAccommodations();
+  /* حفظ اسم الخدمة مؤقتًا */
+  window.selectedServiceName =
+    serviceName || "";
 
-    }
+  /* فتح بطاقة طلب الخدمة */
 
+  const requestCard =
+    document
+      .querySelector(
+        '#services-actions .action-card:nth-child(2)'
+      );
 
-    /* المواصلات */
+  if (requestCard) {
 
-    if (
-      typeof loadTransportServices === "function"
-    ) {
+    document
+      .querySelectorAll(
+        "#services-actions .action-card"
+      )
+      .forEach(card => {
 
-      loadTransportServices();
+        card.classList.remove(
+          "action-card-open"
+        );
 
-    }
+      });
 
-
-    /* الأنشطة والمرشدون */
-
-    if (
-      typeof loadActivities === "function"
-    ) {
-
-      loadActivities();
-
-    }
-
-
-    /* البحث */
-
-    if (
-      typeof initGlobalSearch === "function"
-    ) {
-
-      initGlobalSearch();
-
-    }
+    requestCard.classList.add(
+      "action-card-open"
+    );
 
   }
-);
+
+  /* الانتقال إلى خدمات الموقع */
+
+  const servicesSection =
+    document.getElementById(
+      "services-actions"
+    );
+
+  if (servicesSection) {
+
+    servicesSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  }
+
+}
+
+
+/* =========================================
+   حماية النصوص
+========================================= */
+
+if (typeof escapeHTML !== "function") {
+
+  window.escapeHTML = function(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  };
+
+}
+
+
+if (typeof escapeJS !== "function") {
+
+  window.escapeJS = function(value) {
+
+    return String(value ?? "")
+      .replace(/\\/g, "\\\\")
+      .replace(/'/g, "\\'")
+      .replace(/"/g, '\\"')
+      .replace(/\r/g, "\\r")
+      .replace(/\n/g, "\\n");
+
+  };
+
+      }
