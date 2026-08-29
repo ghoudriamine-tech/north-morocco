@@ -13,36 +13,21 @@ async function loadAccommodations() {
 
   try {
 
-    const controller =
-      new AbortController();
-
-    const timeout =
-      setTimeout(
-        () => controller.abort(),
-        10000
-      );
-
-    const response =
-      await fetch(
-        `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
-        {
-          headers: supabaseHeaders(),
-          signal: controller.signal
-        }
-      );
-
-    clearTimeout(timeout);
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
+      {
+        method: "GET",
+        headers: supabaseHeaders()
+      }
+    );
 
     if (!response.ok) {
-
       throw new Error(
-        `HTTP ${response.status}: ${await response.text()}`
+        `HTTP ${response.status}`
       );
-
     }
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
     displayAccommodations(
       Array.isArray(data) ? data : []
@@ -55,102 +40,74 @@ async function loadAccommodations() {
       error
     );
 
-    const message =
-      error.name === "AbortError"
-        ? "انتهت مهلة تحميل الإقامات."
-        : `خطأ في تحميل الإقامات:<br>${escapeHTML(
-            error.message || String(error)
-          )}`;
-
     lists.forEach(id => {
 
       const box =
         document.getElementById(id);
 
       if (box) {
-
         box.innerHTML =
-          `<p class="empty">${message}</p>`;
-
+          '<p class="empty">تعذر تحميل البيانات حالياً.</p>';
       }
 
     });
-
   }
-
 }
 
+
+/* =========================================
+   عرض الإقامات
+========================================= */
 
 function displayAccommodations(data) {
 
-  displayAccommodationList(
+  displayList(
     "apartmentsList",
-    data.filter(x =>
-      isAccommodationType(x, [
-        "شقق مفروشة",
-        "شقة مفروشة",
-        "apartment"
-      ])
-    ),
+    data,
+    ["شقق مفروشة", "شقة مفروشة", "apartment"],
     "لا توجد شقق مفروشة حالياً."
   );
 
-
-  displayAccommodationList(
+  displayList(
     "hotelsList",
-    data.filter(x =>
-      isAccommodationType(x, [
-        "فنادق",
-        "فندق",
-        "hotel"
-      ])
-    ),
+    data,
+    ["فنادق", "فندق", "hotel"],
     "لا توجد فنادق حالياً."
   );
 
-
-  displayAccommodationList(
+  displayList(
     "riadsList",
-    data.filter(x =>
-      isAccommodationType(x, [
-        "رياضات",
-        "رياض",
-        "riad"
-      ])
-    ),
+    data,
+    ["رياضات", "رياض", "riad"],
     "لا توجد رياضات حالياً."
   );
-
 }
 
 
-function isAccommodationType(item, types) {
+/* =========================================
+   فلترة النوع
+========================================= */
 
-  const value =
-    String(item?.type || "")
-      .trim()
-      .toLowerCase();
-
-  return types.some(type =>
-    value ===
-    String(type)
-      .trim()
-      .toLowerCase()
-  );
-
-}
-
-
-function displayAccommodationList(
-  id,
-  items,
-  emptyMessage
-) {
+function displayList(id, data, types, emptyMessage) {
 
   const box =
     document.getElementById(id);
 
   if (!box) return;
+
+  const items =
+    data.filter(item => {
+
+      const type =
+        String(item.type || "")
+          .trim()
+          .toLowerCase();
+
+      return types.some(t =>
+        type === t.toLowerCase()
+      );
+
+    });
 
   if (!items.length) {
 
@@ -158,20 +115,18 @@ function displayAccommodationList(
       `<p class="empty">${emptyMessage}</p>`;
 
     return;
-
   }
 
   box.innerHTML =
-    items
-      .map(accommodationCard)
-      .join("");
-
+    items.map(accommodationCard).join("");
 }
 
 
-function accommodationCard(item) {
+/* =========================================
+   بطاقة الإقامة
+========================================= */
 
-  const id = item.id;
+function accommodationCard(item) {
 
   const name =
     item.name || "إقامة";
@@ -179,16 +134,12 @@ function accommodationCard(item) {
   const phone =
     String(item.phone || "").trim();
 
-  let whatsapp =
-    String(
-      item.whatsapp || phone
-    ).replace(/\D/g, "");
+  let wa =
+    String(item.whatsapp || phone)
+      .replace(/\D/g, "");
 
-  if (whatsapp.startsWith("0")) {
-
-    whatsapp =
-      "212" + whatsapp.substring(1);
-
+  if (wa.startsWith("0")) {
+    wa = "212" + wa.slice(1);
   }
 
   const price =
@@ -197,11 +148,7 @@ function accommodationCard(item) {
     "";
 
   return `
-
-    <div
-      class="accommodation-card service-card"
-      onclick="toggleAccommodationCard(this)"
-    >
+    <div class="accommodation-card">
 
       ${
         item.image_url
@@ -210,7 +157,8 @@ function accommodationCard(item) {
               src="${escapeHTML(item.image_url)}"
               alt="${escapeHTML(name)}"
               class="accommodation-image"
-              loading="lazy">
+              loading="lazy"
+            >
           `
           : ""
       }
@@ -243,117 +191,42 @@ function accommodationCard(item) {
           : ""
       }
 
-      <div
-        class="service-card-details"
-        onclick="event.stopPropagation()"
-      >
+      <div class="accommodation-buttons">
 
-        <div class="accommodation-buttons">
+        ${
+          phone
+            ? `<a class="btn" href="tel:${escapeHTML(phone)}">📞</a>`
+            : ""
+        }
 
-          ${
-            phone
-              ? `
-                <a
-                  href="tel:${escapeHTML(phone)}"
-                  class="btn icon-btn"
-                >
-                  📞
-                </a>
-              `
-              : ""
-          }
+        ${
+          wa
+            ? `
+              <a
+                class="btn whatsapp-accommodation"
+                href="https://wa.me/${wa}"
+                target="_blank"
+                rel="noopener"
+              >💬</a>
+            `
+            : ""
+        }
 
-          ${
-            whatsapp
-              ? `
-                <a
-                  href="https://wa.me/${whatsapp}"
-                  class="btn whatsapp-accommodation icon-btn"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  💬
-                </a>
-              `
-              : ""
-          }
-
-          ${
-            item.map_url
-              ? `
-                <a
-                  href="${escapeHTML(item.map_url)}"
-                  class="btn icon-btn"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  📍
-                </a>
-              `
-              : ""
-          }
-
-          <button
-            type="button"
-            class="btn request-btn"
-            onclick="
-              event.stopPropagation();
-              selectService(
-                'accommodation',
-                '${escapeJS(id)}',
-                '${escapeJS(name)}'
-              );
-            "
-          >
-            📋
-          </button>
-
-        </div>
-
-        <div class="reviews-hidden-area">
-
-          ${
-            typeof renderReviews === "function"
-              ? renderReviews(
-                  "accommodation",
-                  id
-                )
-              : ""
-          }
-
-        </div>
+        ${
+          item.map_url
+            ? `
+              <a
+                class="btn"
+                href="${escapeHTML(item.map_url)}"
+                target="_blank"
+                rel="noopener"
+              >📍</a>
+            `
+            : ""
+        }
 
       </div>
 
     </div>
-
   `;
-
-}
-
-
-function toggleAccommodationCard(card) {
-
-  if (!card) return;
-
-  document
-    .querySelectorAll(
-      ".service-card.service-card-open"
-    )
-    .forEach(openCard => {
-
-      if (openCard !== card) {
-
-        openCard.classList.remove(
-          "service-card-open"
-        );
-
-      }
-
-    });
-
-  card.classList.toggle(
-    "service-card-open"
-  );
-
-                                    }
+     }
