@@ -203,3 +203,30 @@ if (typeof escapeJS !== "function") {
   };
 
       }
+/* =========================================
+   🌊 شمال المغرب
+   فتح وإغلاق بطاقات خدمات الموقع
+========================================= */
+
+function toggleActionCard(card) {
+
+  if (!card) return;
+
+  document
+    .querySelectorAll(
+      "#services-actions .action-card"
+    )
+    .forEach(otherCard => {
+
+      if (otherCard !== card) {
+        otherCard.classList.remove(
+          "card-open"
+        );
+      }
+
+    });
+
+  card.classList.toggle(
+    "card-open"
+  );
+}
