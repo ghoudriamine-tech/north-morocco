@@ -252,4 +252,4 @@ function toggleActivityCard(card) {
   card.classList.toggle(
     "activity-card-open"
   );
-                      }
+}
