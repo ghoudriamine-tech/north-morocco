@@ -4,6 +4,12 @@
 ========================================= */
 
 async function loadReviews(serviceType, serviceId) {
+  const controller = new AbortController();
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 10000);
+
   try {
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/reviews` +
@@ -11,7 +17,10 @@ async function loadReviews(serviceType, serviceId) {
       `&service_type=eq.${encodeURIComponent(serviceType)}` +
       `&service_id=eq.${encodeURIComponent(serviceId)}` +
       `&order=created_at.desc&limit=50`,
-      { headers: supabaseHeaders() }
+      {
+        headers: supabaseHeaders(),
+        signal: controller.signal
+      }
     );
 
     if (!response.ok) {
@@ -21,9 +30,15 @@ async function loadReviews(serviceType, serviceId) {
     }
 
     return await response.json();
+
   } catch (error) {
+
     console.error("Reviews error:", error);
+
     return [];
+
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -53,6 +68,7 @@ function renderReviews(serviceType, serviceId) {
 
       <div class="reviews-summary">
         <strong>⭐ التقييم</strong>
+
         <span class="reviews-average">
           جاري التحميل...
         </span>
@@ -91,12 +107,14 @@ function renderReviews(serviceType, serviceId) {
           <label>تقييمك</label>
 
           <div class="star-rating">
+
             ${[1,2,3,4,5].map(n => `
               <button
                 type="button"
                 onclick="setReviewRating(this,${n})"
               >☆</button>
             `).join("")}
+
           </div>
 
           <input
@@ -124,6 +142,7 @@ function renderReviews(serviceType, serviceId) {
           <p class="review-message"></p>
 
         </form>
+
       </div>
 
     </div>
@@ -147,12 +166,16 @@ function toggleReviewForm(serviceType, serviceId) {
 
 function setReviewRating(button, rating) {
   const form = button.closest("form");
+
   if (!form) return;
 
-  const input = form.querySelector(".review-rating");
-  const buttons = form.querySelectorAll(
-    ".star-rating button"
-  );
+  const input =
+    form.querySelector(".review-rating");
+
+  const buttons =
+    form.querySelectorAll(
+      ".star-rating button"
+    );
 
   if (!input) return;
 
@@ -173,11 +196,21 @@ async function submitReview(
   event.preventDefault();
 
   const form = event.target;
-  const message = form.querySelector(".review-message");
-  const button = form.querySelector(".review-submit-btn");
-  const nameInput = form.querySelector(".reviewer-name");
-  const ratingInput = form.querySelector(".review-rating");
-  const commentInput = form.querySelector(".review-comment");
+
+  const message =
+    form.querySelector(".review-message");
+
+  const button =
+    form.querySelector(".review-submit-btn");
+
+  const nameInput =
+    form.querySelector(".reviewer-name");
+
+  const ratingInput =
+    form.querySelector(".review-rating");
+
+  const commentInput =
+    form.querySelector(".review-comment");
 
   if (
     !message ||
@@ -187,16 +220,26 @@ async function submitReview(
     !commentInput
   ) return;
 
-  const name = nameInput.value.trim();
-  const rating = Number(ratingInput.value);
-  const comment = commentInput.value.trim();
+  const name =
+    nameInput.value.trim();
+
+  const rating =
+    Number(ratingInput.value);
+
+  const comment =
+    commentInput.value.trim();
 
   if (!name) {
-    message.textContent = "⚠️ يرجى كتابة اسمك.";
+    message.textContent =
+      "⚠️ يرجى كتابة اسمك.";
     return;
   }
 
-  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+  if (
+    !Number.isInteger(rating) ||
+    rating < 1 ||
+    rating > 5
+  ) {
     message.textContent =
       "⚠️ يرجى اختيار تقييم من 1 إلى 5 نجوم.";
     return;
@@ -205,18 +248,24 @@ async function submitReview(
   if (button.disabled) return;
 
   button.disabled = true;
-  button.textContent = "⏳ جاري الإرسال...";
+
+  button.textContent =
+    "⏳ جاري الإرسال...";
+
   message.textContent = "";
 
   try {
+
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/reviews`,
       {
         method: "POST",
+
         headers: {
           ...supabaseHeaders(),
           Prefer: "return=minimal"
         },
+
         body: JSON.stringify({
           service_type: serviceType,
           service_id: Number(serviceId),
@@ -228,20 +277,25 @@ async function submitReview(
     );
 
     if (!response.ok) {
-      throw new Error(await response.text());
+      throw new Error(
+        await response.text()
+      );
     }
 
     message.textContent =
       "✅ تم إرسال تقييمك بنجاح.";
 
     form.reset();
+
     ratingInput.value = "0";
 
-    form.querySelectorAll(
-      ".star-rating button"
-    ).forEach(star => {
-      star.textContent = "☆";
-    });
+    form
+      .querySelectorAll(
+        ".star-rating button"
+      )
+      .forEach(star => {
+        star.textContent = "☆";
+      });
 
     await refreshReviews(
       serviceType,
@@ -250,13 +304,20 @@ async function submitReview(
     );
 
   } catch (error) {
-    console.error("Review submission error:", error);
+
+    console.error(
+      "Review submission error:",
+      error
+    );
+
     message.textContent =
       "❌ تعذر إرسال التقييم حاليًا.";
   }
 
   button.disabled = false;
-  button.textContent = "📩 إرسال التقييم";
+
+  button.textContent =
+    "📩 إرسال التقييم";
 }
 
 
@@ -265,9 +326,10 @@ async function refreshReviews(
   serviceId,
   force = false
 ) {
-  const section = document.getElementById(
-    `reviews-${serviceType}-${serviceId}`
-  );
+  const section =
+    document.getElementById(
+      `reviews-${serviceType}-${serviceId}`
+    );
 
   if (!section) return;
 
@@ -276,74 +338,96 @@ async function refreshReviews(
     section.dataset.reviewsLoaded === "true"
   ) return;
 
-  const average = section.querySelector(
-    ".reviews-average"
-  );
+  const average =
+    section.querySelector(
+      ".reviews-average"
+    );
 
-  const list = section.querySelector(
-    ".reviews-list"
-  );
+  const list =
+    section.querySelector(
+      ".reviews-list"
+    );
 
   if (!average || !list) return;
 
-  section.dataset.reviewsLoaded = "loading";
+  section.dataset.reviewsLoaded =
+    "loading";
 
-  const reviews = await loadReviews(
-    serviceType,
-    serviceId
-  );
+  const reviews =
+    await loadReviews(
+      serviceType,
+      serviceId
+    );
 
   if (!reviews.length) {
+
     average.textContent =
       "لا توجد تقييمات بعد.";
 
     list.innerHTML =
       `<p class="empty">كن أول من يقيّم هذه الخدمة ⭐</p>`;
+
   } else {
+
     const avg =
       reviews.reduce(
-        (sum, r) => sum + Number(r.rating || 0),
+        (sum, r) =>
+          sum + Number(r.rating || 0),
         0
       ) / reviews.length;
 
     average.innerHTML =
       `⭐ ${avg.toFixed(1)}/5 · ${reviews.length} تقييم`;
 
-    list.innerHTML = reviews.map(r => `
-      <div class="review-item">
-        <strong>
-          ${escapeHTML(r.reviewer_name || "مستخدم")}
-        </strong>
+    list.innerHTML =
+      reviews.map(r => `
+        <div class="review-item">
 
-        <div class="review-stars">
-          ${displayStars(r.rating)}
+          <strong>
+            ${escapeHTML(
+              r.reviewer_name || "مستخدم"
+            )}
+          </strong>
+
+          <div class="review-stars">
+            ${displayStars(r.rating)}
+          </div>
+
+          ${
+            r.comment
+              ? `<p>💬 ${escapeHTML(r.comment)}</p>`
+              : ""
+          }
+
         </div>
-
-        ${
-          r.comment
-            ? `<p>💬 ${escapeHTML(r.comment)}</p>`
-            : ""
-        }
-      </div>
-    `).join("");
+      `).join("");
   }
 
-  section.dataset.reviewsLoaded = "true";
+  section.dataset.reviewsLoaded =
+    "true";
 }
 
 
 function initReviews() {
+
   document
     .querySelectorAll(".reviews-section")
     .forEach(section => {
+
       const type =
         section.dataset.serviceType;
+
       const id =
         section.dataset.serviceId;
 
       if (type && id) {
-        refreshReviews(type, id);
+
+        refreshReviews(
+          type,
+          id
+        );
       }
+
     });
 }
 
