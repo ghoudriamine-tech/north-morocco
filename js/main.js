@@ -197,12 +197,47 @@ document.addEventListener(
     );
 
 
-    /*
-       تشغيل البحث فقط
-       لا يوجد هنا أي تحميل من Supabase
-    */
+    /* ================================
+       🔎 البحث
+    ================================= */
 
     initGlobalSearch();
+
+
+    /* ================================
+       🏨 الإقامات
+    ================================= */
+
+    if (
+      typeof loadAccommodations ===
+      "function"
+    ) {
+      loadAccommodations();
+    }
+
+
+    /* ================================
+       🚗 المواصلات
+    ================================= */
+
+    if (
+      typeof loadTransportServices ===
+      "function"
+    ) {
+      loadTransportServices();
+    }
+
+
+    /* ================================
+       🗺️ الرحلات والمرشدون
+    ================================= */
+
+    if (
+      typeof loadActivities ===
+      "function"
+    ) {
+      loadActivities();
+    }
 
   }
 );
