@@ -1,6 +1,7 @@
 /* =========================================
    🌊 شمال المغرب
-   MAIN.JS — نسخة التشخيص
+   MAIN.JS
+   ملف التشغيل الرئيسي
 ========================================= */
 
 
@@ -25,282 +26,305 @@ function toggleActionCard(card) {
 
     });
 
-  card.classList.toggle("card-open");
-}
+  if (isOpen) {
 
+    card.classList.remove("card-open");
 
-/* =========================================
-   رسالة التشخيص
-========================================= */
+  } else {
 
-function showMainStatus(message) {
+    card.classList.add("card-open");
 
-  let box =
-    document.getElementById("mainDebugMessage");
-
-  if (!box) {
-
-    box = document.createElement("div");
-
-    box.id = "mainDebugMessage";
-
-    box.style.cssText = `
-      margin:15px;
-      padding:12px;
-      background:#fff3cd;
-      border:1px solid #ffc107;
-      border-radius:10px;
-      color:#664d03;
-      font-size:14px;
-      direction:rtl;
-      text-align:right;
-    `;
-
-    document.body.prepend(box);
   }
 
-  box.innerHTML += `<div>${message}</div>`;
 }
 
 
 /* =========================================
-   التشغيل
+   البحث العام
 ========================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  async () => {
+function initGlobalSearch() {
 
-    showMainStatus(
-      "🔄 بدأ تشغيل الموقع..."
+  const searchInput =
+    document.getElementById("globalSearch");
+
+  const message =
+    document.getElementById("searchMessage");
+
+  if (!searchInput) return;
+
+  if (
+    searchInput.dataset.initialized === "true"
+  ) {
+    return;
+  }
+
+  searchInput.dataset.initialized = "true";
+
+
+  searchInput.addEventListener(
+    "input",
+    performGlobalSearch
+  );
+
+
+}
+
+
+/* =========================================
+   تنفيذ البحث
+========================================= */
+
+function performGlobalSearch() {
+
+  const searchInput =
+    document.getElementById("globalSearch");
+
+  const message =
+    document.getElementById("searchMessage");
+
+  if (!searchInput) return;
+
+
+  const query =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+
+  const cards =
+    document.querySelectorAll(
+      ".accommodation-card, .service-card"
     );
 
 
-    /* =====================================
-       التحقق من Supabase
-    ===================================== */
+  let found = 0;
+
+
+  cards.forEach(card => {
+
+    /* استثناء بطاقات خدمات الموقع */
 
     if (
-      typeof SUPABASE_URL === "undefined" ||
-      typeof SUPABASE_KEY === "undefined"
+      card.classList.contains("action-card") ||
+      card.closest("#services-actions")
     ) {
+      return;
+    }
 
-      showMainStatus(
-        "❌ خطأ: SUPABASE_URL أو SUPABASE_KEY غير موجود."
-      );
+
+    const text =
+      (card.textContent || "")
+        .toLowerCase();
+
+
+    if (!query) {
+
+      card.style.display = "";
+
+      found++;
 
       return;
     }
 
-    showMainStatus(
-      "✅ إعدادات Supabase موجودة."
+
+    if (text.includes(query)) {
+
+      card.style.display = "";
+
+      found++;
+
+    } else {
+
+      card.style.display = "none";
+
+    }
+
+  });
+
+
+  /* إظهار / إخفاء عناوين الأقسام */
+
+  document
+    .querySelectorAll(
+      ".accommodation-category"
+    )
+    .forEach(category => {
+
+      const cards =
+        category.querySelectorAll(
+          ".accommodation-card, .service-card"
+        );
+
+
+      let visible = false;
+
+
+      cards.forEach(card => {
+
+        if (
+          !card.classList.contains("action-card") &&
+          card.style.display !== "none"
+        ) {
+          visible = true;
+        }
+
+      });
+
+
+      /*
+         إذا لم تكن هناك بطاقات فعلية
+         نترك القسم ظاهرًا.
+      */
+
+      if (cards.length > 0) {
+
+        category.style.display =
+          visible ? "" : "none";
+
+      }
+
+    });
+
+
+  /* رسالة البحث */
+
+  if (!message) return;
+
+
+  if (!query) {
+
+    message.textContent = "";
+
+    return;
+
+  }
+
+
+  message.textContent =
+    found > 0
+      ? `🔎 تم العثور على ${found} خدمة.`
+      : "🔎 لم يتم العثور على خدمة مطابقة.";
+
+}
+
+
+/* =========================================
+   تشغيل الموقع
+========================================= */
+
+async function initSite() {
+
+  console.log(
+    "🌊 شمال المغرب — بدء تشغيل الموقع"
+  );
+
+
+  /* =======================================
+     البحث
+  ======================================= */
+
+  initGlobalSearch();
+
+
+  /* =======================================
+     تحميل الإقامات
+  ======================================= */
+
+  if (
+    typeof loadAccommodations === "function"
+  ) {
+
+    console.log(
+      "🏨 تحميل الإقامات..."
     );
 
+    await loadAccommodations();
 
-    /* =====================================
-       🏨 الإقامات
-    ===================================== */
+  } else {
 
-    if (
-      typeof loadAccommodations ===
-      "function"
-    ) {
-
-      showMainStatus(
-        "▶️ تشغيل تحميل الإقامات..."
-      );
-
-      try {
-
-        await loadAccommodations();
-
-        showMainStatus(
-          "✅ انتهى تشغيل تحميل الإقامات."
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMainStatus(
-          "❌ خطأ في loadAccommodations: " +
-          escapeHTML(
-            error.message || String(error)
-          )
-        );
-
-      }
-
-    } else {
-
-      showMainStatus(
-        "❌ الدالة loadAccommodations غير موجودة."
-      );
-
-    }
-
-
-    /* =====================================
-       🚗 المواصلات
-    ===================================== */
-
-    if (
-      typeof loadTransportServices ===
-      "function"
-    ) {
-
-      showMainStatus(
-        "▶️ تشغيل تحميل المواصلات..."
-      );
-
-      try {
-
-        await loadTransportServices();
-
-        showMainStatus(
-          "✅ انتهى تشغيل تحميل المواصلات."
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMainStatus(
-          "❌ خطأ في loadTransportServices: " +
-          escapeHTML(
-            error.message || String(error)
-          )
-        );
-
-      }
-
-    } else {
-
-      showMainStatus(
-        "❌ الدالة loadTransportServices غير موجودة."
-      );
-
-    }
-
-
-    /* =====================================
-       🗺️ الأنشطة والرحلات
-    ===================================== */
-
-    if (
-      typeof loadActivities ===
-      "function"
-    ) {
-
-      showMainStatus(
-        "▶️ تشغيل تحميل الأنشطة..."
-      );
-
-      try {
-
-        await loadActivities();
-
-        showMainStatus(
-          "✅ انتهى تشغيل تحميل الأنشطة."
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMainStatus(
-          "❌ خطأ في loadActivities: " +
-          escapeHTML(
-            error.message || String(error)
-          )
-        );
-
-      }
-
-    } else {
-
-      showMainStatus(
-        "❌ الدالة loadActivities غير موجودة."
-      );
-
-    }
-
-
-    /* =====================================
-       🔎 البحث
-    ===================================== */
-
-    if (
-      typeof initGlobalSearch ===
-      "function"
-    ) {
-
-      initGlobalSearch();
-
-      showMainStatus(
-        "✅ البحث يعمل."
-      );
-
-    } else {
-
-      showMainStatus(
-        "⚠️ دالة البحث غير موجودة."
-      );
-
-    }
-
-
-    /* =====================================
-       📋 نموذج طلب الخدمة
-    ===================================== */
-
-    const requestForm =
-      document.getElementById(
-        "serviceRequestForm"
-      );
-
-    if (requestForm) {
-
-      showMainStatus(
-        "✅ نموذج طلب الخدمة موجود."
-      );
-
-    } else {
-
-      showMainStatus(
-        "❌ نموذج طلب الخدمة غير موجود."
-      );
-
-    }
-
-
-    /* =====================================
-       🏢 نموذج مقدم الخدمة
-    ===================================== */
-
-    const providerForm =
-      document.getElementById(
-        "providerApplicationForm"
-      );
-
-    if (providerForm) {
-
-      showMainStatus(
-        "✅ نموذج مقدم الخدمة موجود."
-      );
-
-    } else {
-
-      showMainStatus(
-        "❌ نموذج مقدم الخدمة غير موجود."
-      );
-
-    }
-
-
-    showMainStatus(
-      "🏁 انتهى التشخيص."
+    console.error(
+      "❌ loadAccommodations غير موجودة"
     );
 
   }
+
+
+  /* =======================================
+     تحميل المواصلات
+  ======================================= */
+
+  if (
+    typeof loadTransportServices === "function"
+  ) {
+
+    console.log(
+      "🚗 تحميل المواصلات..."
+    );
+
+    await loadTransportServices();
+
+  } else {
+
+    console.error(
+      "❌ loadTransportServices غير موجودة"
+    );
+
+  }
+
+
+  /* =======================================
+     تحميل الرحلات والمرشدين
+  ======================================= */
+
+  if (
+    typeof loadActivities === "function"
+  ) {
+
+    console.log(
+      "🗺️ تحميل الأنشطة والرحلات والمرشدين..."
+    );
+
+    await loadActivities();
+
+  } else {
+
+    console.error(
+      "❌ loadActivities غير موجودة"
+    );
+
+  }
+
+
+  /* =======================================
+     تشغيل التقييمات بعد ظهور البطاقات
+  ======================================= */
+
+  if (
+    typeof initReviews === "function"
+  ) {
+
+    console.log(
+      "⭐ تشغيل التقييمات..."
+    );
+
+    initReviews();
+
+  }
+
+
+  console.log(
+    "✅ شمال المغرب — انتهى تشغيل الموقع"
+  );
+
+}
+
+
+/* =========================================
+   التشغيل بعد تحميل HTML
+========================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  initSite
 );
