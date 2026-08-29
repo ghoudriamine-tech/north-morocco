@@ -50,10 +50,6 @@ function initGlobalSearch() {
 
   if (!search) return;
 
-  /*
-     منع تكرار تشغيل البحث
-  */
-
   if (search.dataset.initialized === "true") {
     return;
   }
@@ -87,10 +83,6 @@ function performGlobalSearch() {
       .trim()
       .toLowerCase();
 
-  /*
-     إذا كان البحث فارغًا
-  */
-
   if (!query) {
 
     clearSearchResults();
@@ -102,14 +94,7 @@ function performGlobalSearch() {
     return;
   }
 
-
   let found = 0;
-
-
-  /*
-     البحث داخل بطاقات الخدمات
-     مع استثناء بطاقات الإجراءات
-  */
 
   document
     .querySelectorAll(
@@ -123,11 +108,9 @@ function performGlobalSearch() {
         return;
       }
 
-
       const text =
         (card.textContent || "")
           .toLowerCase();
-
 
       if (text.includes(query)) {
 
@@ -141,11 +124,6 @@ function performGlobalSearch() {
       }
 
     });
-
-
-  /*
-     رسالة البحث
-  */
 
   if (message) {
 
@@ -197,12 +175,53 @@ document.addEventListener(
     );
 
 
-    /*
-       تشغيل البحث فقط
-       لا يوجد هنا أي تحميل من Supabase
-    */
+    /* ================================
+       🔎 البحث
+    ================================= */
 
     initGlobalSearch();
+
+
+    /* ================================
+       🏨 الإقامات
+    ================================= */
+
+    if (
+      typeof loadAccommodations ===
+      "function"
+    ) {
+
+      loadAccommodations();
+
+    }
+
+
+    /* ================================
+       🚗 المواصلات
+    ================================= */
+
+    if (
+      typeof loadTransportServices ===
+      "function"
+    ) {
+
+      loadTransportServices();
+
+    }
+
+
+    /* ================================
+       🗺️ الأنشطة
+    ================================= */
+
+    if (
+      typeof loadActivities ===
+      "function"
+    ) {
+
+      loadActivities();
+
+    }
 
   }
 );
