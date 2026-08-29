@@ -1,24 +1,10 @@
 /* =========================================
-   ⭐ شمال المغرب
-   التقييمات والمراجعات
-   مهلة التحميل: 10 ثوانٍ
-========================================= */
-
-
-/* =========================================
-   تحميل التقييمات
+   🌊 شمال المغرب
+   ⭐ التقييمات والمراجعات
 ========================================= */
 
 async function loadReviews(serviceType, serviceId) {
-
-  const controller = new AbortController();
-
-  const timeout = setTimeout(() => {
-    controller.abort();
-  }, 10000);
-
   try {
-
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/reviews` +
       `?select=id,service_type,service_id,reviewer_name,rating,comment,created_at` +
@@ -27,116 +13,69 @@ async function loadReviews(serviceType, serviceId) {
       `&order=created_at.desc&limit=50`,
       {
         method: "GET",
-        headers: supabaseHeaders(),
-        signal: controller.signal
+        headers: supabaseHeaders()
       }
     );
 
     if (!response.ok) {
-
-      throw new Error(
-        `HTTP ${response.status}: ${await response.text()}`
-      );
-
+      throw new Error(await response.text());
     }
 
     return await response.json();
 
   } catch (error) {
-
     console.error("Reviews error:", error);
-
     return [];
-
-  } finally {
-
-    clearTimeout(timeout);
-
   }
 }
 
 
-/* =========================================
-   عرض النجوم
-========================================= */
-
 function displayStars(rating) {
-
   const n = Math.max(
     0,
-    Math.min(
-      5,
-      Math.round(Number(rating) || 0)
-    )
+    Math.min(5, Math.round(Number(rating) || 0))
   );
 
-  return (
-    "★".repeat(n) +
-    "☆".repeat(5 - n)
-  );
+  return "★".repeat(n) + "☆".repeat(5 - n);
 }
 
 
-/* =========================================
-   إنشاء قسم التقييم
-========================================= */
-
 function renderReviews(serviceType, serviceId) {
-
-  const type = escapeHTML(serviceType);
-  const id = escapeHTML(serviceId);
+  const type = String(serviceType);
+  const id = String(serviceId);
 
   return `
     <div
       class="reviews-section"
-      id="reviews-${type}-${id}"
-      data-service-type="${type}"
-      data-service-id="${id}"
+      id="reviews-${escapeHTML(type)}-${escapeHTML(id)}"
+      data-service-type="${escapeHTML(type)}"
+      data-service-id="${escapeHTML(id)}"
       data-reviews-loaded="false"
     >
 
       <div class="reviews-summary">
-
         <strong>⭐ التقييم</strong>
-
-        <span class="reviews-average">
-          جاري التحميل...
-        </span>
-
+        <span class="reviews-average">جاري التحميل...</span>
       </div>
 
-
       <div class="reviews-list"></div>
-
 
       <button
         type="button"
         class="btn review-toggle-btn"
-        onclick="
-          toggleReviewForm(
-            '${escapeJS(serviceType)}',
-            '${escapeJS(serviceId)}'
-          )
-        "
+        onclick="toggleReviewForm('${escapeJS(type)}','${escapeJS(id)}')"
       >
         ⭐ أضف تقييمك
       </button>
 
-
       <div
         class="review-form-container"
-        id="review-form-${type}-${id}"
+        id="review-form-${escapeHTML(type)}-${escapeHTML(id)}"
         style="display:none;"
       >
 
         <form
-          onsubmit="
-            submitReview(
-              event,
-              '${escapeJS(serviceType)}',
-              '${escapeJS(serviceId)}'
-            )
-          "
+          onsubmit="submitReview(event,'${escapeJS(type)}','${escapeJS(id)}')"
         >
 
           <label>اسمك</label>
@@ -144,32 +83,27 @@ function renderReviews(serviceType, serviceId) {
           <input
             type="text"
             class="reviewer-name"
-            placeholder="أدخل اسمك"
             maxlength="100"
+            placeholder="أدخل اسمك"
             required
           >
-
 
           <label>تقييمك</label>
 
           <div class="star-rating">
-
             ${[1,2,3,4,5].map(n => `
               <button
                 type="button"
                 onclick="setReviewRating(this,${n})"
               >☆</button>
             `).join("")}
-
           </div>
-
 
           <input
             type="hidden"
             class="review-rating"
             value="0"
           >
-
 
           <label>تعليقك</label>
 
@@ -180,14 +114,12 @@ function renderReviews(serviceType, serviceId) {
             placeholder="اكتب تعليقك هنا (اختياري)"
           ></textarea>
 
-
           <button
             type="submit"
             class="btn review-submit-btn"
           >
             📩 إرسال التقييم
           </button>
-
 
           <p class="review-message"></p>
 
@@ -200,12 +132,7 @@ function renderReviews(serviceType, serviceId) {
 }
 
 
-/* =========================================
-   فتح / إغلاق نموذج التقييم
-========================================= */
-
 function toggleReviewForm(serviceType, serviceId) {
-
   const form = document.getElementById(
     `review-form-${serviceType}-${serviceId}`
   );
@@ -219,49 +146,30 @@ function toggleReviewForm(serviceType, serviceId) {
 }
 
 
-/* =========================================
-   اختيار النجوم
-========================================= */
-
 function setReviewRating(button, rating) {
-
   const form = button.closest("form");
 
   if (!form) return;
 
-  const input =
-    form.querySelector(".review-rating");
-
-  const buttons =
-    form.querySelectorAll(
-      ".star-rating button"
-    );
+  const input = form.querySelector(".review-rating");
+  const buttons = form.querySelectorAll(".star-rating button");
 
   if (!input) return;
 
   input.value = rating;
 
   buttons.forEach((star, index) => {
-
     star.textContent =
-      index < rating
-        ? "★"
-        : "☆";
-
+      index < rating ? "★" : "☆";
   });
 }
 
-
-/* =========================================
-   إرسال التقييم
-========================================= */
 
 async function submitReview(
   event,
   serviceType,
   serviceId
 ) {
-
   event.preventDefault();
 
   const form = event.target;
@@ -281,7 +189,6 @@ async function submitReview(
   const commentInput =
     form.querySelector(".review-comment");
 
-
   if (
     !message ||
     !button ||
@@ -292,110 +199,64 @@ async function submitReview(
     return;
   }
 
-
-  const name =
-    nameInput.value.trim();
-
-  const rating =
-    Number(ratingInput.value);
-
-  const comment =
-    commentInput.value.trim();
-
+  const name = nameInput.value.trim();
+  const rating = Number(ratingInput.value);
+  const comment = commentInput.value.trim();
 
   if (!name) {
-
-    message.textContent =
-      "⚠️ يرجى كتابة اسمك.";
-
+    message.textContent = "⚠️ يرجى كتابة اسمك.";
     return;
   }
-
 
   if (
     !Number.isInteger(rating) ||
     rating < 1 ||
     rating > 5
   ) {
-
     message.textContent =
       "⚠️ يرجى اختيار تقييم من 1 إلى 5 نجوم.";
-
     return;
   }
 
-
-  if (button.disabled) return;
-
-
   button.disabled = true;
-
-  button.textContent =
-    "⏳ جاري الإرسال...";
-
+  button.textContent = "⏳ جاري الإرسال...";
   message.textContent = "";
 
-
   try {
-
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/reviews`,
       {
         method: "POST",
-
         headers: {
           ...supabaseHeaders(),
           Prefer: "return=minimal"
         },
-
         body: JSON.stringify({
-
-          service_type:
-            serviceType,
-
-          service_id:
-            Number(serviceId),
-
-          reviewer_name:
-            name,
-
-          rating:
-            rating,
-
-          comment:
-            comment || null
-
+          service_type: String(serviceType),
+          service_id: Number(serviceId),
+          reviewer_name: name,
+          rating: rating,
+          comment: comment || null
         })
       }
     );
 
-
     if (!response.ok) {
-
-      throw new Error(
-        await response.text()
-      );
-
+      throw new Error(await response.text());
     }
-
 
     message.textContent =
       "✅ تم إرسال تقييمك بنجاح.";
-
 
     form.reset();
 
     ratingInput.value = "0";
 
-
     form.querySelectorAll(
       ".star-rating button"
     ).forEach(star => {
-
       star.textContent = "☆";
-
     });
-
 
     await refreshReviews(
       serviceType,
@@ -403,44 +264,29 @@ async function submitReview(
       true
     );
 
-
   } catch (error) {
-
-    console.error(
-      "Review submission error:",
-      error
-    );
+    console.error("Review submission error:", error);
 
     message.textContent =
       "❌ تعذر إرسال التقييم حاليًا.";
 
+  } finally {
+    button.disabled = false;
+    button.textContent = "📩 إرسال التقييم";
   }
-
-
-  button.disabled = false;
-
-  button.textContent =
-    "📩 إرسال التقييم";
 }
 
-
-/* =========================================
-   تحديث التقييمات
-========================================= */
 
 async function refreshReviews(
   serviceType,
   serviceId,
   force = false
 ) {
-
-  const section =
-    document.getElementById(
-      `reviews-${serviceType}-${serviceId}`
-    );
+  const section = document.getElementById(
+    `reviews-${serviceType}-${serviceId}`
+  );
 
   if (!section) return;
-
 
   if (
     !force &&
@@ -449,36 +295,21 @@ async function refreshReviews(
     return;
   }
 
-
   const average =
-    section.querySelector(
-      ".reviews-average"
-    );
+    section.querySelector(".reviews-average");
 
   const list =
-    section.querySelector(
-      ".reviews-list"
-    );
-
+    section.querySelector(".reviews-list");
 
   if (!average || !list) return;
 
-
-  section.dataset.reviewsLoaded =
-    "loading";
-
+  section.dataset.reviewsLoaded = "loading";
 
   const reviews =
     await loadReviews(
       serviceType,
       serviceId
     );
-
-
-  /*
-     إذا انتهت مهلة 10 ثوانٍ
-     فلن تبقى عبارة "جاري التحميل..."
-  */
 
   if (!reviews.length) {
 
@@ -499,14 +330,11 @@ async function refreshReviews(
         0
       ) / reviews.length;
 
-
     average.innerHTML =
       `⭐ ${avg.toFixed(1)}/5 · ${reviews.length} تقييم`;
 
-
     list.innerHTML =
       reviews.map(r => `
-
         <div class="review-item">
 
           <strong>
@@ -530,27 +358,16 @@ async function refreshReviews(
           }
 
         </div>
-
       `).join("");
-
   }
 
-
-  section.dataset.reviewsLoaded =
-    "true";
+  section.dataset.reviewsLoaded = "true";
 }
 
 
-/* =========================================
-   تشغيل التقييمات
-========================================= */
-
 function initReviews() {
-
   document
-    .querySelectorAll(
-      ".reviews-section"
-    )
+    .querySelectorAll(".reviews-section")
     .forEach(section => {
 
       const type =
@@ -559,23 +376,12 @@ function initReviews() {
       const id =
         section.dataset.serviceId;
 
-
       if (type && id) {
-
-        refreshReviews(
-          type,
-          id
-        );
-
+        refreshReviews(type, id);
       }
-
     });
 }
 
-
-/* =========================================
-   تشغيل بعد تحميل الصفحة
-========================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
