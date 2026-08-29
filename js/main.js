@@ -50,10 +50,6 @@ function initGlobalSearch() {
 
   if (!search) return;
 
-  /*
-     منع تكرار تشغيل البحث
-  */
-
   if (search.dataset.initialized === "true") {
     return;
   }
@@ -87,10 +83,6 @@ function performGlobalSearch() {
       .trim()
       .toLowerCase();
 
-  /*
-     إذا كان البحث فارغًا
-  */
-
   if (!query) {
 
     clearSearchResults();
@@ -102,14 +94,7 @@ function performGlobalSearch() {
     return;
   }
 
-
   let found = 0;
-
-
-  /*
-     البحث داخل بطاقات الخدمات
-     مع استثناء بطاقات الإجراءات
-  */
 
   document
     .querySelectorAll(
@@ -123,11 +108,9 @@ function performGlobalSearch() {
         return;
       }
 
-
       const text =
         (card.textContent || "")
           .toLowerCase();
-
 
       if (text.includes(query)) {
 
@@ -143,16 +126,36 @@ function performGlobalSearch() {
     });
 
 
-  /*
-     رسالة البحث
-  */
+  document
+    .querySelectorAll(
+      ".accommodation-category"
+    )
+    .forEach(category => {
+
+      const visibleCards =
+        Array.from(
+          category.querySelectorAll(
+            ".accommodation-card, .service-card"
+          )
+        )
+        .filter(card =>
+          card.style.display !== "none"
+        );
+
+      category.style.display =
+        visibleCards.length
+          ? ""
+          : "none";
+
+    });
+
 
   if (message) {
 
     message.textContent =
       found > 0
         ? `🔎 تم العثور على ${found} خدمة.`
-        : "❌ لم يتم العثور على خدمة مطابقة.";
+        : "🔎 لم يتم العثور على خدمة مطابقة.";
 
   }
 
@@ -181,63 +184,98 @@ function clearSearchResults() {
 
     });
 
+
+  document
+    .querySelectorAll(
+      ".accommodation-category"
+    )
+    .forEach(category => {
+
+      category.style.display = "";
+
+    });
+
 }
 
 
 /* =========================================
-   التشغيل
+   التشغيل الرئيسي
 ========================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
+  async () => {
 
     console.log(
-      "🌊 شمال المغرب — main.js يعمل"
+      "🌊 شمال المغرب — MAIN.JS يعمل"
     );
 
 
-    /* ================================
-       🔎 البحث
-    ================================= */
+    /* البحث */
 
     initGlobalSearch();
 
 
-    /* ================================
-       🏨 الإقامات
-    ================================= */
+    /* =====================================
+       🏨 تحميل الإقامات
+    ===================================== */
 
     if (
       typeof loadAccommodations ===
       "function"
     ) {
-      loadAccommodations();
+
+      await loadAccommodations();
+
     }
 
 
-    /* ================================
-       🚗 المواصلات
-    ================================= */
+    /* =====================================
+       🚗 تحميل المواصلات
+    ===================================== */
 
     if (
       typeof loadTransportServices ===
       "function"
     ) {
-      loadTransportServices();
+
+      await loadTransportServices();
+
     }
 
 
-    /* ================================
-       🗺️ الرحلات والمرشدون
-    ================================= */
+    /* =====================================
+       🗺️ تحميل الرحلات والمرشدين
+    ===================================== */
 
     if (
       typeof loadActivities ===
       "function"
     ) {
-      loadActivities();
+
+      await loadActivities();
+
     }
+
+
+    /* =====================================
+       ⭐ تشغيل التقييمات
+       بعد ظهور جميع البطاقات
+    ===================================== */
+
+    if (
+      typeof initReviews ===
+      "function"
+    ) {
+
+      initReviews();
+
+    }
+
+
+    console.log(
+      "✅ تم تشغيل جميع خدمات الموقع"
+    );
 
   }
 );
