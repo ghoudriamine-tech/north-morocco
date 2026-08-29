@@ -1,3 +1,8 @@
+/* =========================================
+   🌊 شمال المغرب
+   Supabase Configuration
+========================================= */
+
 const SUPABASE_URL =
   "https://rbmttbxsezttysenbcwn.supabase.co";
 
