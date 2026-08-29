@@ -19,16 +19,23 @@ function toggleActionCard(card) {
   document
     .querySelectorAll(".action-card.card-open")
     .forEach(openCard => {
+
       if (openCard !== card) {
         openCard.classList.remove("card-open");
       }
+
     });
 
   if (isOpen) {
+
     card.classList.remove("card-open");
+
   } else {
+
     card.classList.add("card-open");
+
   }
+
 }
 
 
@@ -43,12 +50,27 @@ function initGlobalSearch() {
 
   if (!search) return;
 
+  /*
+     منع تكرار تشغيل البحث
+  */
+
+  if (search.dataset.initialized === "true") {
+    return;
+  }
+
+  search.dataset.initialized = "true";
+
   search.addEventListener(
     "input",
     performGlobalSearch
   );
+
 }
 
+
+/* =========================================
+   تنفيذ البحث
+========================================= */
 
 function performGlobalSearch() {
 
@@ -65,6 +87,10 @@ function performGlobalSearch() {
       .trim()
       .toLowerCase();
 
+  /*
+     إذا كان البحث فارغًا
+  */
+
   if (!query) {
 
     clearSearchResults();
@@ -76,21 +102,32 @@ function performGlobalSearch() {
     return;
   }
 
+
   let found = 0;
 
+
+  /*
+     البحث داخل بطاقات الخدمات
+     مع استثناء بطاقات الإجراءات
+  */
+
   document
-    .querySelectorAll(".accommodation-card")
+    .querySelectorAll(
+      ".accommodation-card, .service-card"
+    )
     .forEach(card => {
 
-      /* استثناء خدمات الموقع */
       if (
         card.classList.contains("action-card")
       ) {
         return;
       }
 
+
       const text =
-        card.textContent.toLowerCase();
+        (card.textContent || "")
+          .toLowerCase();
+
 
       if (text.includes(query)) {
 
@@ -106,14 +143,19 @@ function performGlobalSearch() {
     });
 
 
+  /*
+     رسالة البحث
+  */
+
   if (message) {
 
     message.textContent =
-      found
+      found > 0
         ? `🔎 تم العثور على ${found} خدمة.`
         : "❌ لم يتم العثور على خدمة مطابقة.";
 
   }
+
 }
 
 
@@ -124,13 +166,13 @@ function performGlobalSearch() {
 function clearSearchResults() {
 
   document
-    .querySelectorAll(".accommodation-card")
+    .querySelectorAll(
+      ".accommodation-card, .service-card"
+    )
     .forEach(card => {
 
       if (
-        !card.classList.contains(
-          "action-card"
-        )
+        !card.classList.contains("action-card")
       ) {
 
         card.style.display = "";
@@ -138,6 +180,7 @@ function clearSearchResults() {
       }
 
     });
+
 }
 
 
@@ -153,17 +196,13 @@ document.addEventListener(
       "🌊 شمال المغرب — main.js يعمل"
     );
 
+
     /*
-       تشغيل البحث
+       تشغيل البحث فقط
+       لا يوجد هنا أي تحميل من Supabase
     */
 
     initGlobalSearch();
-
-    /*
-       ملاحظة:
-       الإقامات والمواصلات والأنشطة
-       يتم تشغيلها من ملفاتها الخاصة.
-    */
 
   }
 );
