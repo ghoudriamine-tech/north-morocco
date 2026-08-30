@@ -10,23 +10,23 @@
    تشغيل الموقع
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 
   console.log("North Morocco site started.");
 
   /* الإقامات */
   if (typeof loadAccommodations === "function") {
-    await loadAccommodations();
+    loadAccommodations();
   }
 
   /* المواصلات */
   if (typeof loadTransportServices === "function") {
-    await loadTransportServices();
+    loadTransportServices();
   }
 
   /* الرحلات والمرشدون */
   if (typeof loadActivities === "function") {
-    await loadActivities();
+    loadActivities();
   }
 
   /* التقييمات */
@@ -75,13 +75,17 @@ function toggleActionCard(card) {
   if (!card) return;
 
   document
-    .querySelectorAll(".action-card")
-    .forEach(openCard => {
+    .querySelectorAll(
+      "#services-actions .action-card"
+    )
+    .forEach(otherCard => {
 
-      if (openCard !== card) {
-        openCard.classList.remove(
+      if (otherCard !== card) {
+
+        otherCard.classList.remove(
           "action-card-open"
         );
+
       }
 
     });
@@ -91,6 +95,25 @@ function toggleActionCard(card) {
   );
 
 }
+
+
+/* =========================================
+   منع إغلاق البطاقة عند الضغط داخل محتواها
+========================================= */
+
+document.addEventListener("click", function(event) {
+
+  if (
+    event.target.closest(
+      "#services-actions .action-card-content"
+    )
+  ) {
+
+    event.stopPropagation();
+
+  }
+
+});
 
 
 /* =========================================
@@ -122,13 +145,13 @@ function selectService(
   window.selectedServiceName =
     serviceName || "";
 
+
   /* فتح بطاقة طلب الخدمة */
 
   const requestCard =
-    document
-      .querySelector(
-        '#services-actions .action-card:nth-child(2)'
-      );
+    document.querySelector(
+      '#services-actions .action-card:nth-child(2)'
+    );
 
   if (requestCard) {
 
@@ -149,6 +172,7 @@ function selectService(
     );
 
   }
+
 
   /* الانتقال إلى خدمات الموقع */
 
@@ -202,31 +226,4 @@ if (typeof escapeJS !== "function") {
 
   };
 
-      }
-/* =========================================
-   🌊 شمال المغرب
-   فتح وإغلاق بطاقات خدمات الموقع
-========================================= */
-
-function toggleActionCard(card) {
-
-  if (!card) return;
-
-  document
-    .querySelectorAll(
-      "#services-actions .action-card"
-    )
-    .forEach(otherCard => {
-
-      if (otherCard !== card) {
-        otherCard.classList.remove(
-          "card-open"
-        );
-      }
-
-    });
-
-  card.classList.toggle(
-    "card-open"
-  );
-     }
+}
