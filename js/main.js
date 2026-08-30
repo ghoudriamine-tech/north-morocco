@@ -10,23 +10,23 @@
    تشغيل الموقع
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   console.log("North Morocco site started.");
 
   /* الإقامات */
   if (typeof loadAccommodations === "function") {
-    loadAccommodations();
+    await loadAccommodations();
   }
 
   /* المواصلات */
   if (typeof loadTransportServices === "function") {
-    loadTransportServices();
+    await loadTransportServices();
   }
 
   /* الرحلات والمرشدون */
   if (typeof loadActivities === "function") {
-    loadActivities();
+    await loadActivities();
   }
 
   /* التقييمات */
@@ -229,4 +229,4 @@ function toggleActionCard(card) {
   card.classList.toggle(
     "card-open"
   );
-}
+     }
