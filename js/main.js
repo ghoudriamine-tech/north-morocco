@@ -230,18 +230,3 @@ function toggleActionCard(card) {
     "card-open"
   );
      }
-/* =========================================
-   حماية نماذج الخدمات من إغلاق البطاقة
-========================================= */
-
-document.addEventListener("click", function(event) {
-
-  const form = event.target.closest(
-    "#serviceRequestForm, #providerApplicationForm"
-  );
-
-  if (form) {
-    event.stopPropagation();
-  }
-
-}, true);
