@@ -1,8 +1,7 @@
 /* =========================================
    🌊 شمال المغرب
    MAIN.JS
-   تشغيل الموقع فقط
-   بدون رسائل فحص ظاهرة
+   تشغيل الموقع
 ========================================= */
 
 
@@ -18,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (typeof loadAccommodations === "function") {
     await loadAccommodations();
   }
+
   /* المواصلات */
   if (typeof loadTransportServices === "function") {
     await loadTransportServices();
@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (typeof initServiceRequests === "function") {
     initServiceRequests();
   }
+
   /* طلب مقدم الخدمة */
   if (typeof submitProviderApplication === "function") {
 
@@ -58,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
     }
-
   }
 
 });
@@ -71,23 +71,46 @@ document.addEventListener("DOMContentLoaded", async () => {
 function toggleActionCard(card) {
 
   if (!card) return;
-  document
-    .querySelectorAll(".action-card")
-    .forEach(openCard => {
 
-      if (openCard !== card) {
-        openCard.classList.remove(
-          "action-card-open"
+  document
+    .querySelectorAll(
+      "#services-actions .action-card"
+    )
+    .forEach(otherCard => {
+
+      if (otherCard !== card) {
+
+        otherCard.classList.remove(
+          "card-open"
         );
+
       }
 
     });
 
   card.classList.toggle(
-    "action-card-open"
+    "card-open"
   );
-
 }
+
+
+/* =========================================
+   منع إغلاق البطاقة عند الضغط داخل محتواها
+========================================= */
+
+document.addEventListener("click", function(event) {
+
+  if (
+    event.target.closest(
+      "#services-actions .action-card-content"
+    )
+  ) {
+
+    event.stopPropagation();
+
+  }
+
+}, true);
 
 
 /* =========================================
@@ -100,11 +123,16 @@ function selectService(
   serviceId,
   serviceName
 ) {
+
   const type =
-    document.getElementById("service_type");
+    document.getElementById(
+      "service_type"
+    );
 
   const id =
-    document.getElementById("service_id");
+    document.getElementById(
+      "service_id"
+    );
 
   if (type) {
     type.value = serviceType;
@@ -118,15 +146,16 @@ function selectService(
   window.selectedServiceName =
     serviceName || "";
 
+
   /* فتح بطاقة طلب الخدمة */
 
   const requestCard =
-    document
-      .querySelector(
-        '#services-actions .action-card:nth-child(2)'
-      );
+    document.querySelector(
+      "#services-actions .action-card:nth-child(2)"
+    );
 
   if (requestCard) {
+
     document
       .querySelectorAll(
         "#services-actions .action-card"
@@ -134,16 +163,17 @@ function selectService(
       .forEach(card => {
 
         card.classList.remove(
-          "action-card-open"
+          "card-open"
         );
 
       });
 
     requestCard.classList.add(
-      "action-card-open"
+      "card-open"
     );
 
   }
+
 
   /* الانتقال إلى خدمات الموقع */
 
@@ -160,6 +190,7 @@ function selectService(
     });
 
   }
+
 }
 
 
@@ -186,6 +217,7 @@ if (typeof escapeHTML !== "function") {
 if (typeof escapeJS !== "function") {
 
   window.escapeJS = function(value) {
+
     return String(value ?? "")
       .replace(/\\/g, "\\\\")
       .replace(/'/g, "\\'")
@@ -195,30 +227,4 @@ if (typeof escapeJS !== "function") {
 
   };
 
-      }
-/* =========================================
-   🌊 شمال المغرب
-   فتح وإغلاق بطاقات خدمات الموقع
-========================================= */
-
-function toggleActionCard(card) {
-
-  if (!card) return;
-
-  document
-    .querySelectorAll(
-      "#services-actions .action-card"
-    )
-    .forEach(otherCard => {
-      if (otherCard !== card) {
-        otherCard.classList.remove(
-          "card-open"
-        );
-      }
-
-    });
-
-  card.classList.toggle(
-    "card-open"
-  );
-             }
+}
