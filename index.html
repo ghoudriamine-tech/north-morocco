@@ -302,7 +302,7 @@
 
       <div
         class="accommodation-card action-card"
-        onclick="toggleActionCard(this)"
+        onclick="toggleActionCard(this, event)"
       >
 
         <h3>⭐ التقييم</h3>
@@ -330,7 +330,7 @@
 
       <div
         class="accommodation-card action-card"
-        onclick="toggleActionCard(this)"
+        onclick="toggleActionCard(this, event)"
       >
 
         <h3>📋 طلب خدمة</h3>
@@ -475,7 +475,7 @@
 
       <div
         class="accommodation-card action-card"
-        onclick="toggleActionCard(this)"
+        onclick="toggleActionCard(this, event)"
       >
 
         <h3>🏢 مقدم الخدمة</h3>
@@ -775,4 +775,8 @@
 
 </body>
 
-        </html>
+</html>
+
+التغيير الوحيد: في البطاقات الثلاث أصبح "toggleActionCard(this, event)" بدل "toggleActionCard(this)".
+
+لا تغيّر أي ملف آخر الآن.
