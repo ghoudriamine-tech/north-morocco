@@ -1,628 +1,778 @@
-<!DOCTYPE html>  <html lang="ar" dir="rtl">  <head>    <meta charset="UTF-8">  <meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-> 
+<head>
 
-  <title>🌊 شمال المغرب</title>    <link  
-    rel="stylesheet"  
-    href="style.css"  
-  >  </head>  <body>  <!-- =========================================  
-     الرئيسية  
-========================================= -->  <section id="home" class="hero">    <div class="container">  <h1>🌊 شمال المغرب</h1>  
+  <meta charset="UTF-8">
 
-<p class="hero-subtitle">  
-  اكتشف جمال الشمال المغربي بسهولة  
-</p>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  </div>  </section>  <!-- =========================================  
-     البحث  
-========================================= -->  <section  
-  id="search"  
-  class="section search-section"  
->    <div class="container">  <div class="search-card">  
+  <title>🌊 شمال المغرب</title>
 
-  <h2>🔎 ابحث عن خدمة</h2>  
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 
-  <input  
-    type="search"  
-    id="globalSearch"  
-    placeholder="ابحث عن إقامة، مواصلات، رحلة أو مرشد..."  
-    autocomplete="off"  
-  >  
+</head>
 
-  <p  
-    id="searchMessage"  
-    class="search-message"  
-  ></p>  
 
-</div>
+<body>
 
-  </div>  </section>  <!-- =========================================  
-     الإقامات  
-========================================= -->  <section id="stay" class="section">    <div class="container">  <h2>🏨 الإقامات</h2>  
 
+<!-- =========================================
+     الرئيسية
+========================================= -->
 
-<div class="accommodation-category">  
+<section id="home" class="hero">
 
-  <h3 class="category-title">  
-    🏠 شقق مفروشة  
-  </h3>  
+  <div class="container">
 
-  <div  
-    id="apartmentsList"  
-    class="cards"  
-  >  
+    <h1>🌊 شمال المغرب</h1>
 
-    <p class="loading">  
-      جاري تحميل الشقق المفروشة...  
-    </p>  
+    <p class="hero-subtitle">
+      اكتشف جمال الشمال المغربي بسهولة
+    </p>
 
-  </div>  
+  </div>
 
-</div>  
+</section>
 
 
-<div class="accommodation-category">  
+<!-- =========================================
+     البحث
+========================================= -->
 
-  <h3 class="category-title">  
-    🏨 فنادق  
-  </h3>  
+<section
+  id="search"
+  class="section search-section"
+>
 
-  <div  
-    id="hotelsList"  
-    class="cards"  
-  >  
+  <div class="container">
 
-    <p class="loading">  
-      جاري تحميل الفنادق...  
-    </p>  
+    <div class="search-card">
 
-  </div>  
+      <h2>🔎 ابحث عن خدمة</h2>
 
-</div>  
+      <input
+        type="search"
+        id="globalSearch"
+        placeholder="ابحث عن إقامة، مواصلات، رحلة أو مرشد..."
+        autocomplete="off"
+      >
 
+      <p
+        id="searchMessage"
+        class="search-message"
+      ></p>
 
-<div class="accommodation-category">  
+    </div>
 
-  <h3 class="category-title">  
-    🕌 رياضات  
-  </h3>  
+  </div>
 
-  <div  
-    id="riadsList"  
-    class="cards"  
-  >  
+</section>
 
-    <p class="loading">  
-      جاري تحميل الرياضات...  
-    </p>  
 
-  </div>  
+<!-- =========================================
+     الإقامات
+========================================= -->
 
-</div>
+<section id="stay" class="section">
 
-  </div>  </section>  <!-- =========================================  
-     المواصلات  
-========================================= -->  <section id="transport" class="section">    <div class="container">  <h2>🚗 المواصلات</h2>  
+  <div class="container">
 
+    <h2>🏨 الإقامات</h2>
 
-<div class="accommodation-category">  
 
-  <h3 class="category-title">  
-    🚙 كراء السيارات  
-  </h3>  
+    <div class="accommodation-category">
 
-  <div  
-    id="carRentalList"  
-    class="cards"  
-  >  
+      <h3 class="category-title">
+        🏠 شقق مفروشة
+      </h3>
 
-    <p class="loading">  
-      جاري تحميل خدمات كراء السيارات...  
-    </p>  
+      <div
+        id="apartmentsList"
+        class="cards"
+      >
 
-  </div>  
+        <p class="loading">
+          جاري تحميل الشقق المفروشة...
+        </p>
 
-</div>  
+      </div>
 
+    </div>
 
-<div class="accommodation-category">  
 
-  <h3 class="category-title">  
-    🚕 سيارات الأجرة  
-  </h3>  
+    <div class="accommodation-category">
 
-  <div  
-    id="taxiList"  
-    class="cards"  
-  >  
+      <h3 class="category-title">
+        🏨 فنادق
+      </h3>
 
-    <p class="loading">  
-      جاري تحميل سيارات الأجرة...  
-    </p>  
+      <div
+        id="hotelsList"
+        class="cards"
+      >
 
-  </div>  
+        <p class="loading">
+          جاري تحميل الفنادق...
+        </p>
 
-</div>  
+      </div>
 
+    </div>
 
-<div class="accommodation-category">  
 
-  <h3 class="category-title">  
-    🚌 الحافلات السياحية الصغيرة  
-  </h3>  
+    <div class="accommodation-category">
 
-  <div  
-    id="busList"  
-    class="cards"  
-  >  
+      <h3 class="category-title">
+        🕌 رياضات
+      </h3>
 
-    <p class="loading">  
-      جاري تحميل الحافلات السياحية...  
-    </p>  
+      <div
+        id="riadsList"
+        class="cards"
+      >
 
-  </div>  
+        <p class="loading">
+          جاري تحميل الرياضات...
+        </p>
 
-</div>
+      </div>
 
-  </div>  </section>  <!-- =========================================  
-     الأنشطة والجولات  
-========================================= -->  <section id="activities" class="section">    <div class="container">  <h2>🗺️ الأنشطة والجولات</h2>  
+    </div>
 
+  </div>
 
-<div class="accommodation-category">  
+</section>
 
-  <h3 class="category-title">  
-    🗺️ الرحلات  
-  </h3>  
 
-  <div  
-    id="tripsList"  
-    class="cards"  
-  >  
+<!-- =========================================
+     المواصلات
+========================================= -->
 
-    <p class="loading">  
-      جاري تحميل الرحلات...  
-    </p>  
+<section id="transport" class="section">
 
-  </div>  
+  <div class="container">
 
-</div>  
+    <h2>🚗 المواصلات</h2>
 
 
-<div class="accommodation-category">  
+    <div class="accommodation-category">
 
-  <h3 class="category-title">  
-    🧭 المرشدون السياحيون  
-  </h3>  
+      <h3 class="category-title">
+        🚙 كراء السيارات
+      </h3>
 
-  <div  
-    id="guidesList"  
-    class="cards"  
-  >  
+      <div
+        id="carRentalList"
+        class="cards"
+      >
 
-    <p class="loading">  
-      جاري تحميل المرشدين السياحيين...  
-    </p>  
+        <p class="loading">
+          جاري تحميل خدمات كراء السيارات...
+        </p>
 
-  </div>  
+      </div>
 
-</div>
+    </div>
 
-  </div>  </section>  <!-- =========================================  
-     خدمات الموقع  
-========================================= -->  <section  
-  id="services-actions"  
-  class="section"  
->    <div class="container">  <h2>خدمات الموقع</h2>  
 
+    <div class="accommodation-category">
 
-<div class="cards">  
+      <h3 class="category-title">
+        🚕 سيارات الأجرة
+      </h3>
 
+      <div
+        id="taxiList"
+        class="cards"
+      >
 
-  <!-- التقييم -->  
+        <p class="loading">
+          جاري تحميل سيارات الأجرة...
+        </p>
 
-  <div  
-    class="accommodation-card action-card"  
-    onclick="toggleActionCard(this)"  
-  >  
+      </div>
 
-    <h3>⭐ التقييم</h3>  
+    </div>
 
-    <p>  
-      اضغط هنا لإضافة تقييم أو مشاهدة التقييمات.  
-    </p>  
 
-    <div class="action-card-content">  
+    <div class="accommodation-category">
 
-      <div id="generalReviewsContent">  
+      <h3 class="category-title">
+        🚌 الحافلات السياحية الصغيرة
+      </h3>
 
-        <p class="empty">  
-          اختر خدمة من البطاقات أعلاه لإضافة تقييم لها.  
-        </p>  
+      <div
+        id="busList"
+        class="cards"
+      >
 
-      </div>  
+        <p class="loading">
+          جاري تحميل الحافلات السياحية...
+        </p>
 
-    </div>  
+      </div>
 
-  </div>  
+    </div>
 
+  </div>
 
-  <!-- طلب خدمة -->  
+</section>
 
-  <div  
-    class="accommodation-card action-card"  
-    onclick="toggleActionCard(this)"  
-  >  
 
-    <h3>📋 طلب خدمة</h3>  
+<!-- =========================================
+     الأنشطة والجولات
+========================================= -->
 
-    <p>  
-      اضغط هنا لإرسال طلب خدمة.  
-    </p>  
+<section id="activities" class="section">
 
-    <div class="action-card-content">  
+  <div class="container">
 
-      <form id="serviceRequestForm">  
+    <h2>🗺️ الأنشطة والجولات</h2>
 
-        <p>  
-          أرسل طلبك وسنتواصل معك في أقرب وقت.  
-        </p>  
 
+    <div class="accommodation-category">
 
-        <label for="requester_name">  
-          الاسم  
-        </label>  
+      <h3 class="category-title">
+        🗺️ الرحلات
+      </h3>
 
-        <input  
-          type="text"  
-          id="requester_name"  
-          name="requester_name"  
-          placeholder="أدخل اسمك"  
-          required  
-        >  
+      <div
+        id="tripsList"
+        class="cards"
+      >
 
+        <p class="loading">
+          جاري تحميل الرحلات...
+        </p>
 
-        <label for="phone">  
-          الهاتف  
-        </label>  
+      </div>
 
-        <input  
-          type="tel"  
-          id="phone"  
-          name="phone"  
-          placeholder="رقم الهاتف"  
-        >  
+    </div>
 
 
-        <label for="whatsapp">  
-          واتساب  
-        </label>  
+    <div class="accommodation-category">
 
-        <input  
-          type="tel"  
-          id="whatsapp"  
-          name="whatsapp"  
-          placeholder="رقم واتساب"  
-        >  
+      <h3 class="category-title">
+        🧭 المرشدون السياحيون
+      </h3>
 
+      <div
+        id="guidesList"
+        class="cards"
+      >
 
-        <label for="service_type">  
-          نوع الخدمة  
-        </label>  
+        <p class="loading">
+          جاري تحميل المرشدين السياحيين...
+        </p>
 
-        <select  
-          id="service_type"  
-          name="service_type"  
-          required  
-        >  
+      </div>
 
-          <option value="">  
-            اختر نوع الخدمة  
-          </option>  
+    </div>
 
-          <option value="accommodation">  
-            🏨 إقامة  
-          </option>  
+  </div>
 
-          <option value="transport">  
-            🚗 مواصلات  
-          </option>  
+</section>
 
-          <option value="activity">  
-            🗺️ نشاط أو جولة  
-          </option>  
 
-        </select>  
+<!-- =========================================
+     خدمات الموقع
+========================================= -->
 
+<section
+  id="services-actions"
+  class="section"
+>
 
-        <label for="service_id">  
-          رقم الخدمة  
-        </label>  
+  <div class="container">
 
-        <input  
-          type="number"  
-          id="service_id"  
-          name="service_id"  
-          placeholder="رقم الخدمة"  
-          required  
-        >  
+    <h2>خدمات الموقع</h2>
 
 
-        <label for="request_date">  
-          تاريخ الطلب  
-        </label>  
+    <div class="cards">
 
-        <input  
-          type="date"  
-          id="request_date"  
-          name="request_date"  
-        >  
 
+      <!-- التقييم -->
 
-        <label for="notes">  
-          ملاحظات  
-        </label>  
+      <div
+        class="accommodation-card action-card"
+        onclick="toggleActionCard(this)"
+      >
 
-        <textarea  
-          id="notes"  
-          name="notes"  
-          rows="4"  
-          placeholder="اكتب طلبك أو ملاحظاتك هنا"  
-        ></textarea>  
+        <h3>⭐ التقييم</h3>
 
+        <p>
+          اضغط هنا لإضافة تقييم أو مشاهدة التقييمات.
+        </p>
 
-        <button  
-          type="submit"  
-          class="btn"  
-          id="submitRequestBtn"  
-        >  
-          📩 إرسال  
-        </button>  
+        <div class="action-card-content">
 
+          <div id="generalReviewsContent">
 
-        <p  
-          id="requestMessage"  
-          class="empty"  
-        ></p>  
+            <p class="empty">
+              اختر خدمة من البطاقات أعلاه لإضافة تقييم لها.
+            </p>
 
-      </form>  
+          </div>
 
-    </div>  
+        </div>
 
-  </div>  
+      </div>
 
 
-  <!-- مقدم الخدمة -->  
+      <!-- طلب خدمة -->
 
-  <div  
-    class="accommodation-card action-card"  
-    onclick="toggleActionCard(this)"  
-  >  
+      <div
+        class="accommodation-card action-card"
+        onclick="toggleActionCard(this)"
+      >
 
-    <h3>🏢 مقدم الخدمة</h3>  
+        <h3>📋 طلب خدمة</h3>
 
-    <p>  
-      هل لديك خدمة سياحية؟ اضغط هنا للانضمام.  
-    </p>  
+        <p>
+          اضغط هنا لإرسال طلب خدمة.
+        </p>
 
+        <div class="action-card-content">
 
-    <div class="action-card-content">  
+          <form id="serviceRequestForm">
 
-      <p>  
-        أرسل معلوماتك وسنراجع طلبك قبل نشره على الموقع.  
-      </p>  
+            <p>
+              أرسل طلبك وسنتواصل معك في أقرب وقت.
+            </p>
 
 
-      <form id="providerApplicationForm">  
+            <label for="requester_name">
+              الاسم
+            </label>
 
+            <input
+              type="text"
+              id="requester_name"
+              name="requester_name"
+              placeholder="أدخل اسمك"
+              required
+            >
 
-        <label for="provider_name">  
-          اسم مقدم الخدمة  
-        </label>  
 
-        <input  
-          type="text"  
-          id="provider_name"  
-          name="provider_name"  
-          placeholder="اسمك أو اسم المؤسسة"  
-          maxlength="150"  
-          required  
-        >  
+            <label for="phone">
+              الهاتف
+            </label>
 
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="رقم الهاتف"
+            >
 
-        <label for="provider_service_type">  
-          نوع الخدمة  
-        </label>  
 
-        <select  
-          id="provider_service_type"  
-          name="service_type"  
-          required  
-        >  
+            <label for="whatsapp">
+              واتساب
+            </label>
 
-          <option value="">  
-            اختر نوع الخدمة  
-          </option>  
+            <input
+              type="tel"
+              id="whatsapp"
+              name="whatsapp"
+              placeholder="رقم واتساب"
+            >
 
-          <option value="accommodation">  
-            🏨 إقامة  
-          </option>  
 
-          <option value="transport">  
-            🚗 مواصلات  
-          </option>  
+            <label for="service_type">
+              نوع الخدمة
+            </label>
 
-          <option value="activity">  
-            🗺️ رحلة أو نشاط  
-          </option>  
+            <select
+              id="service_type"
+              name="service_type"
+              required
+            >
 
-          <option value="tour_guide">  
-            🧭 مرشد سياحي  
-          </option>  
+              <option value="">
+                اختر نوع الخدمة
+              </option>
 
-        </select>  
+              <option value="accommodation">
+                🏨 إقامة
+              </option>
 
+              <option value="transport">
+                🚗 مواصلات
+              </option>
 
-        <label for="provider_city">  
-          المدينة  
-        </label>  
+              <option value="activity">
+                🗺️ نشاط أو جولة
+              </option>
 
-        <input  
-          type="text"  
-          id="provider_city"  
-          name="city"  
-          placeholder="مثال: تطوان"  
-          maxlength="100"  
-          required  
-        >  
+            </select>
 
 
-        <label for="provider_address">  
-          العنوان  
-        </label>  
+            <label for="service_id">
+              رقم الخدمة
+            </label>
 
-        <input  
-          type="text"  
-          id="provider_address"  
-          name="address"  
-          placeholder="العنوان"  
-          maxlength="250"  
-        >  
+            <input
+              type="number"
+              id="service_id"
+              name="service_id"
+              placeholder="رقم الخدمة"
+              required
+            >
 
 
-        <label for="provider_description">  
-          وصف الخدمة  
-        </label>  
+            <label for="request_date">
+              تاريخ الطلب
+            </label>
 
-        <textarea  
-          id="provider_description"  
-          name="description"  
-          rows="4"  
-          maxlength="1000"  
-          placeholder="اكتب وصفًا مختصرًا عن خدمتك"  
-        ></textarea>  
+            <input
+              type="date"
+              id="request_date"
+              name="request_date"
+            >
 
 
-        <label for="provider_phone">  
-          الهاتف  
-        </label>  
+            <label for="notes">
+              ملاحظات
+            </label>
 
-        <input  
-          type="tel"  
-          id="provider_phone"  
-          name="phone"  
-          placeholder="رقم الهاتف"  
-          maxlength="30"  
-        >  
+            <textarea
+              id="notes"
+              name="notes"
+              rows="4"
+              placeholder="اكتب طلبك أو ملاحظاتك هنا"
+            ></textarea>
 
 
-        <label for="provider_whatsapp">  
-          واتساب  
-        </label>  
+            <button
+              type="submit"
+              class="btn"
+              id="submitRequestBtn"
+            >
+              📩 إرسال
+            </button>
 
-        <input  
-          type="tel"  
-          id="provider_whatsapp"  
-          name="whatsapp"  
-          placeholder="رقم واتساب"  
-          maxlength="30"  
-        >  
 
+            <p
+              id="requestMessage"
+              class="empty"
+            ></p>
 
-        <label for="provider_image_url">  
-          رابط الصورة  
-        </label>  
+          </form>
 
-        <input  
-          type="url"  
-          id="provider_image_url"  
-          name="image_url"  
-          placeholder="رابط الصورة - اختياري"  
-        >  
+        </div>
 
+      </div>
 
-        <label for="provider_map_url">  
-          رابط الموقع  
-        </label>  
 
-        <input  
-          type="url"  
-          id="provider_map_url"  
-          name="map_url"  
-          placeholder="رابط Google Maps - اختياري"  
-        >  
+      <!-- مقدم الخدمة -->
 
+      <div
+        class="accommodation-card action-card"
+        onclick="toggleActionCard(this)"
+      >
 
-        <button  
-          type="submit"  
-          class="btn"  
-          id="submitProviderBtn"  
-        >  
-          📩 إرسال  
-        </button>  
+        <h3>🏢 مقدم الخدمة</h3>
 
+        <p>
+          هل لديك خدمة سياحية؟ اضغط هنا للانضمام.
+        </p>
 
-        <p  
-          id="providerMessage"  
-          class="empty"  
-        ></p>  
 
-      </form>  
+        <div class="action-card-content">
 
-    </div>  
+          <p>
+            أرسل معلوماتك وسنراجع طلبك قبل نشره على الموقع.
+          </p>
 
-  </div>  
 
-</div>
+          <form id="providerApplicationForm">
 
-  </div>  </section>  <!-- =========================================  
-     التواصل  
-========================================= -->  <section id="contact" class="section">    <div class="container">  <h2>📞 تواصل معنا</h2>  
 
-<div class="contact-card">  
+            <label for="provider_name">
+              اسم مقدم الخدمة
+            </label>
 
-  <p>  
-    للاستفسار أو إضافة إقامة أو خدمة  
-    إلى الموقع، تواصل معنا.  
-  </p>  
+            <input
+              type="text"
+              id="provider_name"
+              name="provider_name"
+              placeholder="اسمك أو اسم المؤسسة"
+              maxlength="150"
+              required
+            >
 
 
-  <a  
-    href="https://wa.me/212600000000"  
-    class="whatsapp"  
-    target="_blank"  
-    rel="noopener"  
-  >  
-    💬 تواصل معنا عبر واتساب  
-  </a>  
+            <label for="provider_service_type">
+              نوع الخدمة
+            </label>
 
-</div>
+            <select
+              id="provider_service_type"
+              name="service_type"
+              required
+            >
 
-  </div>  </section>  <!-- =========================================  
-     القائمة السفلية  
-========================================= -->  <nav class="bottom-nav">    <a href="#home">  
-    🏠  
-    <span>الرئيسية</span>  
-  </a>    <a href="#stay">  
-    🏨  
-    <span>الإقامات</span>  
-  </a>    <a href="#transport">  
-    🚗  
-    <span>المواصلات</span>  
-  </a>    <a href="#activities">  
-    🗺️  
-    <span>الأنشطة</span>  
-  </a>    <a href="#search">  
-    🔎  
-    <span>بحث</span>  
-  </a>  </nav>  <!-- =========================================  
-     الفوتر  
-========================================= -->  <footer>    <p>  
-    شمال المغرب © 2026  
-  </p>    <p>  
-    اكتشف • احجز • استمتع  
-  </p>  </footer>  <!-- =========================================  
-     JavaScript  
-========================================= -->  <script src="./js/config.js"></script>  <script src="./js/supabase.js"></script>  <script src="./js/reviews.js"></script>  <script src="./js/accommodations.js"></script>  <script src="./js/transport.js"></script>  <script src="./js/activities.js"></script>  <script src="./js/requests.js"></script>  <script src="./js/providers.js"></script>  <script src="./js/search.js"></script>  <script src="./js/main.js"></script>  </body>  </html>
+              <option value="">
+                اختر نوع الخدمة
+              </option>
+
+              <option value="accommodation">
+                🏨 إقامة
+              </option>
+
+              <option value="transport">
+                🚗 مواصلات
+              </option>
+
+              <option value="activity">
+                🗺️ رحلة أو نشاط
+              </option>
+
+              <option value="tour_guide">
+                🧭 مرشد سياحي
+              </option>
+
+            </select>
+
+
+            <label for="provider_city">
+              المدينة
+            </label>
+
+            <input
+              type="text"
+              id="provider_city"
+              name="city"
+              placeholder="مثال: تطوان"
+              maxlength="100"
+              required
+            >
+
+
+            <label for="provider_address">
+              العنوان
+            </label>
+
+            <input
+              type="text"
+              id="provider_address"
+              name="address"
+              placeholder="العنوان"
+              maxlength="250"
+            >
+
+
+            <label for="provider_description">
+              وصف الخدمة
+            </label>
+
+            <textarea
+              id="provider_description"
+              name="description"
+              rows="4"
+              maxlength="1000"
+              placeholder="اكتب وصفًا مختصرًا عن خدمتك"
+            ></textarea>
+
+
+            <label for="provider_phone">
+              الهاتف
+            </label>
+
+            <input
+              type="tel"
+              id="provider_phone"
+              name="phone"
+              placeholder="رقم الهاتف"
+              maxlength="30"
+            >
+
+
+            <label for="provider_whatsapp">
+              واتساب
+            </label>
+
+            <input
+              type="tel"
+              id="provider_whatsapp"
+              name="whatsapp"
+              placeholder="رقم واتساب"
+              maxlength="30"
+            >
+
+
+            <label for="provider_image_url">
+              رابط الصورة
+            </label>
+
+            <input
+              type="url"
+              id="provider_image_url"
+              name="image_url"
+              placeholder="رابط الصورة - اختياري"
+            >
+
+
+            <label for="provider_map_url">
+              رابط الموقع
+            </label>
+
+            <input
+              type="url"
+              id="provider_map_url"
+              name="map_url"
+              placeholder="رابط Google Maps - اختياري"
+            >
+
+
+            <button
+              type="submit"
+              class="btn"
+              id="submitProviderBtn"
+            >
+              📩 إرسال
+            </button>
+
+
+            <p
+              id="providerMessage"
+              class="empty"
+            ></p>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================
+     التواصل
+========================================= -->
+
+<section id="contact" class="section">
+
+  <div class="container">
+
+    <h2>📞 تواصل معنا</h2>
+
+    <div class="contact-card">
+
+      <p>
+        للاستفسار أو إضافة إقامة أو خدمة
+        إلى الموقع، تواصل معنا.
+      </p>
+
+
+      <a
+        href="https://wa.me/212600000000"
+        class="whatsapp"
+        target="_blank"
+        rel="noopener"
+      >
+        💬 تواصل معنا عبر واتساب
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================
+     القائمة السفلية
+========================================= -->
+
+<nav class="bottom-nav">
+
+  <a href="#home">
+    🏠
+    <span>الرئيسية</span>
+  </a>
+
+
+  <a href="#stay">
+    🏨
+    <span>الإقامات</span>
+  </a>
+
+
+  <a href="#transport">
+    🚗
+    <span>المواصلات</span>
+  </a>
+
+
+  <a href="#activities">
+    🗺️
+    <span>الأنشطة</span>
+  </a>
+
+
+  <a href="#search">
+    🔎
+    <span>بحث</span>
+  </a>
+
+</nav>
+
+
+<!-- =========================================
+     الفوتر
+========================================= -->
+
+<footer>
+
+  <p>
+    شمال المغرب © 2026
+  </p>
+
+  <p>
+    اكتشف • احجز • استمتع
+  </p>
+
+</footer>
+
+
+<!-- =========================================
+     JavaScript
+========================================= -->
+
+<script src="./js/config.js"></script>
+
+<script src="./js/supabase.js"></script>
+
+<script src="./js/reviews.js"></script>
+
+<script src="./js/accommodations.js"></script>
+
+<script src="./js/transport.js"></script>
+
+<script src="./js/activities.js"></script>
+
+<script src="./js/requests.js"></script>
+
+<script src="./js/providers.js"></script>
+
+<script src="./js/search.js"></script>
+
+<script src="./js/main.js"></script>
+
+
+</body>
+
+        </html>
