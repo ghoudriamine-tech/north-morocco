@@ -95,153 +95,108 @@ function renderReviews(serviceType, serviceId) {
       data-reviews-loaded="false"
     >
 
-      <!-- زر إظهار / إخفاء التقييم -->
+      <div class="reviews-summary">
+
+        <strong>⭐ التقييم</strong>
+
+        <span class="reviews-average">
+          جاري التحميل...
+        </span>
+
+      </div>
+
+
+      <div class="reviews-list"></div>
+
+
       <button
         type="button"
-        class="btn review-main-toggle"
+        class="btn review-toggle-btn"
         onclick="
-          toggleReviews(
+          toggleReviewForm(
             '${escapeJS(serviceType)}',
             '${escapeJS(serviceId)}'
           )
         "
       >
-        ⭐ التقييم
+        ⭐ أضف تقييمك
       </button>
 
 
-      <!-- محتوى التقييم مخفي في البداية -->
       <div
-        class="reviews-content"
+        class="review-form-container"
+        id="review-form-${type}-${id}"
         style="display:none;"
       >
 
-        <div class="reviews-summary">
-
-          <span class="reviews-average">
-            جاري التحميل...
-          </span>
-
-        </div>
-
-
-        <div class="reviews-list"></div>
-
-
-        <button
-          type="button"
-          class="btn review-toggle-btn"
-          onclick="
-            toggleReviewForm(
+        <form
+          onsubmit="
+            submitReview(
+              event,
               '${escapeJS(serviceType)}',
               '${escapeJS(serviceId)}'
             )
           "
         >
-          ⭐ أضف تقييمك
-        </button>
 
+          <label>اسمك</label>
 
-        <div
-          class="review-form-container"
-          id="review-form-${type}-${id}"
-          style="display:none;"
-        >
-
-          <form
-            onsubmit="
-              submitReview(
-                event,
-                '${escapeJS(serviceType)}',
-                '${escapeJS(serviceId)}'
-              )
-            "
+          <input
+            type="text"
+            class="reviewer-name"
+            placeholder="أدخل اسمك"
+            maxlength="100"
+            required
           >
 
-            <label>اسمك</label>
 
-            <input
-              type="text"
-              class="reviewer-name"
-              placeholder="أدخل اسمك"
-              maxlength="100"
-              required
-            >
+          <label>تقييمك</label>
 
+          <div class="star-rating">
 
-            <label>تقييمك</label>
+            ${[1,2,3,4,5].map(n => `
+              <button
+                type="button"
+                onclick="setReviewRating(this,${n})"
+              >☆</button>
+            `).join("")}
 
-            <div class="star-rating">
-
-              ${[1,2,3,4,5].map(n => `
-                <button
-                  type="button"
-                  onclick="setReviewRating(this,${n})"
-                >☆</button>
-              `).join("")}
-
-            </div>
+          </div>
 
 
-            <input
-              type="hidden"
-              class="review-rating"
-              value="0"
-            >
+          <input
+            type="hidden"
+            class="review-rating"
+            value="0"
+          >
 
 
-            <label>تعليقك</label>
+          <label>تعليقك</label>
 
-            <textarea
-              class="review-comment"
-              rows="3"
-              maxlength="500"
-              placeholder="اكتب تعليقك هنا (اختياري)"
-            ></textarea>
-
-
-            <button
-              type="submit"
-              class="btn review-submit-btn"
-            >
-              📩 إرسال التقييم
-            </button>
+          <textarea
+            class="review-comment"
+            rows="3"
+            maxlength="500"
+            placeholder="اكتب تعليقك هنا (اختياري)"
+          ></textarea>
 
 
-            <p class="review-message"></p>
+          <button
+            type="submit"
+            class="btn review-submit-btn"
+          >
+            📩 إرسال التقييم
+          </button>
 
-          </form>
 
-        </div>
+          <p class="review-message"></p>
+
+        </form>
 
       </div>
 
     </div>
   `;
-}
-
-
-/* =========================================
-   فتح / إغلاق قسم التقييم
-========================================= */
-
-function toggleReviews(serviceType, serviceId) {
-
-  const section = document.getElementById(
-    `reviews-${serviceType}-${serviceId}`
-  );
-
-  if (!section) return;
-
-  const content =
-    section.querySelector(".reviews-content");
-
-  if (!content) return;
-
-  content.style.display =
-    content.style.display === "none"
-      ? "block"
-      : "none";
 }
 
 
