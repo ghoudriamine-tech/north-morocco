@@ -97,16 +97,32 @@ function renderReviews(serviceType, serviceId) {
 
       <div class="reviews-summary">
 
-        <strong>⭐ التقييم</strong>
+        <strong
+          onclick="
+            toggleReviews(
+              '${escapeJS(serviceType)}',
+              '${escapeJS(serviceId)}'
+            )
+          "
+          style="cursor:pointer;"
+        >
+          ⭐ التقييم
+        </strong>
 
-        <span class="reviews-average">
+        <span
+          class="reviews-average"
+          style="display:none;"
+        >
           جاري التحميل...
         </span>
 
       </div>
 
 
-      <div class="reviews-list"></div>
+      <div
+        class="reviews-list"
+        style="display:none;"
+      ></div>
 
 
       <button
@@ -197,6 +213,42 @@ function renderReviews(serviceType, serviceId) {
 
     </div>
   `;
+}
+
+
+/* =========================================
+   إظهار / إخفاء التقييم
+========================================= */
+
+function toggleReviews(serviceType, serviceId) {
+
+  const section =
+    document.getElementById(
+      `reviews-${serviceType}-${serviceId}`
+    );
+
+  if (!section) return;
+
+  const average =
+    section.querySelector(
+      ".reviews-average"
+    );
+
+  const list =
+    section.querySelector(
+      ".reviews-list"
+    );
+
+  if (!average || !list) return;
+
+  const isHidden =
+    average.style.display === "none";
+
+  average.style.display =
+    isHidden ? "inline" : "none";
+
+  list.style.display =
+    isHidden ? "block" : "none";
 }
 
 
