@@ -32,6 +32,8 @@ function selectService(type, id, name) {
   }
 
 
+  /* تعبئة البيانات */
+
   serviceType.value =
     String(type || "");
 
@@ -44,7 +46,9 @@ function selectService(type, id, name) {
   }
 
 
-  /* فتح بطاقة طلب الخدمة */
+  /* =====================================
+     فتح بطاقة طلب الخدمة
+  ===================================== */
 
   const actionCards =
     document.querySelectorAll(
@@ -70,6 +74,8 @@ function selectService(type, id, name) {
 
   if (requestCard) {
 
+    /* إغلاق البطاقات الأخرى */
+
     actionCards.forEach(card => {
 
       if (card !== requestCard) {
@@ -79,10 +85,14 @@ function selectService(type, id, name) {
     });
 
 
+    /* فتح طلب الخدمة */
+
     requestCard.classList.add(
       "card-open"
     );
 
+
+    /* التمرير إليه */
 
     setTimeout(() => {
 
@@ -137,10 +147,7 @@ ${data.notes || "لا توجد ملاحظات"}
     `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
 
 
-  window.open(
-    whatsappURL,
-    "_blank"
-  );
+  window.location.href = whatsappURL;
 
 }
 
@@ -163,23 +170,48 @@ function showWhatsAppButton(msg, data) {
   }
 
 
-  /* إنشاء الزر */
+  const message = `🌊 شمال المغرب
+
+📋 طلب خدمة جديد
+
+👤 الاسم: ${data.requester_name || "غير محدد"}
+📞 الهاتف: ${data.phone || "غير محدد"}
+💬 واتساب: ${data.whatsapp || "غير محدد"}
+🧭 نوع الخدمة: ${data.service_type || "غير محدد"}
+🆔 رقم الخدمة: ${data.service_id || "غير محدد"}
+📅 التاريخ: ${data.request_date || "غير محدد"}
+
+📝 الملاحظات:
+${data.notes || "لا توجد ملاحظات"}`;
+
+
+  const whatsappURL =
+    `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+
+
+  /* إنشاء رابط واتساب */
 
   const whatsappButton =
-    document.createElement("button");
+    document.createElement("a");
 
 
   whatsappButton.id =
     "requestWhatsAppBtn";
 
-  whatsappButton.type =
-    "button";
+  whatsappButton.href =
+    whatsappURL;
 
   whatsappButton.textContent =
     "📲 إرسال تفاصيل الطلب إلى واتساب";
 
 
-  /* تصميم الزر */
+  /* فتح الرابط */
+
+  whatsappButton.target =
+    "_blank";
+
+
+  /* تصميمه كزر */
 
   whatsappButton.style.display =
     "block";
@@ -193,7 +225,13 @@ function showWhatsAppButton(msg, data) {
   whatsappButton.style.padding =
     "14px";
 
-  whatsappButton.style.border =
+  whatsappButton.style.boxSizing =
+    "border-box";
+
+  whatsappButton.style.textAlign =
+    "center";
+
+  whatsappButton.style.textDecoration =
     "none";
 
   whatsappButton.style.borderRadius =
@@ -205,26 +243,11 @@ function showWhatsAppButton(msg, data) {
   whatsappButton.style.fontWeight =
     "bold";
 
-  whatsappButton.style.cursor =
-    "pointer";
-
   whatsappButton.style.background =
     "#25D366";
 
   whatsappButton.style.color =
     "#ffffff";
-
-
-  /* عند الضغط */
-
-  whatsappButton.addEventListener(
-    "click",
-    () => {
-
-      sendRequestToWhatsApp(data);
-
-    }
-  );
 
 
   /* وضع الزر داخل النموذج */
@@ -241,7 +264,7 @@ function showWhatsAppButton(msg, data) {
       whatsappButton
     );
 
-  } else {
+  } else if (msg.parentElement) {
 
     msg.parentElement.appendChild(
       whatsappButton
@@ -288,7 +311,9 @@ async function submitServiceRequest(e) {
   }
 
 
-  /* قراءة القيم */
+  /* =====================================
+     قراءة القيم
+  ===================================== */
 
   const value = id => {
 
@@ -337,7 +362,7 @@ async function submitServiceRequest(e) {
 
 
   /* =====================================
-     التحقق
+     التحقق من البيانات
   ===================================== */
 
   if (!data.requester_name) {
@@ -451,7 +476,7 @@ async function submitServiceRequest(e) {
 
 
     /* =====================================
-       نجاح
+       نجاح إرسال الطلب
     ===================================== */
 
     msg.textContent =
@@ -523,7 +548,7 @@ document.addEventListener(
     if (!form) return;
 
 
-    /* منع تكرار الربط */
+    /* منع تكرار ربط النموذج */
 
     if (
       form.dataset.initialized ===
