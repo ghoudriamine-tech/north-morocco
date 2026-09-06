@@ -1,7 +1,14 @@
 /* =========================================
    🌊 شمال المغرب
-   📋 طلبات الخدمة
+   📋 طلبات الخدمة + واتساب
 ========================================= */
+
+
+/* =========================================
+   رقم واتساب الإدارة
+========================================= */
+
+const ADMIN_WHATSAPP = "212616998500";
 
 
 /* =========================================
@@ -100,6 +107,48 @@ function selectService(type, id, name) {
 
 
 /* =========================================
+   إرسال الطلب إلى واتساب
+========================================= */
+
+function sendRequestToWhatsApp(data) {
+
+  const message =
+
+`🌊 شمال المغرب
+📋 طلب خدمة جديد
+
+👤 الاسم: ${data.requester_name || "غير محدد"}
+
+📞 الهاتف: ${data.phone || "غير محدد"}
+
+💬 واتساب الزبون: ${data.whatsapp || "غير محدد"}
+
+🧭 نوع الخدمة: ${data.service_type || "غير محدد"}
+
+🆔 رقم الخدمة: ${data.service_id || "غير محدد"}
+
+📅 التاريخ: ${data.request_date || "غير محدد"}
+
+📝 الملاحظات:
+${data.notes || "لا توجد ملاحظات"}
+
+━━━━━━━━━━━━
+🌊 شمال المغرب`;
+
+
+  const whatsappURL =
+    `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+
+
+  window.open(
+    whatsappURL,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================
    إرسال طلب الخدمة
 ========================================= */
 
@@ -176,7 +225,9 @@ async function submitServiceRequest(e) {
   };
 
 
-  /* التحقق من البيانات */
+  /* =====================================
+     التحقق من البيانات
+  ===================================== */
 
   if (!data.requester_name) {
 
@@ -208,7 +259,9 @@ async function submitServiceRequest(e) {
   }
 
 
-  /* بدء الإرسال */
+  /* =====================================
+     بدء الإرسال إلى Supabase
+  ===================================== */
 
   btn.disabled = true;
 
@@ -263,10 +316,97 @@ async function submitServiceRequest(e) {
     }
 
 
-    /* نجاح */
+    /* =====================================
+       نجاح حفظ الطلب
+    ===================================== */
 
     msg.textContent =
-      "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
+      "✅ تم إرسال طلبك بنجاح.";
+
+
+    /* =====================================
+       إنشاء زر واتساب
+    ===================================== */
+
+    let whatsappButton =
+      document.getElementById(
+        "requestWhatsAppBtn"
+      );
+
+
+    if (!whatsappButton) {
+
+      whatsappButton =
+        document.createElement(
+          "button"
+        );
+
+      whatsappButton.id =
+        "requestWhatsAppBtn";
+
+      whatsappButton.type =
+        "button";
+
+      whatsappButton.textContent =
+        "📲 إرسال الطلب إلى واتساب";
+
+      whatsappButton.style.marginTop =
+        "10px";
+
+      whatsappButton.style.width =
+        "100%";
+
+      whatsappButton.style.padding =
+        "12px";
+
+      whatsappButton.style.border =
+        "none";
+
+      whatsappButton.style.borderRadius =
+        "10px";
+
+      whatsappButton.style.cursor =
+        "pointer";
+
+      whatsappButton.style.fontSize =
+        "16px";
+
+      whatsappButton.style.background =
+        "#25D366";
+
+      whatsappButton.style.color =
+        "#ffffff";
+
+
+      msg.insertAdjacentElement(
+        "afterend",
+        whatsappButton
+      );
+
+    }
+
+
+    /* =====================================
+       ربط زر واتساب بالطلب الحالي
+    ===================================== */
+
+    whatsappButton.onclick =
+      () => {
+
+        sendRequestToWhatsApp(
+          data
+        );
+
+      };
+
+
+    whatsappButton.style.display =
+      "block";
+
+
+    /* =====================================
+       تنظيف النموذج
+    ===================================== */
 
     form.reset();
 
