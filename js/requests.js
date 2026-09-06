@@ -32,8 +32,6 @@ function selectService(type, id, name) {
   }
 
 
-  /* تعبئة البيانات */
-
   serviceType.value =
     String(type || "");
 
@@ -46,9 +44,7 @@ function selectService(type, id, name) {
   }
 
 
-  /* =====================================
-     فتح بطاقة طلب الخدمة
-  ===================================== */
+  /* فتح بطاقة طلب الخدمة */
 
   const actionCards =
     document.querySelectorAll(
@@ -74,23 +70,19 @@ function selectService(type, id, name) {
 
   if (requestCard) {
 
-    /* إغلاق البطاقات الأخرى */
-
     actionCards.forEach(card => {
+
       if (card !== requestCard) {
         card.classList.remove("card-open");
       }
+
     });
 
-
-    /* فتح طلب الخدمة */
 
     requestCard.classList.add(
       "card-open"
     );
 
-
-    /* التمرير إليه */
 
     setTimeout(() => {
 
@@ -107,27 +99,32 @@ function selectService(type, id, name) {
 
 
 /* =========================================
-   إرسال الطلب إلى واتساب
+   فتح واتساب
 ========================================= */
 
 function sendRequestToWhatsApp(data) {
 
-  const message =
+  const message = `🌊 شمال المغرب
 
-`🌊 شمال المغرب
 📋 طلب خدمة جديد
 
-👤 الاسم: ${data.requester_name || "غير محدد"}
+👤 الاسم:
+${data.requester_name || "غير محدد"}
 
-📞 الهاتف: ${data.phone || "غير محدد"}
+📞 الهاتف:
+${data.phone || "غير محدد"}
 
-💬 واتساب الزبون: ${data.whatsapp || "غير محدد"}
+💬 واتساب:
+${data.whatsapp || "غير محدد"}
 
-🧭 نوع الخدمة: ${data.service_type || "غير محدد"}
+🧭 نوع الخدمة:
+${data.service_type || "غير محدد"}
 
-🆔 رقم الخدمة: ${data.service_id || "غير محدد"}
+🆔 رقم الخدمة:
+${data.service_id || "غير محدد"}
 
-📅 التاريخ: ${data.request_date || "غير محدد"}
+📅 التاريخ:
+${data.request_date || "غير محدد"}
 
 📝 الملاحظات:
 ${data.notes || "لا توجد ملاحظات"}
@@ -149,12 +146,120 @@ ${data.notes || "لا توجد ملاحظات"}
 
 
 /* =========================================
+   إظهار زر واتساب
+========================================= */
+
+function showWhatsAppButton(msg, data) {
+
+  /* حذف الزر القديم */
+
+  const oldButton =
+    document.getElementById(
+      "requestWhatsAppBtn"
+    );
+
+  if (oldButton) {
+    oldButton.remove();
+  }
+
+
+  /* إنشاء الزر */
+
+  const whatsappButton =
+    document.createElement("button");
+
+
+  whatsappButton.id =
+    "requestWhatsAppBtn";
+
+  whatsappButton.type =
+    "button";
+
+  whatsappButton.textContent =
+    "📲 إرسال تفاصيل الطلب إلى واتساب";
+
+
+  /* تصميم الزر */
+
+  whatsappButton.style.display =
+    "block";
+
+  whatsappButton.style.width =
+    "100%";
+
+  whatsappButton.style.marginTop =
+    "15px";
+
+  whatsappButton.style.padding =
+    "14px";
+
+  whatsappButton.style.border =
+    "none";
+
+  whatsappButton.style.borderRadius =
+    "10px";
+
+  whatsappButton.style.fontSize =
+    "16px";
+
+  whatsappButton.style.fontWeight =
+    "bold";
+
+  whatsappButton.style.cursor =
+    "pointer";
+
+  whatsappButton.style.background =
+    "#25D366";
+
+  whatsappButton.style.color =
+    "#ffffff";
+
+
+  /* عند الضغط */
+
+  whatsappButton.addEventListener(
+    "click",
+    () => {
+
+      sendRequestToWhatsApp(data);
+
+    }
+  );
+
+
+  /* وضع الزر داخل النموذج */
+
+  const form =
+    document.getElementById(
+      "serviceRequestForm"
+    );
+
+
+  if (form) {
+
+    form.appendChild(
+      whatsappButton
+    );
+
+  } else {
+
+    msg.parentElement.appendChild(
+      whatsappButton
+    );
+
+  }
+
+}
+
+
+/* =========================================
    إرسال طلب الخدمة
 ========================================= */
 
 async function submitServiceRequest(e) {
 
   e.preventDefault();
+
 
   const form =
     document.getElementById(
@@ -171,11 +276,15 @@ async function submitServiceRequest(e) {
       "submitRequestBtn"
     );
 
+
   if (!form || !msg || !btn) {
+
     console.error(
       "❌ نموذج طلب الخدمة غير موجود"
     );
+
     return;
+
   }
 
 
@@ -198,6 +307,8 @@ async function submitServiceRequest(e) {
       value("service_id")
     );
 
+
+  /* بيانات الطلب */
 
   const data = {
 
@@ -226,7 +337,7 @@ async function submitServiceRequest(e) {
 
 
   /* =====================================
-     التحقق من البيانات
+     التحقق
   ===================================== */
 
   if (!data.requester_name) {
@@ -235,6 +346,7 @@ async function submitServiceRequest(e) {
       "⚠️ يرجى كتابة الاسم.";
 
     return;
+
   }
 
 
@@ -244,6 +356,7 @@ async function submitServiceRequest(e) {
       "⚠️ يرجى اختيار نوع الخدمة.";
 
     return;
+
   }
 
 
@@ -256,11 +369,12 @@ async function submitServiceRequest(e) {
       "⚠️ يرجى اختيار الخدمة أولاً.";
 
     return;
+
   }
 
 
   /* =====================================
-     بدء الإرسال إلى Supabase
+     بدء الإرسال
   ===================================== */
 
   btn.disabled = true;
@@ -271,13 +385,27 @@ async function submitServiceRequest(e) {
   msg.textContent = "";
 
 
+  /* حذف زر واتساب السابق */
+
+  const oldButton =
+    document.getElementById(
+      "requestWhatsAppBtn"
+    );
+
+  if (oldButton) {
+    oldButton.remove();
+  }
+
+
   const controller =
     new AbortController();
 
 
   const timeout =
     setTimeout(() => {
+
       controller.abort();
+
     }, 10000);
 
 
@@ -287,11 +415,16 @@ async function submitServiceRequest(e) {
       await fetch(
         `${SUPABASE_URL}/rest/v1/service_requests`,
         {
+
           method: "POST",
 
           headers: {
+
             ...supabaseHeaders(),
-            Prefer: "return=minimal"
+
+            Prefer:
+              "return=minimal"
+
           },
 
           body:
@@ -299,6 +432,7 @@ async function submitServiceRequest(e) {
 
           signal:
             controller.signal
+
         }
       );
 
@@ -317,96 +451,22 @@ async function submitServiceRequest(e) {
 
 
     /* =====================================
-       نجاح حفظ الطلب
+       نجاح
     ===================================== */
 
     msg.textContent =
-      "✅ تم إرسال طلبك بنجاح.";
+      "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
 
 
-    /* =====================================
-       إنشاء زر واتساب
-    ===================================== */
+    /* إظهار زر واتساب */
 
-    let whatsappButton =
-      document.getElementById(
-        "requestWhatsAppBtn"
-      );
+    showWhatsAppButton(
+      msg,
+      data
+    );
 
 
-    if (!whatsappButton) {
-
-      whatsappButton =
-        document.createElement(
-          "button"
-        );
-
-      whatsappButton.id =
-        "requestWhatsAppBtn";
-
-      whatsappButton.type =
-        "button";
-
-      whatsappButton.textContent =
-        "📲 إرسال الطلب إلى واتساب";
-
-      whatsappButton.style.marginTop =
-        "10px";
-
-      whatsappButton.style.width =
-        "100%";
-
-      whatsappButton.style.padding =
-        "12px";
-
-      whatsappButton.style.border =
-        "none";
-
-      whatsappButton.style.borderRadius =
-        "10px";
-
-      whatsappButton.style.cursor =
-        "pointer";
-
-      whatsappButton.style.fontSize =
-        "16px";
-
-      whatsappButton.style.background =
-        "#25D366";
-
-      whatsappButton.style.color =
-        "#ffffff";
-
-
-      msg.insertAdjacentElement(
-        "afterend",
-        whatsappButton
-      );
-
-    }
-
-
-    /* =====================================
-       ربط زر واتساب بالطلب الحالي
-    ===================================== */
-
-    whatsappButton.onclick =
-      () => {
-
-        sendRequestToWhatsApp(
-          data
-        );
-
-      };
-
-
-    whatsappButton.style.display =
-      "block";
-
-
-    /* =====================================
-       تنظيف النموذج
-    ===================================== */
+    /* تنظيف النموذج */
 
     form.reset();
 
@@ -463,9 +523,7 @@ document.addEventListener(
     if (!form) return;
 
 
-    /*
-       منع تكرار ربط النموذج
-    */
+    /* منع تكرار الربط */
 
     if (
       form.dataset.initialized ===
