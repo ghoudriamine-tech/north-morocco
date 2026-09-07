@@ -5,6 +5,13 @@
 
 
 /* =========================================
+   رقم واتساب الإدارة
+========================================= */
+
+const ADMIN_WHATSAPP = "212616998500";
+
+
+/* =========================================
    اختيار الخدمة
 ========================================= */
 
@@ -100,6 +107,53 @@ function selectService(type, id, name) {
 
 
 /* =========================================
+   فتح واتساب تلقائيًا
+========================================= */
+
+function openRequestWhatsApp(data) {
+
+  const message = `🌊 شمال المغرب
+
+📋 طلب خدمة جديد
+
+👤 الاسم:
+${data.requester_name || "غير محدد"}
+
+📞 الهاتف:
+${data.phone || "غير محدد"}
+
+💬 واتساب:
+${data.whatsapp || "غير محدد"}
+
+🧭 نوع الخدمة:
+${data.service_type || "غير محدد"}
+
+🆔 رقم الخدمة:
+${data.service_id || "غير محدد"}
+
+📅 التاريخ:
+${data.request_date || "غير محدد"}
+
+📝 الملاحظات:
+${data.notes || "لا توجد ملاحظات"}
+
+━━━━━━━━━━━━
+🌊 شمال المغرب`;
+
+
+  const whatsappURL =
+    `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+
+
+  window.open(
+    whatsappURL,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================
    إرسال طلب الخدمة
 ========================================= */
 
@@ -150,6 +204,8 @@ async function submitServiceRequest(e) {
     );
 
 
+  /* بيانات الطلب */
+
   const data = {
 
     requester_name:
@@ -176,7 +232,9 @@ async function submitServiceRequest(e) {
   };
 
 
-  /* التحقق من البيانات */
+  /* =====================================
+     التحقق من البيانات
+  ===================================== */
 
   if (!data.requester_name) {
 
@@ -184,6 +242,7 @@ async function submitServiceRequest(e) {
       "⚠️ يرجى كتابة الاسم.";
 
     return;
+
   }
 
 
@@ -193,6 +252,7 @@ async function submitServiceRequest(e) {
       "⚠️ يرجى اختيار نوع الخدمة.";
 
     return;
+
   }
 
 
@@ -205,10 +265,13 @@ async function submitServiceRequest(e) {
       "⚠️ يرجى اختيار الخدمة أولاً.";
 
     return;
+
   }
 
 
-  /* بدء الإرسال */
+  /* =====================================
+     بدء الإرسال
+  ===================================== */
 
   btn.disabled = true;
 
@@ -234,6 +297,7 @@ async function submitServiceRequest(e) {
       await fetch(
         `${SUPABASE_URL}/rest/v1/service_requests`,
         {
+
           method: "POST",
 
           headers: {
@@ -246,6 +310,7 @@ async function submitServiceRequest(e) {
 
           signal:
             controller.signal
+
         }
       );
 
@@ -263,10 +328,20 @@ async function submitServiceRequest(e) {
     }
 
 
-    /* نجاح */
+    /* =====================================
+       نجاح إرسال الطلب
+    ===================================== */
 
     msg.textContent =
-      "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
+      "✅ تم إرسال طلبك بنجاح، سيتم فتح واتساب الآن.";
+
+
+    /* فتح واتساب تلقائيًا */
+
+    openRequestWhatsApp(data);
+
+
+    /* تنظيف النموذج */
 
     form.reset();
 
@@ -323,9 +398,7 @@ document.addEventListener(
     if (!form) return;
 
 
-    /*
-       منع تكرار ربط النموذج
-    */
+    /* منع تكرار ربط النموذج */
 
     if (
       form.dataset.initialized ===
