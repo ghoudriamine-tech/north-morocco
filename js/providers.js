@@ -37,6 +37,35 @@ async function submitProviderApplication(e) {
     return;
   }
 
+  /* =====================================
+     تجهيز رسالة واتساب
+  ===================================== */
+
+  const whatsappMessage =
+`🏢 طلب مقدم خدمة جديد
+
+👤 الاسم: ${data.provider_name}
+🧭 نوع الخدمة: ${data.service_type}
+📍 المدينة: ${data.city}
+🏠 العنوان: ${data.address || "غير محدد"}
+📞 الهاتف: ${data.phone || "غير محدد"}
+💬 واتساب: ${data.whatsapp || "غير محدد"}
+
+📝 الوصف:
+${data.description || "لا يوجد"}
+
+🔗 الصورة:
+${data.image_url || "لا يوجد"}`;
+
+  const whatsappURL =
+    "https://wa.me/212616998500?text=" +
+    encodeURIComponent(whatsappMessage);
+
+
+  /* =====================================
+     الإرسال إلى Supabase
+  ===================================== */
+
   btn.disabled = true;
   btn.textContent = "⏳ جاري الإرسال...";
   msg.textContent = "";
@@ -61,46 +90,22 @@ async function submitProviderApplication(e) {
       throw new Error(await response.text());
     }
 
+
     /* =====================================
-       تم الحفظ بنجاح
+       نجاح الحفظ
     ===================================== */
 
     msg.textContent =
-      "✅ تم إرسال طلبك بنجاح. سيتم فتح واتساب...";
+      "✅ تم إرسال الطلب بنجاح. سيتم فتح واتساب...";
 
-
-    /* =====================================
-       رسالة واتساب
-    ===================================== */
-
-    const whatsappMessage =
-`🏢 طلب مقدم خدمة جديد
-
-👤 الاسم: ${data.provider_name}
-🧭 نوع الخدمة: ${data.service_type}
-📍 المدينة: ${data.city}
-🏠 العنوان: ${data.address || "غير محدد"}
-📞 الهاتف: ${data.phone || "غير محدد"}
-💬 واتساب: ${data.whatsapp || "غير محدد"}
-
-📝 الوصف:
-${data.description || "لا يوجد"}
-
-🔗 الصورة:
-${data.image_url || "لا يوجد"}`;
+    form.reset();
 
 
     /* =====================================
        فتح واتساب
-       الرقم: 0616998500
     ===================================== */
 
-    window.location.href =
-      "https://wa.me/212616998500?text=" +
-      encodeURIComponent(whatsappMessage);
-
-
-    form.reset();
+    window.location.assign(whatsappURL);
 
   } catch (error) {
 
