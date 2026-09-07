@@ -52,10 +52,33 @@ async function submitProviderApplication(e) {
     msg.textContent =
       "✅ تم إرسال طلبك بنجاح. ستتم مراجعة معلوماتك قبل اعتمادها.";
 
+    const whatsappMessage =
+`🏢 طلب مقدم خدمة جديد
+
+👤 الاسم: ${data.provider_name}
+🧭 نوع الخدمة: ${data.service_type}
+📍 المدينة: ${data.city}
+🏠 العنوان: ${data.address || "غير محدد"}
+📞 الهاتف: ${data.phone || "غير محدد"}
+💬 واتساب: ${data.whatsapp || "غير محدد"}
+
+📝 الوصف:
+${data.description || "لا يوجد"}
+
+🔗 رابط الصورة:
+${data.image_url || "لا يوجد"}`;
+
     form.reset();
+
+    setTimeout(() => {
+      window.location.href =
+        "https://wa.me/212616998500?text=" +
+        encodeURIComponent(whatsappMessage);
+    }, 500);
 
   } catch (error) {
     console.error("Provider application error:", error);
+
     msg.textContent =
       "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";
 
