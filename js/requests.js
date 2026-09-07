@@ -31,7 +31,6 @@ function selectService(type, id, name) {
     return;
   }
 
-
   /* تعبئة البيانات */
 
   serviceType.value =
@@ -46,9 +45,7 @@ function selectService(type, id, name) {
   }
 
 
-  /* =====================================
-     فتح بطاقة طلب الخدمة
-  ===================================== */
+  /* فتح بطاقة طلب الخدمة */
 
   const actionCards =
     document.querySelectorAll(
@@ -77,9 +74,11 @@ function selectService(type, id, name) {
     /* إغلاق البطاقات الأخرى */
 
     actionCards.forEach(card => {
+
       if (card !== requestCard) {
         card.classList.remove("card-open");
       }
+
     });
 
 
@@ -107,32 +106,26 @@ function selectService(type, id, name) {
 
 
 /* =========================================
-   فتح واتساب تلقائيًا
+   فتح واتساب إلى الإدارة
 ========================================= */
 
-function openRequestWhatsApp(data) {
+function openWhatsAppToAdmin(data) {
 
   const message = `🌊 شمال المغرب
 
 📋 طلب خدمة جديد
 
-👤 الاسم:
-${data.requester_name || "غير محدد"}
+👤 الاسم: ${data.requester_name || "غير محدد"}
 
-📞 الهاتف:
-${data.phone || "غير محدد"}
+📞 الهاتف: ${data.phone || "غير محدد"}
 
-💬 واتساب:
-${data.whatsapp || "غير محدد"}
+💬 واتساب: ${data.whatsapp || "غير محدد"}
 
-🧭 نوع الخدمة:
-${data.service_type || "غير محدد"}
+🧭 نوع الخدمة: ${data.service_type || "غير محدد"}
 
-🆔 رقم الخدمة:
-${data.service_id || "غير محدد"}
+🆔 رقم الخدمة: ${data.service_id || "غير محدد"}
 
-📅 التاريخ:
-${data.request_date || "غير محدد"}
+📅 التاريخ: ${data.request_date || "غير محدد"}
 
 📝 الملاحظات:
 ${data.notes || "لا توجد ملاحظات"}
@@ -141,14 +134,16 @@ ${data.notes || "لا توجد ملاحظات"}
 🌊 شمال المغرب`;
 
 
+  /* الرقم هنا ثابت: رقم الإدارة */
+
   const whatsappURL =
-    `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+    `https://wa.me/212616998500?text=${encodeURIComponent(message)}`;
 
 
-  window.open(
-    whatsappURL,
-    "_blank"
-  );
+  /* فتح واتساب */
+
+  window.location.href =
+    whatsappURL;
 
 }
 
@@ -177,10 +172,13 @@ async function submitServiceRequest(e) {
     );
 
   if (!form || !msg || !btn) {
+
     console.error(
       "❌ نموذج طلب الخدمة غير موجود"
     );
+
     return;
+
   }
 
 
@@ -287,7 +285,9 @@ async function submitServiceRequest(e) {
 
   const timeout =
     setTimeout(() => {
+
       controller.abort();
+
     }, 10000);
 
 
@@ -329,21 +329,33 @@ async function submitServiceRequest(e) {
 
 
     /* =====================================
-       نجاح إرسال الطلب
+       نجاح
     ===================================== */
 
     msg.textContent =
-      "✅ تم إرسال طلبك بنجاح، سيتم فتح واتساب الآن.";
+      "✅ تم إرسال طلبك بنجاح.";
 
 
-    /* فتح واتساب تلقائيًا */
+    /* حفظ نسخة البيانات قبل تنظيف النموذج */
 
-    openRequestWhatsApp(data);
+    const requestData =
+      { ...data };
 
 
     /* تنظيف النموذج */
 
     form.reset();
+
+
+    /* فتح واتساب مع رقم الإدارة */
+
+    setTimeout(() => {
+
+      openWhatsAppToAdmin(
+        requestData
+      );
+
+    }, 500);
 
 
   } catch (error) {
