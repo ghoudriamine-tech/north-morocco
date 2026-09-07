@@ -1,571 +1,334 @@
 /* =========================================
-   🌊 شمال المغرب
-   📋 طلبات الخدمة + واتساب
+🌊 شمال المغرب
+📋 طلبات الخدمة
 ========================================= */
 
-
 /* =========================================
-   رقم واتساب الإدارة
-========================================= */
-
-const ADMIN_WHATSAPP = "212616998500";
-
-
-/* =========================================
-   اختيار الخدمة
+اختيار الخدمة
 ========================================= */
 
 function selectService(type, id, name) {
 
-  const serviceType =
-    document.getElementById("service_type");
+const serviceType =
+document.getElementById("service_type");
 
-  const serviceId =
-    document.getElementById("service_id");
+const serviceId =
+document.getElementById("service_id");
 
-  const notes =
-    document.getElementById("notes");
+const notes =
+document.getElementById("notes");
 
-  if (!serviceType || !serviceId) {
-    console.error("❌ حقول طلب الخدمة غير موجودة");
-    return;
-  }
+if (!serviceType || !serviceId) {
+console.error("❌ حقول طلب الخدمة غير موجودة");
+return;
+}
 
+/* تعبئة البيانات */
 
-  /* تعبئة البيانات */
+serviceType.value =
+String(type || "");
 
-  serviceType.value =
-    String(type || "");
+serviceId.value =
+String(id || "");
 
-  serviceId.value =
-    String(id || "");
+if (notes) {
+notes.value =
+أرغب في طلب خدمة: ${String(name || "")};
+}
 
-  if (notes) {
-    notes.value =
-      `أرغب في طلب خدمة: ${String(name || "")}`;
-  }
+/* =====================================
+فتح بطاقة طلب الخدمة
+===================================== */
 
+const actionCards =
+document.querySelectorAll(
+"#services-actions .action-card"
+);
 
-  /* =====================================
-     فتح بطاقة طلب الخدمة
-  ===================================== */
+let requestCard = null;
 
-  const actionCards =
-    document.querySelectorAll(
-      "#services-actions .action-card"
-    );
+actionCards.forEach(card => {
 
-  let requestCard = null;
+const title =  
+  card.querySelector("h3");  
 
-  actionCards.forEach(card => {
+if (  
+  title &&  
+  title.textContent.includes("طلب خدمة")  
+) {  
+  requestCard = card;  
+}
 
-    const title =
-      card.querySelector("h3");
+});
 
-    if (
-      title &&
-      title.textContent.includes("طلب خدمة")
-    ) {
-      requestCard = card;
-    }
+if (requestCard) {
 
-  });
+/* إغلاق البطاقات الأخرى */  
 
-
-  if (requestCard) {
-
-    /* إغلاق البطاقات الأخرى */
-
-    actionCards.forEach(card => {
-
-      if (card !== requestCard) {
-        card.classList.remove("card-open");
-      }
-
-    });
+actionCards.forEach(card => {  
+  if (card !== requestCard) {  
+    card.classList.remove("card-open");  
+  }  
+});  
 
 
-    /* فتح طلب الخدمة */
+/* فتح طلب الخدمة */  
 
-    requestCard.classList.add(
-      "card-open"
-    );
+requestCard.classList.add(  
+  "card-open"  
+);  
 
 
-    /* التمرير إليه */
+/* التمرير إليه */  
 
-    setTimeout(() => {
+setTimeout(() => {  
 
-      requestCard.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+  requestCard.scrollIntoView({  
+    behavior: "smooth",  
+    block: "start"  
+  });  
 
-    }, 100);
-
-  }
+}, 100);
 
 }
 
-
-/* =========================================
-   فتح واتساب
-========================================= */
-
-function sendRequestToWhatsApp(data) {
-
-  const message = `🌊 شمال المغرب
-
-📋 طلب خدمة جديد
-
-👤 الاسم:
-${data.requester_name || "غير محدد"}
-
-📞 الهاتف:
-${data.phone || "غير محدد"}
-
-💬 واتساب:
-${data.whatsapp || "غير محدد"}
-
-🧭 نوع الخدمة:
-${data.service_type || "غير محدد"}
-
-🆔 رقم الخدمة:
-${data.service_id || "غير محدد"}
-
-📅 التاريخ:
-${data.request_date || "غير محدد"}
-
-📝 الملاحظات:
-${data.notes || "لا توجد ملاحظات"}
-
-━━━━━━━━━━━━
-🌊 شمال المغرب`;
-
-
-  const whatsappURL =
-    `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
-
-
-  window.location.href = whatsappURL;
-
 }
 
-
 /* =========================================
-   إظهار زر واتساب
-========================================= */
-
-function showWhatsAppButton(msg, data) {
-
-  /* حذف الزر القديم */
-
-  const oldButton =
-    document.getElementById(
-      "requestWhatsAppBtn"
-    );
-
-  if (oldButton) {
-    oldButton.remove();
-  }
-
-
-  const message = `🌊 شمال المغرب
-
-📋 طلب خدمة جديد
-
-👤 الاسم: ${data.requester_name || "غير محدد"}
-📞 الهاتف: ${data.phone || "غير محدد"}
-💬 واتساب: ${data.whatsapp || "غير محدد"}
-🧭 نوع الخدمة: ${data.service_type || "غير محدد"}
-🆔 رقم الخدمة: ${data.service_id || "غير محدد"}
-📅 التاريخ: ${data.request_date || "غير محدد"}
-
-📝 الملاحظات:
-${data.notes || "لا توجد ملاحظات"}`;
-
-
-  const whatsappURL =
-    `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
-
-
-  /* إنشاء رابط واتساب */
-
-  const whatsappButton =
-    document.createElement("a");
-
-
-  whatsappButton.id =
-    "requestWhatsAppBtn";
-
-  whatsappButton.href =
-    whatsappURL;
-
-  whatsappButton.textContent =
-    "📲 إرسال تفاصيل الطلب إلى واتساب";
-
-
-  /* فتح الرابط */
-
-  whatsappButton.target =
-    "_blank";
-
-
-  /* تصميمه كزر */
-
-  whatsappButton.style.display =
-    "block";
-
-  whatsappButton.style.width =
-    "100%";
-
-  whatsappButton.style.marginTop =
-    "15px";
-
-  whatsappButton.style.padding =
-    "14px";
-
-  whatsappButton.style.boxSizing =
-    "border-box";
-
-  whatsappButton.style.textAlign =
-    "center";
-
-  whatsappButton.style.textDecoration =
-    "none";
-
-  whatsappButton.style.borderRadius =
-    "10px";
-
-  whatsappButton.style.fontSize =
-    "16px";
-
-  whatsappButton.style.fontWeight =
-    "bold";
-
-  whatsappButton.style.background =
-    "#25D366";
-
-  whatsappButton.style.color =
-    "#ffffff";
-
-
-  /* وضع الزر داخل النموذج */
-
-  const form =
-    document.getElementById(
-      "serviceRequestForm"
-    );
-
-
-  if (form) {
-
-    form.appendChild(
-      whatsappButton
-    );
-
-  } else if (msg.parentElement) {
-
-    msg.parentElement.appendChild(
-      whatsappButton
-    );
-
-  }
-
-}
-
-
-/* =========================================
-   إرسال طلب الخدمة
+إرسال طلب الخدمة
 ========================================= */
 
 async function submitServiceRequest(e) {
 
-  e.preventDefault();
+e.preventDefault();
 
+const form =
+document.getElementById(
+"serviceRequestForm"
+);
 
-  const form =
-    document.getElementById(
-      "serviceRequestForm"
-    );
+const msg =
+document.getElementById(
+"requestMessage"
+);
 
-  const msg =
-    document.getElementById(
-      "requestMessage"
-    );
+const btn =
+document.getElementById(
+"submitRequestBtn"
+);
 
-  const btn =
-    document.getElementById(
-      "submitRequestBtn"
-    );
+if (!form || !msg || !btn) {
+console.error(
+"❌ نموذج طلب الخدمة غير موجود"
+);
+return;
+}
 
+/* قراءة القيم */
 
-  if (!form || !msg || !btn) {
+const value = id => {
 
-    console.error(
-      "❌ نموذج طلب الخدمة غير موجود"
-    );
+const element =  
+  document.getElementById(id);  
 
-    return;
+return element  
+  ? element.value.trim()  
+  : "";
 
-  }
+};
 
+const serviceId =
+Number(
+value("service_id")
+);
 
-  /* =====================================
-     قراءة القيم
-  ===================================== */
+const data = {
 
-  const value = id => {
+requester_name:  
+  value("requester_name"),  
 
-    const element =
-      document.getElementById(id);
+phone:  
+  value("phone") || null,  
 
-    return element
-      ? element.value.trim()
-      : "";
+whatsapp:  
+  value("whatsapp") || null,  
 
-  };
+service_type:  
+  value("service_type"),  
 
+service_id:  
+  serviceId,  
 
-  const serviceId =
-    Number(
-      value("service_id")
-    );
+request_date:  
+  value("request_date") || null,  
 
+notes:  
+  value("notes") || null
 
-  /* بيانات الطلب */
+};
 
-  const data = {
+/* التحقق من البيانات */
 
-    requester_name:
-      value("requester_name"),
+if (!data.requester_name) {
 
-    phone:
-      value("phone") || null,
+msg.textContent =  
+  "⚠️ يرجى كتابة الاسم.";  
 
-    whatsapp:
-      value("whatsapp") || null,
-
-    service_type:
-      value("service_type"),
-
-    service_id:
-      serviceId,
-
-    request_date:
-      value("request_date") || null,
-
-    notes:
-      value("notes") || null
-
-  };
-
-
-  /* =====================================
-     التحقق من البيانات
-  ===================================== */
-
-  if (!data.requester_name) {
-
-    msg.textContent =
-      "⚠️ يرجى كتابة الاسم.";
-
-    return;
-
-  }
-
-
-  if (!data.service_type) {
-
-    msg.textContent =
-      "⚠️ يرجى اختيار نوع الخدمة.";
-
-    return;
-
-  }
-
-
-  if (
-    !Number.isInteger(serviceId) ||
-    serviceId <= 0
-  ) {
-
-    msg.textContent =
-      "⚠️ يرجى اختيار الخدمة أولاً.";
-
-    return;
-
-  }
-
-
-  /* =====================================
-     بدء الإرسال
-  ===================================== */
-
-  btn.disabled = true;
-
-  btn.textContent =
-    "⏳ جاري الإرسال...";
-
-  msg.textContent = "";
-
-
-  /* حذف زر واتساب السابق */
-
-  const oldButton =
-    document.getElementById(
-      "requestWhatsAppBtn"
-    );
-
-  if (oldButton) {
-    oldButton.remove();
-  }
-
-
-  const controller =
-    new AbortController();
-
-
-  const timeout =
-    setTimeout(() => {
-
-      controller.abort();
-
-    }, 10000);
-
-
-  try {
-
-    const response =
-      await fetch(
-        `${SUPABASE_URL}/rest/v1/service_requests`,
-        {
-
-          method: "POST",
-
-          headers: {
-
-            ...supabaseHeaders(),
-
-            Prefer:
-              "return=minimal"
-
-          },
-
-          body:
-            JSON.stringify(data),
-
-          signal:
-            controller.signal
-
-        }
-      );
-
-
-    if (!response.ok) {
-
-      const errorText =
-        await response.text();
-
-      throw new Error(
-        errorText ||
-        `HTTP ${response.status}`
-      );
-
-    }
-
-
-    /* =====================================
-       نجاح إرسال الطلب
-    ===================================== */
-
-    msg.textContent =
-      "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";
-
-
-    /* إظهار زر واتساب */
-
-    showWhatsAppButton(
-      msg,
-      data
-    );
-
-
-    /* تنظيف النموذج */
-
-    form.reset();
-
-
-  } catch (error) {
-
-    console.error(
-      "❌ Service request error:",
-      error
-    );
-
-
-    if (
-      error.name === "AbortError"
-    ) {
-
-      msg.textContent =
-        "❌ انتهت مهلة إرسال الطلب. يرجى المحاولة مرة أخرى.";
-
-    } else {
-
-      msg.textContent =
-        "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";
-
-    }
-
-  } finally {
-
-    clearTimeout(timeout);
-
-    btn.disabled = false;
-
-    btn.textContent =
-      "📩 إرسال";
-
-  }
+return;
 
 }
 
+if (!data.service_type) {
+
+msg.textContent =  
+  "⚠️ يرجى اختيار نوع الخدمة.";  
+
+return;
+
+}
+
+if (
+!Number.isInteger(serviceId) ||
+serviceId <= 0
+) {
+
+msg.textContent =  
+  "⚠️ يرجى اختيار الخدمة أولاً.";  
+
+return;
+
+}
+
+/* بدء الإرسال */
+
+btn.disabled = true;
+
+btn.textContent =
+"⏳ جاري الإرسال...";
+
+msg.textContent = "";
+
+const controller =
+new AbortController();
+
+const timeout =
+setTimeout(() => {
+controller.abort();
+}, 10000);
+
+try {
+
+const response =  
+  await fetch(  
+    `${SUPABASE_URL}/rest/v1/service_requests`,  
+    {  
+      method: "POST",  
+
+      headers: {  
+        ...supabaseHeaders(),  
+        Prefer: "return=minimal"  
+      },  
+
+      body:  
+        JSON.stringify(data),  
+
+      signal:  
+        controller.signal  
+    }  
+  );  
+
+
+if (!response.ok) {  
+
+  const errorText =  
+    await response.text();  
+
+  throw new Error(  
+    errorText ||  
+    `HTTP ${response.status}`  
+  );  
+
+}  
+
+
+/* نجاح */  
+
+msg.textContent =  
+  "✅ تم إرسال طلبك بنجاح، سنتواصل معك قريبًا.";  
+
+form.reset();
+
+} catch (error) {
+
+console.error(  
+  "❌ Service request error:",  
+  error  
+);  
+
+
+if (  
+  error.name === "AbortError"  
+) {  
+
+  msg.textContent =  
+    "❌ انتهت مهلة إرسال الطلب. يرجى المحاولة مرة أخرى.";  
+
+} else {  
+
+  msg.textContent =  
+    "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";  
+
+}
+
+} finally {
+
+clearTimeout(timeout);  
+
+btn.disabled = false;  
+
+btn.textContent =  
+  "📩 إرسال";
+
+}
+
+}
 
 /* =========================================
-   تشغيل نموذج طلب الخدمة
+تشغيل نموذج طلب الخدمة
 ========================================= */
 
 document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+"DOMContentLoaded",
+() => {
 
-    const form =
-      document.getElementById(
-        "serviceRequestForm"
-      );
+const form =  
+  document.getElementById(  
+    "serviceRequestForm"  
+  );  
 
-    if (!form) return;
-
-
-    /* منع تكرار ربط النموذج */
-
-    if (
-      form.dataset.initialized ===
-      "true"
-    ) {
-      return;
-    }
+if (!form) return;  
 
 
-    form.dataset.initialized =
-      "true";
+/*  
+   منع تكرار ربط النموذج  
+*/  
+
+if (  
+  form.dataset.initialized ===  
+  "true"  
+) {  
+  return;  
+}  
 
 
-    form.addEventListener(
-      "submit",
-      submitServiceRequest
-    );
+form.dataset.initialized =  
+  "true";  
 
-  }
+
+form.addEventListener(  
+  "submit",  
+  submitServiceRequest  
+);
+
+}
 );
