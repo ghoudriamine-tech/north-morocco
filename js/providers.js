@@ -1,9 +1,19 @@
+/* =========================================
+   🌊 شمال المغرب
+   🏢 طلبات مقدمي الخدمات
+========================================= */
+
 async function submitProviderApplication(e) {
   e.preventDefault();
 
-  const form = document.getElementById("providerApplicationForm");
-  const msg = document.getElementById("providerMessage");
-  const btn = document.getElementById("submitProviderBtn");
+  const form =
+    document.getElementById("providerApplicationForm");
+
+  const msg =
+    document.getElementById("providerMessage");
+
+  const btn =
+    document.getElementById("submitProviderBtn");
 
   if (!form || !msg || !btn) return;
 
@@ -32,14 +42,17 @@ async function submitProviderApplication(e) {
   msg.textContent = "";
 
   try {
+
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/provider_applications`,
       {
         method: "POST",
+
         headers: {
           ...supabaseHeaders(),
           Prefer: "return=minimal"
         },
+
         body: JSON.stringify(data)
       }
     );
@@ -48,33 +61,89 @@ async function submitProviderApplication(e) {
       throw new Error(await response.text());
     }
 
+    /* =====================================
+       تم الحفظ بنجاح
+    ===================================== */
+
     msg.textContent =
-      "✅ تم إرسال طلبك بنجاح. ستتم مراجعة معلوماتك قبل اعتمادها.";
+      "✅ تم إرسال طلبك بنجاح. سيتم فتح واتساب...";
+
+
+    /* =====================================
+       رسالة واتساب
+    ===================================== */
+
+    const whatsappMessage =
+`🏢 طلب مقدم خدمة جديد
+
+👤 الاسم: ${data.provider_name}
+🧭 نوع الخدمة: ${data.service_type}
+📍 المدينة: ${data.city}
+🏠 العنوان: ${data.address || "غير محدد"}
+📞 الهاتف: ${data.phone || "غير محدد"}
+💬 واتساب: ${data.whatsapp || "غير محدد"}
+
+📝 الوصف:
+${data.description || "لا يوجد"}
+
+🔗 الصورة:
+${data.image_url || "لا يوجد"}`;
+
+
+    /* =====================================
+       فتح واتساب
+       الرقم: 0616998500
+    ===================================== */
+
+    window.location.href =
+      "https://wa.me/212616998500?text=" +
+      encodeURIComponent(whatsappMessage);
+
 
     form.reset();
 
   } catch (error) {
-    console.error("Provider application error:", error);
+
+    console.error(
+      "Provider application error:",
+      error
+    );
 
     msg.textContent =
       "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";
 
   } finally {
+
     btn.disabled = false;
     btn.textContent = "📩 إرسال";
+
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form =
-    document.getElementById("providerApplicationForm");
 
-  if (form && form.dataset.initialized !== "true") {
+/* =========================================
+   تشغيل النموذج
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const form =
+    document.getElementById(
+      "providerApplicationForm"
+    );
+
+  if (
+    form &&
+    form.dataset.initialized !== "true"
+  ) {
+
     form.dataset.initialized = "true";
 
     form.addEventListener(
       "submit",
       submitProviderApplication
     );
+
   }
+
 });
