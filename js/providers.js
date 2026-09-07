@@ -37,8 +37,7 @@ async function submitProviderApplication(e) {
       {
         method: "POST",
         headers: {
-          apikey: SUPABASE_KEY,
-          "Content-Type": "application/json",
+          ...supabaseHeaders(),
           Prefer: "return=minimal"
         },
         body: JSON.stringify(data)
@@ -56,6 +55,7 @@ async function submitProviderApplication(e) {
 
   } catch (error) {
     console.error("Provider application error:", error);
+
     msg.textContent =
       "❌ تعذر إرسال الطلب حاليًا. يرجى المحاولة مرة أخرى.";
 
@@ -66,9 +66,15 @@ async function submitProviderApplication(e) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("providerApplicationForm");
+  const form =
+    document.getElementById("providerApplicationForm");
 
-  if (form) {
-    form.addEventListener("submit", submitProviderApplication);
+  if (form && form.dataset.initialized !== "true") {
+    form.dataset.initialized = "true";
+
+    form.addEventListener(
+      "submit",
+      submitProviderApplication
+    );
   }
 });
