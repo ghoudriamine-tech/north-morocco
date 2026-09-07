@@ -405,50 +405,6 @@ footer p{margin:4px 0;font-size:13px}
   .accommodation-buttons{gap:7px}
   .btn{width:44px;height:44px;min-width:44px}
 }
-/* =========================================
-   📋 نموذج طلب الخدمة
-========================================= */
-
-.service-request-form{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-
-/* مقدمة النموذج */
-
-.service-request-form .form-intro{
-  text-align:center;
-  color:#405c64;
-  font-size:14px;
-  margin-bottom:8px;
-}
-
-
-/* عناوين الخانات */
-
-.service-request-form label{
-  display:block;
-
-  font-size:15px;
-  font-weight:bold;
-
-  color:#006b88;
-
-  margin-top:5px;
-}
-
-
-/* خانات الإدخال */
-
-.service-request-form input,
-.service-request-form textarea{
-  width:100%;
-
-  border:1px solid #b9dfe8;
-
-  border-radius:13px;
 
   padding:13px 14px;
 
@@ -547,66 +503,87 @@ footer p{margin:4px 0;font-size:13px}
 /* عند المرور فوق الزر */
 
 #submitRequestBtn:hover{
-
-  opacity:.94;
-
-  transform:
-    translateY(-1px);
-
-}
-
-
-/* عند الضغط */
-
-#submitRequestBtn:active{
-
-  transform:
-    scale(.98);
-
-}
-
-
-/* عند الإرسال */
-
-#submitRequestBtn:disabled{
-
-  opacity:.7;
-
-  cursor:not-allowed;
-
-}
-
-
-/* رسالة النجاح أو الخطأ */
-
-#requestMessage{
-
-  width:100%;
-
-  text-align:center;
-
-  font-weight:bold;
-
-  line-height:1.7;
-
-  margin-top:5px;
-
-}
-
-
 /* =========================================
-   📱 تحسين الهاتف
+   📋 تصميم نموذج طلب الخدمة
 ========================================= */
 
-@media(max-width:599px){
+#serviceRequestForm{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:12px;
+}
 
-  .service-request-form input,
-  .service-request-form textarea{
+#serviceRequestForm > p:first-child{
+  text-align:center;
+  color:#405c64;
+  font-size:14px;
+  margin-bottom:8px;
+}
 
-    font-size:16px;
+#serviceRequestForm label{
+  display:block;
+  color:#006b88;
+  font-size:15px;
+  font-weight:bold;
+  margin-top:7px;
+}
 
-    padding:13px;
+#serviceRequestForm input:not([type="hidden"]),
+#serviceRequestForm textarea{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid #b9dfe8;
+  border-radius:14px;
+  padding:14px;
+  background:#f8fdff;
+  color:#12343d;
+  font-size:16px;
+  outline:none;
+  box-shadow:0 2px 6px rgba(0,80,110,.05);
+  transition:.2s;
+}
 
-  }
+#serviceRequestForm input:not([type="hidden"]):focus,
+#serviceRequestForm textarea:focus{
+  border-color:#079bc0;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(7,155,192,.12);
+}
 
+#serviceRequestForm input::placeholder,
+#serviceRequestForm textarea::placeholder{
+  color:#8aa3aa;
+}
+
+#serviceRequestForm textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+#serviceRequestForm #submitRequestBtn{
+  width:100%;
+  height:50px;
+  margin-top:12px;
+  border:0;
+  border-radius:14px;
+  background:linear-gradient(135deg,#087da8,#16a8c9);
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#serviceRequestForm #submitRequestBtn:active{
+  transform:scale(.98);
+}
+
+#serviceRequestForm #submitRequestBtn:disabled{
+  opacity:.7;
+}
+
+#serviceRequestForm #requestMessage{
+  text-align:center;
+  margin-top:8px;
+  font-weight:bold;
 }
