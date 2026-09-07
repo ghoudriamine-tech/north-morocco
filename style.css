@@ -15,7 +15,10 @@ img{max-width:100%;display:block}
 a{text-decoration:none}
 button,input,select,textarea{font-family:inherit}
 
-.container{width:min(1100px,94%);margin:auto}
+.container{
+  width:min(1100px,94%);
+  margin:auto
+}
 
 .hero{
   background:linear-gradient(135deg,#006f91,#079bc0 48%,#42c7df);
@@ -32,9 +35,14 @@ button,input,select,textarea{font-family:inherit}
   margin-bottom:8px
 }
 
-.hero-subtitle{font-size:clamp(15px,4vw,20px);opacity:.95}
+.hero-subtitle{
+  font-size:clamp(15px,4vw,20px);
+  opacity:.95
+}
 
-.section{padding:28px 0}
+.section{
+  padding:28px 0
+}
 
 .section h2{
   text-align:center;
@@ -44,7 +52,9 @@ button,input,select,textarea{font-family:inherit}
   font-weight:800
 }
 
-.search-section{padding-top:22px}
+.search-section{
+  padding-top:22px
+}
 
 .search-card,
 .contact-card,
@@ -55,9 +65,14 @@ button,input,select,textarea{font-family:inherit}
   box-shadow:0 5px 18px rgba(0,80,110,.12)
 }
 
-.search-card{padding:20px}
+.search-card{
+  padding:20px
+}
 
-.search-card h2{margin-bottom:15px;font-size:22px}
+.search-card h2{
+  margin-bottom:15px;
+  font-size:22px
+}
 
 #globalSearch{
   width:100%;
@@ -83,7 +98,9 @@ button,input,select,textarea{font-family:inherit}
   font-size:14px
 }
 
-.accommodation-category{margin-bottom:28px}
+.accommodation-category{
+  margin-bottom:28px
+}
 
 .category-title{
   background:linear-gradient(135deg,#087da8,#39b8d8);
@@ -160,8 +177,14 @@ button,input,select,textarea{font-family:inherit}
   transition:transform .15s,opacity .15s
 }
 
-.btn:hover{opacity:.92;transform:translateY(-1px)}
-.btn:active{transform:scale(.96)}
+.btn:hover{
+  opacity:.92;
+  transform:translateY(-1px)
+}
+
+.btn:active{
+  transform:scale(.96)
+}
 
 .whatsapp-accommodation,
 .whatsapp{
@@ -180,7 +203,8 @@ button,input,select,textarea{font-family:inherit}
   margin-top:10px
 }
 
-.loading,.empty{
+.loading,
+.empty{
   text-align:center;
   color:#617b82;
   background:rgba(255,255,255,.75);
@@ -189,7 +213,10 @@ button,input,select,textarea{font-family:inherit}
   font-size:14px
 }
 
-/* التقييمات */
+
+/* =========================================
+   ⭐ التقييمات
+========================================= */
 
 .reviews-section,
 .card-toggle-section{
@@ -198,8 +225,13 @@ button,input,select,textarea{font-family:inherit}
   border-top:1px solid #d8eef3
 }
 
-.card-toggle-section{display:none}
-.card-toggle-section.show{display:block}
+.card-toggle-section{
+  display:none
+}
+
+.card-toggle-section.show{
+  display:block
+}
 
 .reviews-summary{
   display:flex;
@@ -215,7 +247,10 @@ button,input,select,textarea{font-family:inherit}
   color:#006b88
 }
 
-.reviews-average{color:#55727b;font-size:13px}
+.reviews-average{
+  color:#55727b;
+  font-size:13px
+}
 
 .review-stars{
   color:#f4a400;
@@ -231,7 +266,10 @@ button,input,select,textarea{font-family:inherit}
   font-size:13px
 }
 
-.review-comment-display{color:#526970;margin-top:4px}
+.review-comment-display{
+  color:#526970;
+  margin-top:4px
+}
 
 .review-toggle-btn,
 .review-submit-btn{
@@ -297,7 +335,9 @@ button,input,select,textarea{font-family:inherit}
   cursor:pointer
 }
 
-.provider-details{margin-top:0}
+.provider-details{
+  margin-top:0
+}
 
 .provider-details h4{
   margin-bottom:7px;
@@ -310,9 +350,14 @@ button,input,select,textarea{font-family:inherit}
   margin:4px 0
 }
 
-/* بطاقات خدمات الموقع */
 
-.action-card{cursor:pointer}
+/* =========================================
+   📋 بطاقات خدمات الموقع
+========================================= */
+
+.action-card{
+  cursor:pointer
+}
 
 .action-card-content{
   display:none;
@@ -321,20 +366,131 @@ button,input,select,textarea{font-family:inherit}
   border-top:1px solid #d8eef3
 }
 
-.action-card.card-open .action-card-content{display:block}
+.action-card.card-open .action-card-content{
+  display:block
+}
 
-/* نماذج التواصل */
 
-.contact-card{padding:20px}
+/* =========================================
+   📋 نموذج طلب الخدمة
+========================================= */
+
+#serviceRequestForm{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:12px;
+}
+
+#serviceRequestForm > p:first-child{
+  text-align:center;
+  color:#405c64;
+  font-size:14px;
+  margin-bottom:8px;
+  background:#f4fbfd;
+  padding:10px;
+  border-radius:12px;
+}
+
+#serviceRequestForm label{
+  display:block;
+  color:#006b88;
+  font-size:15px;
+  font-weight:bold;
+  margin-top:7px;
+  margin-bottom:2px;
+}
+
+#serviceRequestForm input:not([type="hidden"]),
+#serviceRequestForm textarea{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid #b9dfe8;
+  border-radius:14px;
+  padding:14px;
+  background:#f8fdff;
+  color:#12343d;
+  font-size:16px;
+  outline:none;
+  box-shadow:0 2px 6px rgba(0,80,110,.05);
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+
+#serviceRequestForm input:not([type="hidden"]):focus,
+#serviceRequestForm textarea:focus{
+  border-color:#079bc0;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(7,155,192,.12);
+}
+
+#serviceRequestForm input::placeholder,
+#serviceRequestForm textarea::placeholder{
+  color:#8aa3aa;
+}
+
+#serviceRequestForm textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+#serviceRequestForm #submitRequestBtn{
+  width:100%;
+  min-height:52px;
+  height:52px;
+  margin-top:12px;
+  border:0;
+  border-radius:14px;
+  background:linear-gradient(135deg,#087da8,#16a8c9);
+  color:#fff;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,100,130,.18);
+  transition:transform .15s,opacity .15s;
+}
+
+#serviceRequestForm #submitRequestBtn:hover{
+  opacity:.93;
+}
+
+#serviceRequestForm #submitRequestBtn:active{
+  transform:scale(.98);
+}
+
+#serviceRequestForm #submitRequestBtn:disabled{
+  opacity:.7;
+  cursor:wait;
+}
+
+#serviceRequestForm #requestMessage{
+  text-align:center;
+  margin-top:8px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+
+/* =========================================
+   📞 نماذج التواصل
+========================================= */
+
+.contact-card{
+  padding:20px
+}
 
 .contact-card p{
   margin-bottom:10px;
   color:#405c64
 }
 
-.contact-card textarea{resize:vertical}
+.contact-card textarea{
+  resize:vertical
+}
 
-/* القائمة السفلية */
+
+/* =========================================
+   📱 القائمة السفلية
+========================================= */
 
 .bottom-nav{
   position:fixed;
@@ -358,7 +514,9 @@ button,input,select,textarea{font-family:inherit}
   border-radius:10px
 }
 
-.bottom-nav a:hover{background:rgba(255,255,255,.12)}
+.bottom-nav a:hover{
+  background:rgba(255,255,255,.12)
+}
 
 .bottom-nav span{
   display:block;
@@ -366,7 +524,10 @@ button,input,select,textarea{font-family:inherit}
   margin-top:3px
 }
 
-/* الفوتر */
+
+/* =========================================
+   الفوتر
+========================================= */
 
 footer{
   background:linear-gradient(135deg,#00627f,#078eaf);
@@ -376,7 +537,15 @@ footer{
   margin-top:25px
 }
 
-footer p{margin:4px 0;font-size:13px}
+footer p{
+  margin:4px 0;
+  font-size:13px
+}
+
+
+/* =========================================
+   اللمس على الهاتف
+========================================= */
 
 .btn,
 .bottom-nav a,
@@ -384,206 +553,95 @@ footer p{margin:4px 0;font-size:13px}
   -webkit-tap-highlight-color:transparent
 }
 
-.accommodation-card{height:fit-content}
-
-@media(min-width:600px){
-  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .accommodation-image{height:210px}
-}
-
-@media(min-width:900px){
-  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .section{padding:38px 0}
-  .accommodation-card{padding:17px}
-}
-
-@media(max-width:599px){
-  .container{width:94%}
-  .section{padding:22px 0}
-  .accommodation-card{border-radius:18px}
-  .accommodation-image{height:185px}
-  .accommodation-buttons{gap:7px}
-  .btn{width:44px;height:44px;min-width:44px}
-}
-
-  padding:13px 14px;
-
-  background:#f8fdff;
-
-  color:#12343d;
-
-  font-size:16px;
-
-  outline:none;
-
-  transition:
-    border-color .2s,
-    box-shadow .2s,
-    background .2s;
+.accommodation-card{
+  height:fit-content
 }
 
 
-/* عند الضغط على الخانة */
-
-.service-request-form input:focus,
-.service-request-form textarea:focus{
-
-  border-color:#079bc0;
-
-  background:#ffffff;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(7,155,192,.12);
-
-}
-
-
-/* النص داخل الخانات */
-
-.service-request-form input::placeholder,
-.service-request-form textarea::placeholder{
-
-  color:#8aa3aa;
-
-}
-
-
-/* مربع الملاحظات */
-
-.service-request-form textarea{
-
-  min-height:110px;
-
-  resize:vertical;
-
-}
-
-
-/* زر إرسال الطلب */
-
-#submitRequestBtn{
-
-  width:100%;
-
-  min-height:50px;
-
-  margin-top:12px;
-
-  padding:12px 18px;
-
-  border:none;
-
-  border-radius:14px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #087da8,
-      #16a8c9
-    );
-
-  color:#ffffff;
-
-  font-size:16px;
-
-  font-weight:bold;
-
-  cursor:pointer;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-}
-
-
-/* عند المرور فوق الزر */
-
-#submitRequestBtn:hover{
 /* =========================================
-   📋 تصميم نموذج طلب الخدمة
+   الشاشات المتوسطة
 ========================================= */
 
-#serviceRequestForm{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-top:12px;
+@media(min-width:600px){
+
+  .cards{
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+  .accommodation-image{
+    height:210px
+  }
+
 }
 
-#serviceRequestForm > p:first-child{
-  text-align:center;
-  color:#405c64;
-  font-size:14px;
-  margin-bottom:8px;
+
+/* =========================================
+   الشاشات الكبيرة
+========================================= */
+
+@media(min-width:900px){
+
+  .cards{
+    grid-template-columns:repeat(3,minmax(0,1fr))
+  }
+
+  .section{
+    padding:38px 0
+  }
+
+  .accommodation-card{
+    padding:17px
+  }
+
 }
 
-#serviceRequestForm label{
-  display:block;
-  color:#006b88;
-  font-size:15px;
-  font-weight:bold;
-  margin-top:7px;
-}
 
-#serviceRequestForm input:not([type="hidden"]),
-#serviceRequestForm textarea{
-  width:100%;
-  box-sizing:border-box;
-  border:1px solid #b9dfe8;
-  border-radius:14px;
-  padding:14px;
-  background:#f8fdff;
-  color:#12343d;
-  font-size:16px;
-  outline:none;
-  box-shadow:0 2px 6px rgba(0,80,110,.05);
-  transition:.2s;
-}
+/* =========================================
+   الهاتف
+========================================= */
 
-#serviceRequestForm input:not([type="hidden"]):focus,
-#serviceRequestForm textarea:focus{
-  border-color:#079bc0;
-  background:#fff;
-  box-shadow:0 0 0 3px rgba(7,155,192,.12);
-}
+@media(max-width:599px){
 
-#serviceRequestForm input::placeholder,
-#serviceRequestForm textarea::placeholder{
-  color:#8aa3aa;
-}
+  .container{
+    width:94%
+  }
 
-#serviceRequestForm textarea{
-  min-height:110px;
-  resize:vertical;
-}
+  .section{
+    padding:22px 0
+  }
 
-#serviceRequestForm #submitRequestBtn{
-  width:100%;
-  height:50px;
-  margin-top:12px;
-  border:0;
-  border-radius:14px;
-  background:linear-gradient(135deg,#087da8,#16a8c9);
-  color:#fff;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-}
+  .accommodation-card{
+    border-radius:18px
+  }
 
-#serviceRequestForm #submitRequestBtn:active{
-  transform:scale(.98);
-}
+  .accommodation-image{
+    height:185px
+  }
 
-#serviceRequestForm #submitRequestBtn:disabled{
-  opacity:.7;
-}
+  .accommodation-buttons{
+    gap:7px
+  }
 
-#serviceRequestForm #requestMessage{
-  text-align:center;
-  margin-top:8px;
-  font-weight:bold;
-}
+  .btn{
+    width:44px;
+    height:44px;
+    min-width:44px
+  }
+
+  #serviceRequestForm input:not([type="hidden"]),
+  #serviceRequestForm textarea{
+    font-size:16px;
+    padding:13px;
+  }
+
+  #serviceRequestForm label{
+    font-size:15px;
+  }
+
+  #serviceRequestForm #submitRequestBtn{
+    min-height:52px;
+    height:52px;
+    font-size:16px;
+  }
+
+    }
