@@ -389,6 +389,72 @@ button,input,select,textarea{font-family:inherit}
 }
 
 
+/* نموذج مقدم الخدمة */
+
+#providerApplicationForm{
+  display:flex;
+  flex-direction:column;
+  gap:6px
+}
+
+#providerApplicationForm label{
+  display:block;
+  margin:4px 0 3px;
+  color:#006b88;
+  font-size:15px;
+  font-weight:bold
+}
+
+#providerApplicationForm input,
+#providerApplicationForm select,
+#providerApplicationForm textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #b9dfe8;
+  border-radius:12px;
+  background:#f8fdff;
+  color:#12343d;
+  font-size:16px;
+  box-sizing:border-box
+}
+
+#providerApplicationForm input,
+#providerApplicationForm select{
+  height:48px
+}
+
+#providerApplicationForm textarea{
+  min-height:110px;
+  resize:vertical
+}
+
+#providerApplicationForm input:focus,
+#providerApplicationForm select:focus,
+#providerApplicationForm textarea:focus{
+  border-color:#079bc0;
+  box-shadow:0 0 0 3px rgba(7,155,192,.1);
+  outline:none
+}
+
+#providerApplicationForm #submitProviderBtn{
+  width:100%;
+  height:50px;
+  margin-top:8px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,#087da8,#16a8c9);
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer
+}
+
+#providerApplicationForm #providerMessage{
+  text-align:center;
+  margin-top:8px
+}
+
+
 /* نماذج التواصل */
 
 .contact-card{padding:20px}
