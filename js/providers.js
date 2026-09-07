@@ -19,6 +19,7 @@ async function submitProviderApplication(e) {
     phone: value("provider_phone") || null,
     whatsapp: value("provider_whatsapp") || null,
     image_url: value("provider_image_url") || null,
+    map_url: value("provider_map_url") || null,
     status: "pending"
   };
 
@@ -37,8 +38,7 @@ async function submitProviderApplication(e) {
       {
         method: "POST",
         headers: {
-          apikey: SUPABASE_KEY,
-          "Content-Type": "application/json",
+          ...supabaseHeaders(),
           Prefer: "return=minimal"
         },
         body: JSON.stringify(data)
@@ -48,9 +48,6 @@ async function submitProviderApplication(e) {
     if (!response.ok) {
       throw new Error(await response.text());
     }
-
-    msg.textContent =
-      "✅ تم إرسال طلبك بنجاح. ستتم مراجعة معلوماتك قبل اعتمادها.";
 
     const whatsappMessage =
 `🏢 طلب مقدم خدمة جديد
@@ -65,8 +62,14 @@ async function submitProviderApplication(e) {
 📝 الوصف:
 ${data.description || "لا يوجد"}
 
-🔗 رابط الصورة:
-${data.image_url || "لا يوجد"}`;
+🔗 الصورة:
+${data.image_url || "لا يوجد"}
+
+📍 الموقع:
+${data.map_url || "لا يوجد"}`;
+
+    msg.textContent =
+      "✅ تم إرسال الطلب بنجاح. سيتم فتح واتساب...";
 
     form.reset();
 
@@ -89,9 +92,15 @@ ${data.image_url || "لا يوجد"}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("providerApplicationForm");
+  const form =
+    document.getElementById("providerApplicationForm");
 
-  if (form) {
-    form.addEventListener("submit", submitProviderApplication);
+  if (form && form.dataset.initialized !== "true") {
+    form.dataset.initialized = "true";
+
+    form.addEventListener(
+      "submit",
+      submitProviderApplication
+    );
   }
 });
