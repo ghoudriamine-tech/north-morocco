@@ -1,4 +1,4 @@
- /* =========================================
+/* =========================================
    🌊 شمال المغرب
    المواصلات
 ========================================= */
@@ -145,6 +145,7 @@ function displayTransportList(
 
 function transportCard(item) {
   const id = item.id;
+
   const name =
     item.name ||
     item.title ||
@@ -162,20 +163,69 @@ function transportCard(item) {
       "212" + whatsapp.substring(1);
   }
 
+
+  /* =========================================
+     صور Oussaid Elyounssy Car
+  ========================================= */
+
+  const images = [];
+
+  if (Number(id) === 6) {
+    images.push(
+      "https://rbmttbxsezttysenbcwn.supabase.co/storage/v1/object/public/transport-images/IMG-20260910-WA0010.jpg",
+      "https://rbmttbxsezttysenbcwn.supabase.co/storage/v1/object/public/transport-images/IMG-20260910-WA0009.jpg",
+      "https://rbmttbxsezttysenbcwn.supabase.co/storage/v1/object/public/transport-images/IMG-20260910-WA0002.jpg",
+      "https://rbmttbxsezttysenbcwn.supabase.co/storage/v1/object/public/transport-images/IMG-20260910-WA0011.jpg"
+    );
+  } else if (item.image_url) {
+    images.push(item.image_url);
+  }
+
+
+  /* =========================================
+     معرض الصور
+  ========================================= */
+
+  const imagesHTML = images.length
+    ? `
+      <div
+        class="transport-images"
+        style="
+          display:flex;
+          overflow-x:auto;
+          gap:10px;
+          scroll-snap-type:x mandatory;
+          -webkit-overflow-scrolling:touch;
+          margin-bottom:12px;
+        "
+      >
+
+        ${images.map((image, index) => `
+          <img
+            src="${escapeHTML(image)}"
+            alt="${escapeHTML(name)} - صورة ${index + 1}"
+            loading="lazy"
+            style="
+              width:100%;
+              min-width:100%;
+              height:220px;
+              object-fit:cover;
+              border-radius:12px;
+              scroll-snap-align:start;
+              display:block;
+            "
+          >
+        `).join("")}
+
+      </div>
+    `
+    : "";
+
+
   return `
     <div class="accommodation-card service-card">
 
-      ${
-        item.image_url
-          ? `
-            <img
-              src="${escapeHTML(item.image_url)}"
-              alt="${escapeHTML(name)}"
-              class="accommodation-image"
-              loading="lazy">
-          `
-          : ""
-      }
+      ${imagesHTML}
 
       <h3>${escapeHTML(name)}</h3>
 
@@ -265,4 +315,4 @@ function transportCard(item) {
 
     </div>
   `;
-    }
+                                          }
