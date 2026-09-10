@@ -14,7 +14,6 @@ async function loadTransportServices() {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
 
-    // تحميل خدمات المواصلات
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/transport_services?select=*`,
       {
@@ -33,7 +32,7 @@ async function loadTransportServices() {
 
     const data = await response.json();
 
-    // تحميل الصور من transport_images
+    /* تحميل الصور */
     const imagesResponse = await fetch(
       `${SUPABASE_URL}/rest/v1/transport_images?select=transport_id,image_url&order=id.asc`,
       {
@@ -50,7 +49,6 @@ async function loadTransportServices() {
 
     const imagesData = await imagesResponse.json();
 
-    // تجميع الصور حسب خدمة المواصلات
     const imagesByTransport = {};
 
     (Array.isArray(imagesData) ? imagesData : [])
@@ -68,7 +66,6 @@ async function loadTransportServices() {
         }
       });
 
-    // إضافة الصور لكل خدمة
     const services = (
       Array.isArray(data) ? data : []
     ).map(item => ({
@@ -209,13 +206,10 @@ function transportCard(item) {
       "212" + whatsapp.substring(1);
   }
 
-  // الصور من جدول transport_images
   let images = Array.isArray(item.images)
     ? item.images.filter(Boolean)
     : [];
 
-  // إذا لم توجد صور في transport_images
-  // نستخدم image_url القديمة كصورة احتياطية
   if (!images.length && item.image_url) {
     images = [item.image_url];
   }
@@ -267,14 +261,6 @@ function transportCard(item) {
               }
 
             </div>
-
-            <script>
-              window.transportImages =
-                window.transportImages || {};
-
-              window.transportImages["${imageId}"] =
-                ${JSON.stringify(images)};
-            </script>
           `
           : ""
       }
@@ -290,6 +276,14 @@ function transportCard(item) {
       ${
         item.description
           ? `<p>${escapeHTML(item.description)}</p>`
+          : ""
+      }
+
+      ${
+        item.price !== null &&
+        item.price !== undefined &&
+        String(item.price).trim() !== ""
+          ? `<p>💰 ${escapeHTML(String(item.price))} درهم</p>`
           : ""
       }
 
@@ -374,15 +368,18 @@ function transportCard(item) {
    تبديل صور المواصلات
 ========================================= */
 
+window.transportImageIndexes =
+  window.transportImageIndexes || {};
+
+
+window.transportImages =
+  window.transportImages || {};
+
+
 function changeTransportImage(
   imageId,
   direction
 ) {
-  const images =
-    window.transportImages?.[imageId];
-
-  if (!images || !images.length) return;
-
   const slider =
     document.getElementById(imageId);
 
@@ -400,30 +397,79 @@ function changeTransportImage(
 
   if (!image) return;
 
-  let currentIndex =
-    Number(
-      slider.dataset.imageIndex || 0
-    );
+  /*
+     نقرأ الصور من العنصر نفسه
+     الذي تم إنشاؤه بواسطة البطاقة
+  */
+  const images =
+    window.transportImages[imageId];
 
-  currentIndex += direction;
+  if (!images || !images.length) return;
 
-  if (currentIndex < 0) {
-    currentIndex =
-      images.length - 1;
+  let current =
+    window.transportImageIndexes[imageId] || 0;
+
+  current += direction;
+
+  if (current < 0) {
+    current = images.length - 1;
   }
 
-  if (currentIndex >= images.length) {
-    currentIndex = 0;
+  if (current >= images.length) {
+    current = 0;
   }
 
-  slider.dataset.imageIndex =
-    currentIndex;
+  window.transportImageIndexes[imageId] =
+    current;
 
   image.src =
-    images[currentIndex];
+    images[current];
 
   if (counter) {
     counter.textContent =
-      `${currentIndex + 1} / ${images.length}`;
+      `${current + 1} / ${images.length}`;
   }
 }
+
+
+/* =========================================
+   حفظ صور كل بطاقة بعد إنشائها
+========================================= */
+
+const originalTransportCard =
+  transportCard;
+
+
+/*
+   إعادة إنشاء الصور بطريقة آمنة
+*/
+function prepareTransportImages(data) {
+  data.forEach(item => {
+    const images =
+      Array.isArray(item.images)
+        ? item.images.filter(Boolean)
+        : [];
+
+    if (!images.length && item.image_url) {
+      images.push(item.image_url);
+    }
+
+    window.transportImages[
+      `transport-images-${item.id}`
+    ] = images;
+  });
+}
+
+
+/*
+   تعديل displayTransportServices
+   لحفظ الصور قبل إنشاء البطاقات
+*/
+const originalDisplayTransportServices =
+  displayTransportServices;
+
+displayTransportServices = function(data) {
+  prepareTransportImages(data);
+
+  originalDisplayTransportServices(data);
+};
