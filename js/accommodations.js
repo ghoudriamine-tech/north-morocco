@@ -13,23 +13,96 @@ async function loadAccommodations() {
 
   try {
 
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
-      {
-        method: "GET",
-        headers: supabaseHeaders()
-      }
-    );
+    const [accommodationsResponse, imagesResponse] =
+      await Promise.all([
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+        fetch(
+          `${SUPABASE_URL}/rest/v1/accommodations?select=*`,
+          {
+            method: "GET",
+            headers: supabaseHeaders()
+          }
+        ),
+
+        fetch(
+          `${SUPABASE_URL}/rest/v1/accommodation_images?select=*`,
+          {
+            method: "GET",
+            headers: supabaseHeaders()
+          }
+        )
+
+      ]);
+
+    if (!accommodationsResponse.ok) {
+      throw new Error(
+        `HTTP ${accommodationsResponse.status}`
+      );
     }
 
-    const data = await response.json();
+    if (!imagesResponse.ok) {
+      throw new Error(
+        `HTTP images ${imagesResponse.status}`
+      );
+    }
+
+    const data =
+      await accommodationsResponse.json();
+
+    const images =
+      await imagesResponse.json();
+
+    const accommodationData =
+      Array.isArray(data) ? data : [];
+
+    const imageData =
+      Array.isArray(images) ? images : [];
+
+
+    /* =========================================
+       ربط الصور بكل إقامة
+    ========================================= */
+
+    accommodationData.forEach(item => {
+
+      const id =
+        String(item.id);
+
+      const multipleImages =
+        imageData
+          .filter(image =>
+            String(image.accommodation_id) === id
+          )
+          .map(image =>
+            String(image.image_url || "").trim()
+          )
+          .filter(Boolean);
+
+      /*
+         إذا لم توجد صور في الجدول الجديد،
+         نستعمل image_url القديمة.
+      */
+
+      if (item.image_url) {
+        const oldImage =
+          String(item.image_url).trim();
+
+        if (
+          oldImage &&
+          !multipleImages.includes(oldImage)
+        ) {
+          multipleImages.unshift(oldImage);
+        }
+      }
+
+      item.images = multipleImages;
+    });
+
 
     displayAccommodations(
-      Array.isArray(data) ? data : []
+      accommodationData
     );
+
 
     // تشغيل تحميل التقييمات بعد ظهور البطاقات
     if (typeof initReviews === "function") {
@@ -49,8 +122,10 @@ async function loadAccommodations() {
         document.getElementById(id);
 
       if (box) {
+
         box.innerHTML =
           '<p class="empty">تعذر تحميل البيانات حالياً.</p>';
+
       }
 
     });
@@ -91,7 +166,12 @@ function displayAccommodations(data) {
    فلترة النوع
 ========================================= */
 
-function displayList(id, data, types, emptyMessage) {
+function displayList(
+  id,
+  data,
+  types,
+  emptyMessage
+) {
 
   const box =
     document.getElementById(id);
@@ -153,25 +233,111 @@ function accommodationCard(item) {
     item.price ??
     "";
 
+
+  /* =========================================
+     الصور
+  ========================================= */
+
+  let images =
+    Array.isArray(item.images)
+      ? item.images
+      : [];
+
+  /*
+     إذا لم توجد صور متعددة،
+     نستعمل image_url القديمة.
+  */
+
+  if (
+    !images.length &&
+    item.image_url
+  ) {
+    images = [
+      String(item.image_url)
+    ];
+  }
+
+
+  /*
+     معرف خاص للصور حتى لا تختلط
+     صور الإقامات مع بعضها
+  */
+
+  const galleryId =
+    `accommodation-gallery-${id}`;
+
+
+  let imageHTML = "";
+
+  if (images.length) {
+
+    imageHTML = `
+      <div
+        class="accommodation-gallery"
+        id="${galleryId}"
+        data-current="0"
+      >
+
+        <div class="accommodation-gallery-image">
+
+          <img
+            src="${escapeHTML(images[0])}"
+            alt="${escapeHTML(name)}"
+            class="accommodation-image"
+            loading="lazy"
+          >
+
+        </div>
+
+
+        ${
+          images.length > 1
+            ? `
+              <div class="accommodation-gallery-controls">
+
+                <button
+                  type="button"
+                  class="gallery-arrow"
+                  onclick="changeAccommodationImage('${escapeJS(galleryId)}', -1)"
+                  aria-label="الصورة السابقة"
+                >
+                  ❮
+                </button>
+
+                <span class="gallery-counter">
+                  1 / ${images.length}
+                </span>
+
+                <button
+                  type="button"
+                  class="gallery-arrow"
+                  onclick="changeAccommodationImage('${escapeJS(galleryId)}', 1)"
+                  aria-label="الصورة التالية"
+                >
+                  ❯
+                </button>
+
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+    `;
+
+  }
+
+
   return `
     <div class="accommodation-card">
 
-      ${
-        item.image_url
-          ? `
-            <img
-              src="${escapeHTML(item.image_url)}"
-              alt="${escapeHTML(name)}"
-              class="accommodation-image"
-              loading="lazy"
-            >
-          `
-          : ""
-      }
+      ${imageHTML}
+
 
       <h3>
         ${escapeHTML(name)}
       </h3>
+
 
       ${
         item.city
@@ -179,17 +345,20 @@ function accommodationCard(item) {
           : ""
       }
 
+
       ${
         item.address
           ? `<p>📌 ${escapeHTML(item.address)}</p>`
           : ""
       }
 
+
       ${
         item.description
           ? `<p>${escapeHTML(item.description)}</p>`
           : ""
       }
+
 
       ${
         price !== ""
@@ -201,6 +370,7 @@ function accommodationCard(item) {
       <!-- أزرار الإقامة -->
 
       <div class="accommodation-buttons">
+
 
         ${
           phone
@@ -274,4 +444,137 @@ function accommodationCard(item) {
 
     </div>
   `;
-     }
+}
+
+
+/* =========================================
+   تغيير صورة الإقامة
+========================================= */
+
+function changeAccommodationImage(
+  galleryId,
+  direction
+) {
+
+  const gallery =
+    document.getElementById(galleryId);
+
+  if (!gallery) return;
+
+
+  const images =
+    window.accommodationGalleryImages?.[galleryId];
+
+  if (!images || !images.length) {
+    return;
+  }
+
+
+  let current =
+    parseInt(
+      gallery.dataset.current || "0",
+      10
+    );
+
+
+  current += direction;
+
+
+  if (current < 0) {
+    current = images.length - 1;
+  }
+
+
+  if (current >= images.length) {
+    current = 0;
+  }
+
+
+  gallery.dataset.current =
+    String(current);
+
+
+  const img =
+    gallery.querySelector(
+      ".accommodation-image"
+    );
+
+  if (img) {
+
+    img.src =
+      images[current];
+
+  }
+
+
+  const counter =
+    gallery.querySelector(
+      ".gallery-counter"
+    );
+
+  if (counter) {
+
+    counter.textContent =
+      `${current + 1} / ${images.length}`;
+
+  }
+}
+
+
+/* =========================================
+   تجهيز صور الإقامات
+========================================= */
+
+window.accommodationGalleryImages = {};
+
+
+/*
+   نعيد تجهيز الصور بعد إنشاء البطاقات
+*/
+
+const originalDisplayList =
+  displayList;
+
+displayList =
+  function(
+    id,
+    data,
+    types,
+    emptyMessage
+  ) {
+
+    originalDisplayList(
+      id,
+      data,
+      types,
+      emptyMessage
+    );
+
+
+    data.forEach(item => {
+
+      const itemId =
+        String(item.id || "");
+
+      const images =
+        Array.isArray(item.images)
+          ? item.images
+          : [];
+
+
+      if (!images.length) {
+        return;
+      }
+
+
+      const galleryId =
+        `accommodation-gallery-${itemId}`;
+
+
+      window.accommodationGalleryImages[
+        galleryId
+      ] = images;
+
+    });
+
+  };
