@@ -11,7 +11,7 @@ async function loadActivities() {
     const timeout = setTimeout(() => controller.abort(), 10000);
 
     const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/activities?select=*`,
+      `${SUPABASE_URL}/rest/v1/activities?select=*,activity_images(*)`,
       {
         headers: supabaseHeaders(),
         signal: controller.signal
@@ -27,7 +27,22 @@ async function loadActivities() {
     }
 
     const data = await response.json();
-    displayActivities(Array.isArray(data) ? data : []);
+
+    const activities = Array.isArray(data) ? data : [];
+
+    activities.forEach(item => {
+      item.images = Array.isArray(item.activity_images)
+        ? item.activity_images
+            .map(x => x.image_url)
+            .filter(Boolean)
+        : [];
+
+      if (!item.images.length && item.image_url) {
+        item.images = [item.image_url];
+      }
+    });
+
+    displayActivities(activities);
 
   } catch (error) {
     console.error("Activities error:", error);
@@ -51,13 +66,19 @@ async function loadActivities() {
 function displayActivities(data) {
   displayActivityList(
     "tripsList",
-    data.filter(x => isActivityType(x, "trip")),
+    data.filter(x =>
+      isActivityType(x, "trip") ||
+      isActivityType(x, "الرحلات")
+    ),
     "لا توجد رحلات حالياً."
   );
 
   displayActivityList(
     "guidesList",
-    data.filter(x => isActivityType(x, "tour_guide")),
+    data.filter(x =>
+      isActivityType(x, "tour_guide") ||
+      isActivityType(x, "المرشدون السياحيون")
+    ),
     "لا يوجد مرشدون سياحيون حالياً."
   );
 }
@@ -106,6 +127,18 @@ function activityCard(item) {
       "212" + whatsapp.substring(1);
   }
 
+  const images = Array.isArray(item.images)
+    ? item.images
+    : [];
+
+  const firstImage = images[0] || "";
+
+  if (!window.activityGalleryImages) {
+    window.activityGalleryImages = {};
+  }
+
+  window.activityGalleryImages[id] = images;
+
   return `
     <div
       class="accommodation-card activity-card"
@@ -113,13 +146,52 @@ function activityCard(item) {
     >
 
       ${
-        item.image_url
+        firstImage
           ? `
-            <img
-              src="${escapeHTML(item.image_url)}"
-              alt="${escapeHTML(name)}"
-              class="accommodation-image"
-              loading="lazy">
+            <div class="accommodation-image-gallery">
+
+              <img
+                id="activity-image-${escapeJS(id)}"
+                src="${escapeHTML(firstImage)}"
+                alt="${escapeHTML(name)}"
+                class="accommodation-image"
+                loading="lazy">
+
+              ${
+                images.length > 1
+                  ? `
+                    <div class="gallery-controls">
+
+                      <button
+                        type="button"
+                        onclick="
+                          event.stopPropagation();
+                          changeActivityImage('${escapeJS(id)}', -1);
+                        "
+                        class="gallery-arrow">
+                        ◀
+                      </button>
+
+                      <span id="activity-image-counter-${escapeJS(id)}">
+                        1 / ${images.length}
+                      </span>
+
+                      <button
+                        type="button"
+                        onclick="
+                          event.stopPropagation();
+                          changeActivityImage('${escapeJS(id)}', 1);
+                        "
+                        class="gallery-arrow">
+                        ▶
+                      </button>
+
+                    </div>
+                  `
+                  : ""
+              }
+
+            </div>
           `
           : ""
       }
@@ -236,6 +308,47 @@ function activityCard(item) {
 }
 
 
+function changeActivityImage(id, direction) {
+  const images =
+    window.activityGalleryImages?.[id] || [];
+
+  if (!images.length) return;
+
+  const image =
+    document.getElementById(
+      `activity-image-${id}`
+    );
+
+  const counter =
+    document.getElementById(
+      `activity-image-counter-${id}`
+    );
+
+  if (!image) return;
+
+  let current =
+    Number(image.dataset.index || 0);
+
+  current += direction;
+
+  if (current < 0) {
+    current = images.length - 1;
+  }
+
+  if (current >= images.length) {
+    current = 0;
+  }
+
+  image.dataset.index = current;
+  image.src = images[current];
+
+  if (counter) {
+    counter.textContent =
+      `${current + 1} / ${images.length}`;
+  }
+}
+
+
 function toggleActivityCard(card) {
   if (!card) return;
 
@@ -252,4 +365,4 @@ function toggleActivityCard(card) {
   card.classList.toggle(
     "activity-card-open"
   );
-}
+     }
