@@ -634,6 +634,8 @@ function changeAccommodationVideo(
       videos[current];
 
     video.load();
+
+    video.play().catch(() => {});
   }
 
   const counter =
