@@ -45,13 +45,11 @@ async function loadAccommodations() {
 
     ]);
 
-
     if (!accommodationsResponse.ok) {
       throw new Error(
         `HTTP ${accommodationsResponse.status}`
       );
     }
-
 
     if (!imagesResponse.ok) {
       throw new Error(
@@ -59,13 +57,11 @@ async function loadAccommodations() {
       );
     }
 
-
     if (!videosResponse.ok) {
       throw new Error(
         `HTTP videos ${videosResponse.status}`
       );
     }
-
 
     const data =
       await accommodationsResponse.json();
@@ -75,7 +71,6 @@ async function loadAccommodations() {
 
     const videos =
       await videosResponse.json();
-
 
     const accommodationData =
       Array.isArray(data) ? data : [];
@@ -97,9 +92,7 @@ async function loadAccommodations() {
         String(item.id);
 
 
-      /* =========================================
-         الصور
-      ========================================= */
+      /* الصور */
 
       const multipleImages =
         imageData
@@ -112,11 +105,6 @@ async function loadAccommodations() {
           .filter(Boolean);
 
 
-      /*
-         إذا لم توجد صور في الجدول الجديد،
-         نستعمل image_url القديمة.
-      */
-
       if (item.image_url) {
 
         const oldImage =
@@ -128,19 +116,15 @@ async function loadAccommodations() {
         ) {
           multipleImages.unshift(oldImage);
         }
-
       }
-
 
       item.images =
         multipleImages;
 
 
-      /* =========================================
-         الفيديوهات
-      ========================================= */
+      /* الفيديوهات */
 
-      const multipleVideos =
+      item.videos =
         videoData
           .filter(video =>
             String(video.accommodation_id) === id
@@ -150,30 +134,17 @@ async function loadAccommodations() {
           )
           .filter(Boolean);
 
-
-      item.videos =
-        multipleVideos;
-
     });
 
-
-    /* =========================================
-       عرض الإقامات
-    ========================================= */
 
     displayAccommodations(
       accommodationData
     );
 
 
-    /* =========================================
-       تشغيل التقييمات
-    ========================================= */
-
     if (typeof initReviews === "function") {
       initReviews();
     }
-
 
   } catch (error) {
 
@@ -181,7 +152,6 @@ async function loadAccommodations() {
       "Accommodations error:",
       error
     );
-
 
     lists.forEach(id => {
 
@@ -196,9 +166,7 @@ async function loadAccommodations() {
       }
 
     });
-
   }
-
 }
 
 
@@ -215,7 +183,6 @@ function displayAccommodations(data) {
     "لا توجد شقق مفروشة حالياً."
   );
 
-
   displayList(
     "hotelsList",
     data,
@@ -223,14 +190,12 @@ function displayAccommodations(data) {
     "لا توجد فنادق حالياً."
   );
 
-
   displayList(
     "riadsList",
     data,
     ["رياضات", "رياض", "riad"],
     "لا توجد رياضات حالياً."
   );
-
 }
 
 
@@ -250,7 +215,6 @@ function displayList(
 
   if (!box) return;
 
-
   const items =
     data.filter(item => {
 
@@ -259,13 +223,11 @@ function displayList(
           .trim()
           .toLowerCase();
 
-
       return types.some(t =>
         type === t.toLowerCase()
       );
 
     });
-
 
   if (!items.length) {
 
@@ -273,13 +235,10 @@ function displayList(
       `<p class="empty">${emptyMessage}</p>`;
 
     return;
-
   }
-
 
   box.innerHTML =
     items.map(accommodationCard).join("");
-
 }
 
 
@@ -292,24 +251,19 @@ function accommodationCard(item) {
   const name =
     item.name || "إقامة";
 
-
   const id =
     String(item.id || "");
 
-
   const phone =
     String(item.phone || "").trim();
-
 
   let wa =
     String(item.whatsapp || phone)
       .replace(/\D/g, "");
 
-
   if (wa.startsWith("0")) {
     wa = "212" + wa.slice(1);
   }
-
 
   const price =
     item.price_per_night ??
@@ -317,39 +271,39 @@ function accommodationCard(item) {
     "";
 
 
-  /* =========================================
-     الصور
-  ========================================= */
+  /* الصور */
 
   let images =
     Array.isArray(item.images)
       ? item.images
       : [];
 
-
-  /*
-     إذا لم توجد صور متعددة،
-     نستعمل image_url القديمة.
-  */
-
   if (
     !images.length &&
     item.image_url
   ) {
-
     images = [
       String(item.image_url)
     ];
-
   }
+
+
+  /* الفيديوهات */
+
+  const videos =
+    Array.isArray(item.videos)
+      ? item.videos
+      : [];
 
 
   const galleryId =
     `accommodation-gallery-${id}`;
 
+  const videoGalleryId =
+    `accommodation-video-gallery-${id}`;
+
 
   let imageHTML = "";
-
 
   if (images.length) {
 
@@ -371,7 +325,6 @@ function accommodationCard(item) {
 
         </div>
 
-
         ${
           images.length > 1
             ? `
@@ -381,7 +334,6 @@ function accommodationCard(item) {
                   type="button"
                   class="gallery-arrow"
                   onclick="changeAccommodationImage('${escapeJS(galleryId)}', -1)"
-                  aria-label="الصورة السابقة"
                 >
                   ❮
                 </button>
@@ -394,7 +346,6 @@ function accommodationCard(item) {
                   type="button"
                   class="gallery-arrow"
                   onclick="changeAccommodationImage('${escapeJS(galleryId)}', 1)"
-                  aria-label="الصورة التالية"
                 >
                   ❯
                 </button>
@@ -406,26 +357,12 @@ function accommodationCard(item) {
 
       </div>
     `;
-
   }
 
 
-  /* =========================================
-     الفيديوهات
-  ========================================= */
-
-  let videos =
-    Array.isArray(item.videos)
-      ? item.videos
-      : [];
-
-
-  const videoGalleryId =
-    `accommodation-video-gallery-${id}`;
-
+  /* فيديو واحد + أسهم */
 
   let videoHTML = "";
-
 
   if (videos.length) {
 
@@ -446,9 +383,7 @@ function accommodationCard(item) {
             src="${escapeHTML(videos[0])}"
             type="video/mp4"
           >
-          متصفحك لا يدعم تشغيل الفيديو.
         </video>
-
 
         ${
           videos.length > 1
@@ -459,7 +394,6 @@ function accommodationCard(item) {
                   type="button"
                   class="gallery-arrow"
                   onclick="changeAccommodationVideo('${escapeJS(videoGalleryId)}', -1)"
-                  aria-label="الفيديو السابق"
                 >
                   ❮
                 </button>
@@ -472,7 +406,6 @@ function accommodationCard(item) {
                   type="button"
                   class="gallery-arrow"
                   onclick="changeAccommodationVideo('${escapeJS(videoGalleryId)}', 1)"
-                  aria-label="الفيديو التالي"
                 >
                   ❯
                 </button>
@@ -484,27 +417,19 @@ function accommodationCard(item) {
 
       </div>
     `;
-
   }
 
-
-  /* =========================================
-     البطاقة
-  ========================================= */
 
   return `
     <div class="accommodation-card">
 
       ${imageHTML}
 
-
       ${videoHTML}
-
 
       <h3>
         ${escapeHTML(name)}
       </h3>
-
 
       ${
         item.city
@@ -512,13 +437,11 @@ function accommodationCard(item) {
           : ""
       }
 
-
       ${
         item.address
           ? `<p>📌 ${escapeHTML(item.address)}</p>`
           : ""
       }
-
 
       ${
         item.description
@@ -526,18 +449,13 @@ function accommodationCard(item) {
           : ""
       }
 
-
       ${
         price !== ""
           ? `<p>💰 ${escapeHTML(price)} درهم / ليلة</p>`
           : ""
       }
 
-
-      <!-- أزرار الإقامة -->
-
       <div class="accommodation-buttons">
-
 
         ${
           phone
@@ -550,7 +468,6 @@ function accommodationCard(item) {
             `
             : ""
         }
-
 
         ${
           wa
@@ -566,7 +483,6 @@ function accommodationCard(item) {
             : ""
         }
 
-
         ${
           item.map_url
             ? `
@@ -581,9 +497,6 @@ function accommodationCard(item) {
             : ""
         }
 
-
-        <!-- طلب خدمة -->
-
         <button
           type="button"
           class="btn"
@@ -597,9 +510,6 @@ function accommodationCard(item) {
 
       </div>
 
-
-      <!-- التقييم -->
-
       ${
         typeof renderReviews === "function"
           ? renderReviews(
@@ -611,12 +521,11 @@ function accommodationCard(item) {
 
     </div>
   `;
-
 }
 
 
 /* =========================================
-   تغيير صورة الإقامة
+   تغيير الصورة
 ========================================= */
 
 function changeAccommodationImage(
@@ -629,15 +538,10 @@ function changeAccommodationImage(
 
   if (!gallery) return;
 
-
   const images =
     window.accommodationGalleryImages?.[galleryId];
 
-
-  if (!images || !images.length) {
-    return;
-  }
-
+  if (!images || !images.length) return;
 
   let current =
     parseInt(
@@ -645,76 +549,117 @@ function changeAccommodationImage(
       10
     );
 
-
   current += direction;
-
 
   if (current < 0) {
     current = images.length - 1;
   }
 
-
   if (current >= images.length) {
     current = 0;
   }
 
-
   gallery.dataset.current =
     String(current);
-
 
   const img =
     gallery.querySelector(
       ".accommodation-image"
     );
 
-
   if (img) {
-
-    img.src =
-      images[current];
-
+    img.src = images[current];
   }
-
 
   const counter =
     gallery.querySelector(
       ".gallery-counter"
     );
 
-
   if (counter) {
-
     counter.textContent =
       `${current + 1} / ${images.length}`;
-
   }
-
 }
 
 
 /* =========================================
-   تجهيز صور الإقامات
+   تغيير الفيديو
+========================================= */
+
+function changeAccommodationVideo(
+  galleryId,
+  direction
+) {
+
+  const gallery =
+    document.getElementById(galleryId);
+
+  if (!gallery) return;
+
+  const videos =
+    window.accommodationGalleryVideos?.[galleryId];
+
+  if (!videos || !videos.length) return;
+
+  let current =
+    parseInt(
+      gallery.dataset.current || "0",
+      10
+    );
+
+  current += direction;
+
+  if (current < 0) {
+    current = videos.length - 1;
+  }
+
+  if (current >= videos.length) {
+    current = 0;
+  }
+
+  gallery.dataset.current =
+    String(current);
+
+  const video =
+    gallery.querySelector(
+      ".accommodation-video"
+    );
+
+  if (video) {
+
+    video.pause();
+
+    video.src =
+      videos[current];
+
+    video.load();
+  }
+
+  const counter =
+    gallery.querySelector(
+      ".gallery-counter"
+    );
+
+  if (counter) {
+
+    counter.textContent =
+      `${current + 1} / ${videos.length}`;
+
+  }
+}
+
+
+/* =========================================
+   تجهيز الصور والفيديوهات
 ========================================= */
 
 window.accommodationGalleryImages = {};
 
-
-/* =========================================
-   تجهيز فيديوهات الإقامات
-========================================= */
-
 window.accommodationGalleryVideos = {};
-
-
-/*
-   نعيد تجهيز الصور والفيديوهات
-   بعد إنشاء البطاقات
-*/
 
 const originalDisplayList =
   displayList;
-
 
 displayList =
   function(
@@ -731,148 +676,41 @@ displayList =
       emptyMessage
     );
 
-
     data.forEach(item => {
 
       const itemId =
         String(item.id || "");
-
-
-      /* =========================================
-         الصور
-      ========================================= */
 
       const images =
         Array.isArray(item.images)
           ? item.images
           : [];
 
+      const videos =
+        Array.isArray(item.videos)
+          ? item.videos
+          : [];
 
       if (images.length) {
 
         const galleryId =
           `accommodation-gallery-${itemId}`;
 
-
         window.accommodationGalleryImages[
           galleryId
         ] = images;
-
       }
-
-
-      /* =========================================
-         الفيديوهات
-      ========================================= */
-
-      const videos =
-        Array.isArray(item.videos)
-          ? item.videos
-          : [];
-
 
       if (videos.length) {
 
         const videoGalleryId =
           `accommodation-video-gallery-${itemId}`;
 
-
         window.accommodationGalleryVideos[
           videoGalleryId
         ] = videos;
-
       }
 
     });
 
   };
-
-
-/* =========================================
-   تغيير فيديو الإقامة
-========================================= */
-
-function changeAccommodationVideo(
-  galleryId,
-  direction
-) {
-
-  const gallery =
-    document.getElementById(galleryId);
-
-
-  if (!gallery) return;
-
-
-  const videos =
-    window.accommodationGalleryVideos?.[galleryId];
-
-
-  if (!videos || !videos.length) {
-    return;
-  }
-
-
-  let current =
-    parseInt(
-      gallery.dataset.current || "0",
-      10
-    );
-
-
-  current += direction;
-
-
-  if (current < 0) {
-    current = videos.length - 1;
-  }
-
-
-  if (current >= videos.length) {
-    current = 0;
-  }
-
-
-  gallery.dataset.current =
-    String(current);
-
-
-  const video =
-    gallery.querySelector(
-      ".accommodation-video"
-    );
-
-
-  if (!video) return;
-
-
-  /* إيقاف الفيديو الحالي */
-
-  video.pause();
-
-
-  /* تغيير المصدر */
-
-  video.src =
-    videos[current];
-
-
-  video.load();
-
-
-  /* تحديث العداد */
-
-  const counter =
-    gallery.querySelector(
-      ".gallery-counter"
-    );
-
-
-  if (counter) {
-
-    counter.textContent =
-      `${current + 1} / ${videos.length}`;
-
-  }
-
-         }
