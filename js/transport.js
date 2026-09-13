@@ -1,14 +1,21 @@
 /* =========================================
-🌊 شمال المغرب
-المواصلات
+   🌊 شمال المغرب
+   🚗 المواصلات
 ========================================= */
 
 async function loadTransportServices() {
-  const lists = ["carRentalList", "taxiList", "busList"];
+  const lists = [
+    "carRentalList",
+    "taxiList",
+    "busList"
+  ];
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 10000);
 
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/transport_services?select=*`,
@@ -28,14 +35,25 @@ async function loadTransportServices() {
 
     const data = await response.json();
 
-    /* تحميل الصور */
+    /* =========================================
+       تحميل الصور
+    ========================================= */
+
+    const imagesController = new AbortController();
+
+    const imagesTimeout = setTimeout(() => {
+      imagesController.abort();
+    }, 10000);
+
     const imagesResponse = await fetch(
       `${SUPABASE_URL}/rest/v1/transport_images?select=transport_id,image_url&order=id.asc`,
       {
         headers: supabaseHeaders(),
-        signal: controller.signal
+        signal: imagesController.signal
       }
     );
+
+    clearTimeout(imagesTimeout);
 
     if (!imagesResponse.ok) {
       throw new Error(
@@ -45,11 +63,17 @@ async function loadTransportServices() {
 
     const imagesData = await imagesResponse.json();
 
+    /* =========================================
+       تجميع الصور حسب الخدمة
+    ========================================= */
+
     const imagesByTransport = {};
 
-    (Array.isArray(imagesData) ? imagesData : [])
-      .forEach(image => {
+    if (Array.isArray(imagesData)) {
+      imagesData.forEach(image => {
         const transportId = image.transport_id;
+
+        if (!transportId) return;
 
         if (!imagesByTransport[transportId]) {
           imagesByTransport[transportId] = [];
@@ -61,19 +85,41 @@ async function loadTransportServices() {
           );
         }
       });
+    }
+
+    /* =========================================
+       تجهيز الخدمات
+    ========================================= */
 
     const services = (
       Array.isArray(data) ? data : []
-    ).map(item => ({
-      ...item,
-      images:
-        imagesByTransport[item.id] || []
-    }));
+    ).map(item => {
+
+      let images =
+        imagesByTransport[item.id] || [];
+
+      /* الصورة القديمة إن لم توجد صور متعددة */
+      if (
+        !images.length &&
+        item.image_url
+      ) {
+        images = [item.image_url];
+      }
+
+      return {
+        ...item,
+        images
+      };
+    });
 
     displayTransportServices(services);
 
   } catch (error) {
-    console.error("Transport error:", error);
+
+    console.error(
+      "Transport error:",
+      error
+    );
 
     const message =
       error.name === "AbortError"
@@ -83,23 +129,31 @@ async function loadTransportServices() {
           )}`;
 
     lists.forEach(id => {
-      const box = document.getElementById(id);
+
+      const box =
+        document.getElementById(id);
 
       if (box) {
         box.innerHTML =
           `<p class="empty">${message}</p>`;
       }
+
     });
   }
 }
 
 
+/* =========================================
+   تقسيم خدمات المواصلات
+========================================= */
+
 function displayTransportServices(data) {
 
   displayTransportList(
     "carRentalList",
-    data.filter(x =>
-      isTransportType(x, [
+
+    data.filter(item =>
+      isTransportType(item, [
         "car_rental",
         "car rental",
         "كراء السيارات",
@@ -107,26 +161,32 @@ function displayTransportServices(data) {
         "سيارات للكراء"
       ])
     ),
+
     "لا توجد خدمات كراء السيارات حالياً."
   );
 
+
   displayTransportList(
     "taxiList",
-    data.filter(x =>
-      isTransportType(x, [
+
+    data.filter(item =>
+      isTransportType(item, [
         "taxi",
         "سيارات الأجرة",
         "سيارة أجرة",
         "taxi service"
       ])
     ),
+
     "لا توجد خدمات سيارات الأجرة حالياً."
   );
 
+
   displayTransportList(
     "busList",
-    data.filter(x =>
-      isTransportType(x, [
+
+    data.filter(item =>
+      isTransportType(item, [
         "bus",
         "tourist_bus",
         "tourist bus",
@@ -135,10 +195,15 @@ function displayTransportServices(data) {
         "الحافلات السياحية الصغيرة"
       ])
     ),
+
     "لا توجد خدمات الحافلات السياحية حالياً."
   );
 }
 
+
+/* =========================================
+   التحقق من نوع المواصلات
+========================================= */
 
 function isTransportType(item, types) {
 
@@ -154,28 +219,40 @@ function isTransportType(item, types) {
     if (!value) return false;
 
     const normalized =
-      String(value).trim().toLowerCase();
+      String(value)
+        .trim()
+        .toLowerCase();
 
     return types.some(type =>
       normalized ===
-      String(type).trim().toLowerCase()
+      String(type)
+        .trim()
+        .toLowerCase()
     );
   });
 }
 
+
+/* =========================================
+   عرض قائمة المواصلات
+========================================= */
 
 function displayTransportList(
   id,
   items,
   emptyMessage
 ) {
-  const box = document.getElementById(id);
+
+  const box =
+    document.getElementById(id);
 
   if (!box) return;
 
   if (!items.length) {
+
     box.innerHTML =
       `<p class="empty">${emptyMessage}</p>`;
+
     return;
   }
 
@@ -183,6 +260,10 @@ function displayTransportList(
     items.map(transportCard).join("");
 }
 
+
+/* =========================================
+   بطاقة المواصلات
+========================================= */
 
 function transportCard(item) {
 
@@ -196,64 +277,105 @@ function transportCard(item) {
   const phone =
     String(item.phone || "").trim();
 
+
   let whatsapp =
-    String(item.whatsapp || phone)
+    String(
+      item.whatsapp || phone
+    )
       .replace(/\D/g, "");
+
 
   if (whatsapp.startsWith("0")) {
     whatsapp =
-      "212" + whatsapp.substring(1);
+      "212" +
+      whatsapp.substring(1);
   }
+
+
+  /* =========================================
+     الصور
+  ========================================= */
 
   let images =
     Array.isArray(item.images)
       ? item.images.filter(Boolean)
       : [];
 
-  if (!images.length && item.image_url) {
+
+  if (
+    !images.length &&
+    item.image_url
+  ) {
     images = [item.image_url];
   }
+
 
   const imageId =
     `transport-images-${id}`;
 
+
+  /* حفظ الصور مباشرة */
+  window.transportImages =
+    window.transportImages || {};
+
+  window.transportImageIndexes =
+    window.transportImageIndexes || {};
+
+
+  window.transportImages[imageId] =
+    images;
+
+
+  window.transportImageIndexes[imageId] =
+    0;
+
+
   return `
+
     ${
       images.length
         ? `
           <div
             class="transport-image-slider"
-            id="${imageId}">
+            id="${escapeHTML(imageId)}">
 
             <img
               src="${escapeHTML(images[0])}"
               alt="${escapeHTML(name)}"
               class="accommodation-image transport-main-image"
-              loading="lazy">
+              loading="lazy"
+            >
 
             ${
               images.length > 1
                 ? `
+
                   <button
                     type="button"
                     class="transport-image-arrow transport-prev"
                     onclick="changeTransportImage('${escapeJS(imageId)}', -1)"
-                    aria-label="الصورة السابقة">
+                    aria-label="الصورة السابقة"
+                  >
                     ❮
                   </button>
+
 
                   <button
                     type="button"
                     class="transport-image-arrow transport-next"
                     onclick="changeTransportImage('${escapeJS(imageId)}', 1)"
-                    aria-label="الصورة التالية">
+                    aria-label="الصورة التالية"
+                  >
                     ❯
                   </button>
 
+
                   <span
-                    class="transport-image-counter">
+                    class="transport-image-counter"
+                  >
                     1 / ${images.length}
                   </span>
+
                 `
                 : ""
             }
@@ -263,27 +385,48 @@ function transportCard(item) {
         : ""
     }
 
-    <h3>${escapeHTML(name)}</h3>
+
+    <h3>
+      ${escapeHTML(name)}
+    </h3>
+
 
     ${
       item.city
-        ? `<p>📍 ${escapeHTML(item.city)}</p>`
+        ? `
+          <p>
+            📍 ${escapeHTML(item.city)}
+          </p>
+        `
         : ""
     }
 
+
     ${
       item.description
-        ? `<p>${escapeHTML(item.description)}</p>`
+        ? `
+          <p>
+            ${escapeHTML(item.description)}
+          </p>
+        `
         : ""
     }
+
 
     ${
       item.price !== null &&
       item.price !== undefined &&
       String(item.price).trim() !== ""
-        ? `<p>💰 ${escapeHTML(String(item.price))} درهم</p>`
+        ? `
+          <p>
+            💰 ${escapeHTML(
+              String(item.price)
+            )} درهم
+          </p>
+        `
         : ""
     }
+
 
     <div class="accommodation-buttons">
 
@@ -294,12 +437,14 @@ function transportCard(item) {
               href="tel:${escapeHTML(phone)}"
               class="btn icon-btn"
               aria-label="اتصال"
-              title="اتصال">
+              title="اتصال"
+            >
               📞
             </a>
           `
           : ""
       }
+
 
       ${
         whatsapp
@@ -310,12 +455,14 @@ function transportCard(item) {
               target="_blank"
               rel="noopener"
               aria-label="واتساب"
-              title="واتساب">
+              title="واتساب"
+            >
               💬
             </a>
           `
           : ""
       }
+
 
       ${
         item.map_url
@@ -326,12 +473,14 @@ function transportCard(item) {
               target="_blank"
               rel="noopener"
               aria-label="الموقع"
-              title="الموقع">
+              title="الموقع"
+            >
               📍
             </a>
           `
           : ""
       }
+
 
       <button
         type="button"
@@ -345,25 +494,29 @@ function transportCard(item) {
           );
         "
         aria-label="طلب الخدمة"
-        title="طلب الخدمة">
+        title="طلب الخدمة"
+      >
         📋
       </button>
 
     </div>
 
+
     ${
       typeof renderReviews === "function"
-        ? renderReviews("transport", id)
+        ? renderReviews(
+            "transport",
+            id
+          )
         : ""
     }
 
-    </div>
   `;
 }
 
 
 /* =========================================
-تبديل صور المواصلات
+   🖼️ سلايدر صور المواصلات
 ========================================= */
 
 window.transportImageIndexes =
@@ -383,91 +536,85 @@ function changeTransportImage(
 
   if (!slider) return;
 
+
   const image =
     slider.querySelector(
       ".transport-main-image"
     );
+
+  if (!image) return;
+
 
   const counter =
     slider.querySelector(
       ".transport-image-counter"
     );
 
-  if (!image) return;
-
-  /* نقرأ الصور من العنصر نفسه الذي تم إنشاؤه بواسطة البطاقة */
 
   const images =
     window.transportImages[imageId];
 
-  if (!images || !images.length) return;
+
+  if (
+    !Array.isArray(images) ||
+    !images.length
+  ) {
+    return;
+  }
+
 
   let current =
-    window.transportImageIndexes[imageId] || 0;
+    Number(
+      window.transportImageIndexes[imageId] || 0
+    );
+
 
   current += direction;
 
+
   if (current < 0) {
-    current = images.length - 1;
+    current =
+      images.length - 1;
   }
+
 
   if (current >= images.length) {
     current = 0;
   }
 
+
   window.transportImageIndexes[imageId] =
     current;
+
 
   image.src =
     images[current];
 
+
   if (counter) {
+
     counter.textContent =
       `${current + 1} / ${images.length}`;
+
   }
 }
 
 
 /* =========================================
-حفظ صور كل بطاقة بعد إنشائها
+   تشغيل التحميل
 ========================================= */
 
-const originalTransportCard =
-  transportCard;
+if (
+  document.readyState === "loading"
+) {
 
+  document.addEventListener(
+    "DOMContentLoaded",
+    loadTransportServices
+  );
 
-/* إعادة إنشاء الصور بطريقة آمنة */
+} else {
 
-function prepareTransportImages(data) {
+  loadTransportServices();
 
-  data.forEach(item => {
-
-    const images =
-      Array.isArray(item.images)
-        ? item.images.filter(Boolean)
-        : [];
-
-    if (!images.length && item.image_url) {
-      images.push(item.image_url);
-    }
-
-    window.transportImages[
-      `transport-images-${item.id}`
-    ] = images;
-
-  });
 }
-
-
-/* تعديل displayTransportServices لحفظ الصور قبل إنشاء البطاقات */
-
-const originalDisplayTransportServices =
-  displayTransportServices;
-
-displayTransportServices = function(data) {
-
-  prepareTransportImages(data);
-
-  originalDisplayTransportServices(data);
-
-};
