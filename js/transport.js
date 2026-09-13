@@ -175,7 +175,7 @@ if (!box) return;
 
 if (!items.length) {
 box.innerHTML =
-"<p class="empty">${emptyMessage}</p>";
+`<p class="empty">${emptyMessage}</p>`;
 return;
 }
 
@@ -213,7 +213,7 @@ images = [item.image_url];
 }
 
 const imageId =
-"transport-images-${id}";
+`transport-images-${id}`;
 
 return `
 <div class="accommodation-card service-card">
@@ -427,7 +427,7 @@ images[current];
 
 if (counter) {
 counter.textContent =
-"${current + 1} / ${images.length}";
+`${current + 1} / ${images.length}`;
 }
 }
 
