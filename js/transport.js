@@ -14,85 +14,85 @@ try {
 const controller = new AbortController();
 const timeout = setTimeout(() => controller.abort(), 10000);
 
-const response = await fetch(  
-  `${SUPABASE_URL}/rest/v1/transport_services?select=*`,  
-  {  
-    headers: supabaseHeaders(),  
-    signal: controller.signal  
-  }  
-);  
+const response = await fetch(
+  `${SUPABASE_URL}/rest/v1/transport_services?select=*`,
+  {
+    headers: supabaseHeaders(),
+    signal: controller.signal
+  }
+);
 
-clearTimeout(timeout);  
+clearTimeout(timeout);
 
-if (!response.ok) {  
-  throw new Error(  
-    `HTTP ${response.status}: ${await response.text()}`  
-  );  
-}  
+if (!response.ok) {
+  throw new Error(
+    `HTTP ${response.status}: ${await response.text()}`
+  );
+}
 
-const data = await response.json();  
+const data = await response.json();
 
-/* تحميل الصور */  
-const imagesResponse = await fetch(  
-  `${SUPABASE_URL}/rest/v1/transport_images?select=transport_id,image_url&order=id.asc`,  
-  {  
-    headers: supabaseHeaders(),  
-    signal: controller.signal  
-  }  
-);  
+/* تحميل الصور */
+const imagesResponse = await fetch(
+  `${SUPABASE_URL}/rest/v1/transport_images?select=transport_id,image_url&order=id.asc`,
+  {
+    headers: supabaseHeaders(),
+    signal: controller.signal
+  }
+);
 
-if (!imagesResponse.ok) {  
-  throw new Error(  
-    `HTTP ${imagesResponse.status}: ${await imagesResponse.text()}`  
-  );  
-}  
+if (!imagesResponse.ok) {
+  throw new Error(
+    `HTTP ${imagesResponse.status}: ${await imagesResponse.text()}`
+  );
+}
 
-const imagesData = await imagesResponse.json();  
+const imagesData = await imagesResponse.json();
 
-const imagesByTransport = {};  
+const imagesByTransport = {};
 
-(Array.isArray(imagesData) ? imagesData : [])  
-  .forEach(image => {  
-    const transportId = image.transport_id;  
+(Array.isArray(imagesData) ? imagesData : [])
+  .forEach(image => {
+    const transportId = image.transport_id;
 
-    if (!imagesByTransport[transportId]) {  
-      imagesByTransport[transportId] = [];  
-    }  
+    if (!imagesByTransport[transportId]) {
+      imagesByTransport[transportId] = [];
+    }
 
-    if (image.image_url) {  
-      imagesByTransport[transportId].push(  
-        image.image_url  
-      );  
-    }  
-  });  
+    if (image.image_url) {
+      imagesByTransport[transportId].push(
+        image.image_url
+      );
+    }
+  });
 
-const services = (  
-  Array.isArray(data) ? data : []  
-).map(item => ({  
-  ...item,  
-  images:  
-    imagesByTransport[item.id] || []  
-}));  
+const services = (
+  Array.isArray(data) ? data : []
+).map(item => ({
+  ...item,
+  images:
+    imagesByTransport[item.id] || []
+}));
 
 displayTransportServices(services);
 
 } catch (error) {
 console.error("Transport error:", error);
 
-const message =  
-  error.name === "AbortError"  
-    ? "انتهت مهلة تحميل خدمات المواصلات."  
-    : `خطأ في تحميل المواصلات:<br>${escapeHTML(  
-        error.message || String(error)  
-      )}`;  
+const message =
+  error.name === "AbortError"
+    ? "انتهت مهلة تحميل خدمات المواصلات."
+    : `خطأ في تحميل المواصلات:<br>${escapeHTML(
+        error.message || String(error)
+      )}`;
 
-lists.forEach(id => {  
-  const box = document.getElementById(id);  
+lists.forEach(id => {
+  const box = document.getElementById(id);
 
-  if (box) {  
-    box.innerHTML =  
-      `<p class="empty">${message}</p>`;  
-  }  
+  if (box) {
+    box.innerHTML =
+      `<p class="empty">${message}</p>`;
+  }
 });
 
 }
@@ -153,12 +153,12 @@ item?.transport_type
 return values.some(value => {
 if (!value) return false;
 
-const normalized =  
-  String(value).trim().toLowerCase();  
+const normalized =
+  String(value).trim().toLowerCase();
 
-return types.some(type =>  
-  normalized ===  
-  String(type).trim().toLowerCase()  
+return types.some(type =>
+  normalized ===
+  String(type).trim().toLowerCase()
 );
 
 });
@@ -175,7 +175,7 @@ if (!box) return;
 
 if (!items.length) {
 box.innerHTML =
-<p class="empty">${emptyMessage}</p>;
+"<p class="empty">${emptyMessage}</p>";
 return;
 }
 
@@ -213,149 +213,153 @@ images = [item.image_url];
 }
 
 const imageId =
-transport-images-${id};
+"transport-images-${id}";
 
 return `
 <div class="accommodation-card service-card">
 
-${  
-    images.length  
-      ? `  
-        <div  
-          class="transport-image-slider"  
-          id="${imageId}">  
+  ${
+    images.length
+      ? `
+        <div
+          class="transport-image-slider"
+          id="${imageId}">
 
-          <img  
-            src="${escapeHTML(images[0])}"  
-            alt="${escapeHTML(name)}"  
-            class="accommodation-image transport-main-image"  
-            loading="lazy">  
+          <img
+            src="${escapeHTML(images[0])}"
+            alt="${escapeHTML(name)}"
+            class="accommodation-image transport-main-image"
+            loading="lazy">
 
-          ${  
-            images.length > 1  
-              ? `  
-                <button  
-                  type="button"  
-                  class="transport-image-arrow transport-prev"  
-                  onclick="changeTransportImage('${escapeJS(imageId)}', -1)"  
-                  aria-label="الصورة السابقة">  
-                  ❮  
-                </button>  
+          ${
+            images.length > 1
+              ? `
+                <div class="transport-image-navigation">
 
-                <button  
-                  type="button"  
-                  class="transport-image-arrow transport-next"  
-                  onclick="changeTransportImage('${escapeJS(imageId)}', 1)"  
-                  aria-label="الصورة التالية">  
-                  ❯  
-                </button>  
+                  <button
+                    type="button"
+                    class="transport-image-arrow transport-prev"
+                    onclick="changeTransportImage('${escapeJS(imageId)}', -1)"
+                    aria-label="الصورة السابقة">
+                    ❮
+                  </button>
 
-                <span  
-                  class="transport-image-counter">  
-                  1 / ${images.length}  
-                </span>  
-              `  
-              : ""  
-          }  
+                  <span
+                    class="transport-image-counter">
+                    1 / ${images.length}
+                  </span>
 
-        </div>  
-      `  
-      : ""  
-  }  
+                  <button
+                    type="button"
+                    class="transport-image-arrow transport-next"
+                    onclick="changeTransportImage('${escapeJS(imageId)}', 1)"
+                    aria-label="الصورة التالية">
+                    ❯
+                  </button>
 
-  <h3>${escapeHTML(name)}</h3>  
+                </div>
+              `
+              : ""
+          }
 
-  ${  
-    item.city  
-      ? `<p>📍 ${escapeHTML(item.city)}</p>`  
-      : ""  
-  }  
+        </div>
+      `
+      : ""
+  }
 
-  ${  
-    item.description  
-      ? `<p>${escapeHTML(item.description)}</p>`  
-      : ""  
-  }  
+  <h3>${escapeHTML(name)}</h3>
 
-  ${  
-    item.price !== null &&  
-    item.price !== undefined &&  
-    String(item.price).trim() !== ""  
-      ? `<p>💰 ${escapeHTML(String(item.price))} درهم</p>`  
-      : ""  
-  }  
+  ${
+    item.city
+      ? `<p>📍 ${escapeHTML(item.city)}</p>`
+      : ""
+  }
 
-  <div class="accommodation-buttons">  
+  ${
+    item.description
+      ? `<p>${escapeHTML(item.description)}</p>`
+      : ""
+  }
 
-    ${  
-      phone  
-        ? `  
-          <a  
-            href="tel:${escapeHTML(phone)}"  
-            class="btn icon-btn"  
-            aria-label="اتصال"  
-            title="اتصال">  
-            📞  
-          </a>  
-        `  
-        : ""  
-    }  
+  ${
+    item.price !== null &&
+    item.price !== undefined &&
+    String(item.price).trim() !== ""
+      ? `<p>💰 ${escapeHTML(String(item.price))} درهم</p>`
+      : ""
+  }
 
-    ${  
-      whatsapp  
-        ? `  
-          <a  
-            href="https://wa.me/${whatsapp}"  
-            class="btn whatsapp-accommodation icon-btn"  
-            target="_blank"  
-            rel="noopener"  
-            aria-label="واتساب"  
-            title="واتساب">  
-            💬  
-          </a>  
-        `  
-        : ""  
-    }  
+  <div class="accommodation-buttons">
 
-    ${  
-      item.map_url  
-        ? `  
-          <a  
-            href="${escapeHTML(item.map_url)}"  
-            class="btn icon-btn"  
-            target="_blank"  
-            rel="noopener"  
-            aria-label="الموقع"  
-            title="الموقع">  
-            📍  
-          </a>  
-        `  
-        : ""  
-    }  
+    ${
+      phone
+        ? `
+          <a
+            href="tel:${escapeHTML(phone)}"
+            class="btn icon-btn"
+            aria-label="اتصال"
+            title="اتصال">
+            📞
+          </a>
+        `
+        : ""
+    }
 
-    <button  
-      type="button"  
-      class="btn request-btn"  
-      onclick="  
-        event.stopPropagation();  
-        selectService(  
-          'transport',  
-          '${escapeJS(id)}',  
-          '${escapeJS(name)}'  
-        );  
-      "  
-      aria-label="طلب الخدمة"  
-      title="طلب الخدمة">  
-      📋  
-    </button>  
+    ${
+      whatsapp
+        ? `
+          <a
+            href="https://wa.me/${whatsapp}"
+            class="btn whatsapp-accommodation icon-btn"
+            target="_blank"
+            rel="noopener"
+            aria-label="واتساب"
+            title="واتساب">
+            💬
+          </a>
+        `
+        : ""
+    }
 
-  </div>  
+    ${
+      item.map_url
+        ? `
+          <a
+            href="${escapeHTML(item.map_url)}"
+            class="btn icon-btn"
+            target="_blank"
+            rel="noopener"
+            aria-label="الموقع"
+            title="الموقع">
+            📍
+          </a>
+        `
+        : ""
+    }
 
-  ${  
-    typeof renderReviews === "function"  
-      ? renderReviews("transport", id)  
-      : ""  
-  }  
+    <button
+      type="button"
+      class="btn request-btn"
+      onclick="
+        event.stopPropagation();
+        selectService(
+          'transport',
+          '${escapeJS(id)}',
+          '${escapeJS(name)}'
+        );
+      "
+      aria-label="طلب الخدمة"
+      title="طلب الخدمة">
+      📋
+    </button>
+
+  </div>
+
+  ${
+    typeof renderReviews === "function"
+      ? renderReviews("transport", id)
+      : ""
+  }
 
 </div>
 
@@ -423,7 +427,7 @@ images[current];
 
 if (counter) {
 counter.textContent =
-${current + 1} / ${images.length};
+"${current + 1} / ${images.length}";
 }
 }
 
@@ -444,12 +448,12 @@ Array.isArray(item.images)
 ? item.images.filter(Boolean)
 : [];
 
-if (!images.length && item.image_url) {  
-  images.push(item.image_url);  
-}  
+if (!images.length && item.image_url) {
+  images.push(item.image_url);
+}
 
-window.transportImages[  
-  `transport-images-${item.id}`  
+window.transportImages[
+  `transport-images-${item.id}`
 ] = images;
 
 });
