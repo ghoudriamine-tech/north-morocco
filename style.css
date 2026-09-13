@@ -561,3 +561,48 @@ footer p{margin:4px 0;font-size:13px}
   background: #000;
   border-radius: 12px;
                               }
+/* =========================================
+🌊 أزرار صور المواصلات
+========================================= */
+
+.transport-image-slider {
+position: relative;
+}
+
+.transport-image-navigation {
+position: absolute;
+bottom: 10px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+direction: ltr;
+z-index: 5;
+}
+
+.transport-image-arrow {
+border: none;
+background: rgba(0, 0, 0, 0.55);
+color: white;
+width: 32px;
+height: 32px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 18px;
+padding: 0;
+}
+
+.transport-image-counter {
+background: rgba(0, 0, 0, 0.55);
+color: white;
+padding: 5px 9px;
+border-radius: 12px;
+font-size: 14px;
+min-width: 45px;
+text-align: center;
+  }
